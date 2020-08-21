@@ -9,3 +9,7 @@ student backend
 
 email
 project edit button...title
+
+onClick={() =>
+                    axios.get("signOut/").then(() => window.location.reload())
+                  }

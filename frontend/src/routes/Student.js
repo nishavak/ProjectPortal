@@ -105,7 +105,7 @@ export default class Student extends React.Component {
             <Route path="/" exact component={Assignments} />
             <Route path="/assignment/:id" exact component={Assignment} />
             <Route path="/profile" component={Profile} />
-            {/* <Redirect to="/" /> */}
+            <Redirect to="/" />
           </Switch>
         </div>
       </>

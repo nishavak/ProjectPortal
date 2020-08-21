@@ -15,7 +15,6 @@
     &:hover {
       background-color: rgb(183, 32, 46);
       color: white;
-
       a {
         color: white;
       }
@@ -24,15 +23,10 @@
   .fa-bars {
     font-size: 2em;
     color: rgb(183, 32, 46);
-
     &:hover {
       cursor: pointer;
     }
   }
-  // .mobile-header{
-  //   display:none;
-  // }
-
   .nav-item {
     margin: 0.15em 0;
     cursor: pointer;
@@ -41,30 +35,11 @@
     &:hover {
       color: white;
       background: rgb(183, 32, 46);
-      // transform: scale(1.02);
     }
   }
   .dropdown-item {
     cursor: pointer;
     transition: transform 400ms ease;
     color: #63605f;
-  }
-  // .dropright{
-  //   &:hover{
-  //     background-color: #fff;
-  //     color: black;
-  //     transform: scale(1);
-  //   }
-  // }
-
-  @media only screen and (max-width: 500px) {
-    // .sidebar{
-    //   background-color: rgba(231, 231, 231, 0.459);
-    //   position: relative;
-    //   // z-index: 1;
-    // }
-    // .mobile-header{
-    //   display:inline-block;
-    // }
   }
 }

@@ -4720,6 +4720,11 @@ file-loader@4.3.0:
     loader-utils "^1.2.3"
     schema-utils "^2.5.0"
 
+file-saver@^2.0.0-rc.3:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.2.tgz#06d6e728a9ea2df2cce2f8d9e84dfcdc338ec17a"
+  integrity sha512-Wz3c3XQ5xroCxd1G8b7yL0Ehkf0TC9oYC6buPFkNnU9EnaPlifeAFCyCh+iewXTyFRcg0a6j3J7FmJsIhlhBdw==
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -9256,6 +9261,15 @@ react-is@^16.12.0, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-json-excel@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-json-excel/-/react-json-excel-1.1.0.tgz#af9d67ebd945527dc05ab4bb0f1e336cc07ebcb4"
+  integrity sha512-HH4nhyzOuUPfknmOnpc3rgzEQvmGOuxcrdExZIE3D1tPPAjhPqijobB2gOdpg+I8YMp4NT3SzWbsTApshxesIg==
+  dependencies:
+    file-saver "^2.0.0-rc.3"
+    prop-types "^15.6.2"
+    react "^16.5.2"
+
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
@@ -9419,7 +9433,7 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@^16.13.1:
+react@^16.13.1, react@^16.5.2:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
@@ -9940,6 +9954,11 @@ sass-loader@8.0.2:
     neo-async "^2.6.1"
     schema-utils "^2.6.1"
     semver "^6.3.0"
+
+save-csv@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/save-csv/-/save-csv-4.1.0.tgz#2b19c9ed467cd3b4d12ced0b44ab3dd220f1d1e5"
+  integrity sha512-42leo58/ud4+xnXiSmY0T6p74UjucuYImlPgFyzmx/NY9ClJWqFYpO7/RB+2whJ6bv5VmbwT0yQCHA8NbPEDxg==
 
 sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"

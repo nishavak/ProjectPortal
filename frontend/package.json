@@ -16,10 +16,12 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-datetime-picker": "^3.0.2",
     "react-dom": "^16.13.1",
+    "react-json-excel": "^1.1.0",
     "react-notifications": "^1.6.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "react-search-box": "^2.0.2"
+    "react-search-box": "^2.0.2",
+    "save-csv": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

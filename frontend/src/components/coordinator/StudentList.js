@@ -1,54 +1,36 @@
 import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
-import ReactSearchBox from "react-search-box";
-import "./StudentList.scss";
+import { Link, Redirect } from "react-router-dom";
 import axios from "../../axios";
+import "./StudentList.scss";
+import saveCsv from "save-csv/save-csv.min.js";
 
 class StudentList extends Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: null,
-      students: [],
-    };
+    this.students = [];
+    this.downloadable = [];
   }
   componentDidMount() {
-    axios.get("rStudent/").then((studentList) => {
-      console.table(studentList.data.data);
-      this.setState({ students: studentList.data.data });
+    axios.get("coordinatorStudent/").then(({ data }) => {
+      console.table(data);
+      this.students = data;
+      this.downloadable.push(
+        this.students.map((student) => {
+          return {
+            student_roll_number: student.student_roll_number,
+            student_name: student.student_name,
+            group_id: student.group_id,
+            project_name: student.project_name,
+            student_branch: student.student_branch,
+            guide_name: student.guide_name,
+          };
+        })
+      );
+      this.setState({});
     });
   }
-  detailInfo = () => {
-    this.setState({ redirect: "/users/student/:id" });
-    // window.location.href = "/users/student/:id";
-  };
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
     return (
       <div className="student-list mx-auto" style={{ width: "90%" }}>
         <br />
@@ -62,15 +44,7 @@ class StudentList extends Component {
         >
           Student List
         </div>
-        <div className="my-4">
-          <ReactSearchBox
-            placeholder="Search for students here ..."
-            data={this.data}
-            autoFocus="true"
-            inputBoxBorderColor="#e1e6e2"
-            callback={(record) => console.log(record)}
-          />
-        </div>
+        <br />
         <div class="table-responsive">
           <table class="ui striped table">
             <thead class="text-center">
@@ -96,88 +70,32 @@ class StudentList extends Component {
               </tr>
             </thead>
             <tbody class="text-center">
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814055</td>
-                <td class="">Jill Shah</td>
-                <td class="">1</td>
-                <td class="">Smart Cities Mission</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814040</td>
-                <td class="">Nishavak Naik</td>
-                <td class="">1</td>
-                <td class="">Smart Cities Mission</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814033</td>
-                <td class="">Atharva Kitkaru</td>
-                <td class="">1</td>
-                <td class="">Smart Cities Mission</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814055</td>
-                <td class="">Jill Shah</td>
-                <td class="">2</td>
-                <td class="">ABCD</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814040</td>
-                <td class="">Nishavak Naik</td>
-                <td class="">2</td>
-                <td class="">ABCD</td>
-                <td class="">ETRX</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814033</td>
-                <td class="">Atharva Kitkaru</td>
-                <td class="">2</td>
-                <td class="">ABCD</td>
-                <td class="">COMP</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814055</td>
-                <td class="">Jill Shah</td>
-                <td class="">3</td>
-                <td class="">Project India</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814040</td>
-                <td class="">Nishavak Naik</td>
-                <td class="">3</td>
-                <td class="">Project India</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
-              <tr class="" onClick={this.detailInfo}>
-                <td class="">1814033</td>
-                <td class="">Atharva Kitkaru</td>
-                <td class="">4</td>
-                <td class="">Save Animals</td>
-                <td class="">IT</td>
-                <td class="">ABC ABC</td>
-              </tr>
+              {this.students &&
+                this.students.map((student) => (
+                  <tr
+                    class=""
+                    onClick={() =>
+                      this.props.history.push(`/student/${student.student_id}`)
+                    }
+                  >
+                    <td class="">{student.student_roll_number}</td>
+                    <td class="">{student.student_name}</td>
+                    <td class="">{student.group_id || "-"}</td>
+                    <td class="">{student.project_name || "-"}</td>
+                    <td class="">{student.student_branch}</td>
+                    <td class="">{student.guide_name || "-"}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
-
-        <Link to="/users/students">
-          <div className="mx-auto back-button p-2 text-center my-4 rounded-lg">
-            <i className="fa fa-arrow-down mr-2" aria-hidden="true" />
-            Download
-          </div>
-        </Link>
+        <div
+          className="mx-auto back-button p-2 text-center my-4 rounded-lg"
+          onClick={() => saveCsv(this.downloadable[0])}
+        >
+          <i className="fa fa-arrow-down mr-2" />
+          Download
+        </div>
       </div>
     );
   }
