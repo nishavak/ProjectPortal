@@ -89,12 +89,18 @@ class StudentList extends Component {
             </tbody>
           </table>
         </div>
-        <div
-          className="mx-auto back-button p-2 text-center my-4 rounded-lg"
-          onClick={() => saveCsv(this.downloadable[0])}
-        >
-          <i className="fa fa-arrow-down mr-2" />
-          Download
+        <div className="w-100 d-flex justify-content-center">
+          <div
+            className="btn btn-danger"
+            onClick={() =>
+              saveCsv(this.downloadable[0], {
+                filename: "student-list.csv",
+              })
+            }
+          >
+            <i className="fa fa-arrow-down mr-2" />
+            Download
+          </div>
         </div>
       </div>
     );
