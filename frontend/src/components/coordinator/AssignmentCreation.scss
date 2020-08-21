@@ -1,0 +1,23 @@
+.assignment-details {
+  a:hover {
+    text-decoration: none;
+  }
+  .form-section {
+    width: 75%;
+  }
+  .back-button {
+    width: 30vh;
+    background-color: rgb(183, 32, 46);
+    color: white;
+  }
+  @media only screen and (max-width: 750px) {
+    .form-section {
+      width: 100%;
+    }
+    .back-button {
+      width: 40vh;
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+  }
+}

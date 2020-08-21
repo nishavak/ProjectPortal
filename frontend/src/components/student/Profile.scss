@@ -1,0 +1,20 @@
+#Profile-Panel {
+  .nav-link {
+    transition: all 300ms;
+    background-color: none;
+    &:hover {
+      //   transform: scale(1.0864);
+      background-color: white;
+      //   box-shadow: 0 0 1em 0.4em #eee;
+    }
+  }
+}
+
+.studentCard {
+  transition: all 300ms;
+  @media screen and (min-width: 992px) {
+    &:hover {
+      transform: scale(1.5);
+    }
+  }
+}

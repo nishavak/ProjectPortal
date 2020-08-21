@@ -1,0 +1,10 @@
+.assignmentCard {
+  transition: transform 300ms;
+  &:hover {
+    transform: scale(1.04);
+    .card-header {
+      transition: all 0.15s;
+      background-color: rgb(235, 235, 235);
+    }
+  }
+}

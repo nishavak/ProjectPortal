@@ -1,0 +1,23 @@
+#AssignmentCard {
+  * {
+    border: 0;
+  }
+  @media screen and (min-width: 992px) {
+    .card {
+      transition: transform 300ms;
+      &:hover {
+        transform: scale(1.0162);
+        cursor: pointer;
+      }
+    }
+  }
+}
+@media screen and (min-width: 992px) {
+  .attachment {
+    transition: transform 300ms;
+    &:hover {
+      transform: scale(1.0162);
+      cursor: pointer;
+    }
+  }
+}

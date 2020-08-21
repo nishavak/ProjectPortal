@@ -1,0 +1,47 @@
+/*.heading{
+  text-align: center;
+  color: rgb(183, 32, 46);
+  font-size: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 20px;
+  font-weight: bold;
+}
+.guide-details{
+  padding: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.personal{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}*/
+.guide-details {
+  a:hover {
+    text-decoration: none;
+  }
+  a:hover span {
+    color: rgb(183, 32, 46);
+  }
+  .badge-info {
+    background-color: rgb(183, 32, 46);
+  }
+  .left-panel {
+    border-right: 1px solid #dedcd9;
+  }
+  .back-button {
+    width: 30vh;
+    background-color: rgb(183, 32, 46);
+    color: white;
+  }
+
+  @media only screen and (max-width: 750px) {
+    .left-panel {
+      border: none;
+    }
+    .back-button {
+      width: 40vh;
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+  }
+}
