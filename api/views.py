@@ -1,22 +1,21 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
-from django.shortcuts import render, HttpResponse
-from django.utils import timezone
-from rest_framework import permissions, status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-
-import constants
-
-from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
-                     GroupRequest, Guide, Preference, Project, ProjectRequest,
-                     Student, Team)
 from .serializers import (AssignmentSerializer, AssistantSerializer,
                           CommentSerializer, CoordinatorSerializer,
                           FileSerializer, GradeSerializer,
                           GroupRequestSerializer, GuideSerializer,
                           PreferenceSerializer, ProjectRequestSerializer,
                           ProjectSerializer, StudentSerializer, TeamSerializer)
+from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
+                     GroupRequest, Guide, Preference, Project, ProjectRequest,
+                     Student, Team)
+import constants
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions, status
+from django.utils import timezone
+from django.shortcuts import render, HttpResponse
+from django.contrib.auth.models import Group
+from django.contrib.auth import authenticate, login, logout
+
 
 # * COORDINATOR
 
@@ -52,6 +51,44 @@ def coordinatorStudent(request):
             student_data.setdefault("guide_id", None)
             student_data.setdefault("guide_name", None)
         response.append(student_data)
+    return Response(data=response, status=status.HTTP_200_OK)
+
+
+@api_view()
+def coordinatorStudentDetail(request, id):
+    response = {}
+    try:
+        student = Student.objects.get(id=id)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    student_data = {
+        "student_branch": student.branch,
+        "student_email": student.email,
+        "student_id": student.id,
+        "student_name": student.name,
+        "student_roll_number": student.roll_number,
+    }
+    try:
+        project = Project.objects.get(student=student)
+        student_data.setdefault("project_id", project.id)
+        student_data.setdefault("project_name", project.title)
+    except:
+        student_data.setdefault("project_id", None)
+        student_data.setdefault("project_name", None)
+    try:
+        team = Team.objects.get(id=student.team.id)
+        student_data.setdefault("group_id", team.id)
+    except:
+        student_data.setdefault("group_id", None)
+    try:
+        guide = Guide.objects.get(id=team.guide_id)
+        student_data.setdefault("guide_id", guide.id)
+        student_data.setdefault("guide_name", guide.name)
+    except:
+        student_data.setdefault("guide_id", None)
+        student_data.setdefault("guide_name", None)
+    response = student_data
     return Response(data=response, status=status.HTTP_200_OK)
 
 

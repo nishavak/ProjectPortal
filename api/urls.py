@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     # COORDINATOR
     path('coordinatorStudent/', views.coordinatorStudent),
+    path('coordinatorStudentDetail/<int:id>/', views.coordinatorStudentDetail),
     path('coordinatorGroup/', views.coordinatorGroup),
     path('coordinatorGuide/', views.coordinatorGuide),
     path('coordinatorProject/', views.coordinatorProject),
