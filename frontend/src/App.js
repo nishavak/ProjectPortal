@@ -1,13 +1,13 @@
+import $ from "jquery";
 import React, { Component } from "react";
+import axios from "./axios";
 import Error from "./components/shared/Error";
 import Loading from "./components/shared/Loading";
+import Assistant from "./routes/Assistant";
 import Authentication from "./routes/Authentication";
 import Coordinator from "./routes/Coordinator";
-import Student from "./routes/Student";
 import Guide from "./routes/Guide";
-import Assistant from "./routes/Assistant";
-import $ from "jquery";
-import axios from "./axios";
+import Student from "./routes/Student";
 
 export default class App extends Component {
   constructor(props) {
@@ -25,7 +25,6 @@ export default class App extends Component {
       .get("whoAmI/")
       .then(({ data }) => {
         this.__userType = data;
-        console.log(data);
         this.__authenticated = true;
         this.setState({ loading: false });
       })

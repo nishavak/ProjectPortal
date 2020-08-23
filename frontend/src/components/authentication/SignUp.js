@@ -1,8 +1,8 @@
+import $ from "jquery";
+import axios from "../../axios";
 import React, { Component } from "react";
 import { NotificationManager } from "react-notifications";
 import SignUpImage from "../../assets/images/SignUp.gif";
-import $ from "jquery";
-import "./SignUp.scss";
 
 const branch = [
   "Information Technology",
@@ -80,8 +80,23 @@ export class SignUp extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.isFormValid()) NotificationManager.info("You have signed up");
-    else NotificationManager.error("Form has been tampered");
+    if (this.isFormValid()) {
+      axios
+        .post("signUp/", this.state)
+        .then(() => {
+          NotificationManager.success(
+            "Please verify your email and sign in.",
+            "Signed up.",
+            6000,
+            () => this.props.history.push("signIn/"),
+            true
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          NotificationManager.error("Error signing up");
+        });
+    } else NotificationManager.error("Form has been tampered");
   };
 
   render() {

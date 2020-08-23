@@ -1,22 +1,23 @@
+from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import HttpResponse, render
+from django.utils import timezone
+from rest_framework import permissions, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+import constants
+from . import forms
+from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
+                     GroupRequest, Guide, Preference, Project, ProjectRequest,
+                     Student, Team)
 from .serializers import (AssignmentSerializer, AssistantSerializer,
                           CommentSerializer, CoordinatorSerializer,
                           FileSerializer, GradeSerializer,
                           GroupRequestSerializer, GuideSerializer,
                           PreferenceSerializer, ProjectRequestSerializer,
                           ProjectSerializer, StudentSerializer, TeamSerializer)
-from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
-                     GroupRequest, Guide, Preference, Project, ProjectRequest,
-                     Student, Team)
-import constants
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions, status
-from django.utils import timezone
-from django.shortcuts import render, HttpResponse
-from django.contrib.auth.models import Group
-from django.contrib.auth import authenticate, login, logout
-
-
 # * COORDINATOR
 
 
@@ -61,7 +62,6 @@ def coordinatorStudentDetail(request, id):
         student = Student.objects.get(id=id)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
-
     student_data = {
         "student_branch": student.branch,
         "student_email": student.email,
@@ -315,7 +315,6 @@ def coordinatorCreateAssignment(request):
     posted = timezone.datetime.fromtimestamp(int(request.data.get('posted')))
     due = timezone.datetime.fromtimestamp(int(request.data.get('due')))
     coordinator = request.data.get("coordinator")
-
     data = {
         "title": title,
         "description": description,
@@ -333,7 +332,6 @@ def coordinatorCreateAssignment(request):
             Grade.objects.create(
                 student=student, guide=None, assignment=assignment)
         return Response(status=status.HTTP_201_CREATED)
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -693,10 +691,22 @@ def guideProfile(request):
     response.setdefault("group_details", group_details)
     return Response(data=response)
 # * STUDENT
+
+
+@api_view()
+def studentPersonal(request):
+    student = Student.objects.get(id=request.user.id)
+    response = {
+        "name": student.name,
+        "roll_number": student.roll_number,
+        "branch": dict(constants.BRANCH)[student.branch],
+        "email": student.email,
+    }
+    return Response(data=response)
+
+
 # * ASSISTANT
 # * AUTHENTICATION AND MISCELLANEOUS
-
-
 """ change profile picture and password """
 
 
@@ -738,7 +748,7 @@ def signUp(request):
         email = request.data.get("email")
         password = request.data.get("password")
         name = request.data.get("name")
-        roll_number = request.data.get("roll_number")
+        roll_number = request.data.get("rollNumber")
         branch = request.data.get("branch")
         if branch == "Information Technology":
             branch = "IT"
@@ -804,3 +814,35 @@ def guideSignUp(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(["POST"])
+def changePassword(request):
+    user = request.user
+    user.set_password(request.data.get("newPassword"))
+    user.save()
+    login(request, user)
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def changePhoto(request):
+    user = request.user
+
+    form = forms.StudentForm(request.POST, request.FILES)
+    if form.is_valid():
+        f = form.save(commit=False)
+        user.photo = f.photo
+        user.save()
+        return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view()
+def getImage(request):
+    try:
+        url = "/api" + request.user.photo.url
+        return Response(data=url, status=status.HTTP_200_OK)
+    except:
+        url = None
+        return Response(data=url, status=status.HTTP_404_NOT_FOUND)

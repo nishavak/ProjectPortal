@@ -1,9 +1,13 @@
 autopep8==1.5.4
 Django==2.2
+django-appconf==1.0.4
 django-cleanup==5.0.0
+django-imagekit==4.0.2
 djangorestframework==3.11.1
+pilkit==2.0
 Pillow==7.2.0
 pycodestyle==2.6.0
 pytz==2020.1
+six==1.15.0
 sqlparse==0.3.1
 toml==0.10.1

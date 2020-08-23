@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import SignInImage from "../../assets/images/SignIn.gif";
 import { NotificationManager } from "react-notifications";
-// import $ from "jquery";
+import SignInImage from "../../assets/images/SignIn.gif";
 import axios from "../../axios";
-
 export class SignIn extends Component {
   state = {
     email: "",
@@ -33,7 +31,7 @@ export class SignIn extends Component {
           style={{ backgroundColor: "#f7f8fa" }}
         >
           <div className="d-none col-7 d-xl-flex justify-content-center align-items-center">
-            <img src={SignInImage} alt="" className="w-100" />
+            <img src={SignInImage} alt="Sign in" className="w-100" />
           </div>
           <div className="d-flex col-12 col-xl-5 align-items-center">
             <form
@@ -89,5 +87,4 @@ export class SignIn extends Component {
     );
   }
 }
-
 export default SignIn;

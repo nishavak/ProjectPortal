@@ -6,12 +6,21 @@ import Personal from "./Personal";
 import Guide from "./Guide";
 import Group from "./Group";
 import Project from "./Project";
+import axios from "../../axios";
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {};
+    this.image = null;
+  }
+
+  componentDidMount() {
+    axios.get("getImage/").then(({ data }) => {
+      this.image = data;
+      this.setState({});
+    });
   }
 
   render() {
@@ -27,7 +36,7 @@ export default class Profile extends Component {
         <div className="col-12 col-md-3 bg-light" style={{ minHeight: "100%" }}>
           <div className="p-md-3" style={{ height: "50%" }}>
             <img
-              src={UserImage}
+              src={this.image || UserImage}
               alt="Student Roll Number"
               className="w-100 rounded shadow-sm"
             />

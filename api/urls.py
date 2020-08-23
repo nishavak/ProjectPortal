@@ -38,6 +38,7 @@ urlpatterns = [
     path("guideDetailsForm/", views.guideDetailsForm),
     path("guideProfile/", views.guideProfile),
     # STUDENT
+    path('studentPersonal/', views.studentPersonal),
     # ASSISTANT
     # AUTHENTICATION
     path('whoAmI/', views.whoAmI),
@@ -45,4 +46,7 @@ urlpatterns = [
     path('signUp/', views.signUp),
     path('guideSignUp/', views.guideSignUp),
     path('signOut/', views.signOut),
+    path('changePassword/', views.changePassword),
+    path('changePhoto/', views.changePhoto),
+    path('getImage/', views.getImage),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

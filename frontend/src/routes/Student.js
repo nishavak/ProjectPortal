@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
-import Header from "../components/student/Header";
-import Assignments from "../components/student/Assignments";
-import Profile from "../components/student/Profile";
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Assignment from "../components/student/Assignment";
+import Assignments from "../components/student/Assignments";
+import Header from "../components/student/Header";
+import Profile from "../components/student/Profile";
+import ChangePassword from "../components/shared/ChangePassword";
 
 export default class Student extends React.Component {
   constructor(props) {
@@ -99,6 +100,7 @@ export default class Student extends React.Component {
             </div>
           </>
         )}
+        <Route component={ChangePassword} />
         <div className="swing-in-top-fwd min-vh-100">
           <Route component={Header} />
           <Switch>

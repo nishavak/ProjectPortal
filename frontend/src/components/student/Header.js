@@ -1,6 +1,7 @@
 import React from "react";
 import SomaiyaLogo from "../../assets/images/Somaiya.svg";
 import UserImage from "../../assets/images/User.png";
+import axios from "../../axios";
 import "./Header.scss";
 
 export default function Header(props) {
@@ -44,7 +45,12 @@ export default function Header(props) {
             <div
               className="dropdown-item"
               style={{ cursor: "pointer" }}
-              onClick={() => alert("Signed out")}
+              onClick={() =>
+                axios
+                  .get("signOut/")
+                  .then(() => window.location.reload())
+                  .catch(() => window.location.reload())
+              }
             >
               Sign out
             </div>

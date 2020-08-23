@@ -6,7 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 import constants
 
 
@@ -44,6 +45,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_("is active"), default=True)
     is_staff = models.BooleanField(_("is staff"), default=False)
     name = models.CharField(_("name"), max_length=400)
+    # photo = ProcessedImageField(upload_to='photos/%Y/',
+    #                             processors=[ResizeToFill(400, 400)],
+    #                             format='JPEG',
+    #                             options={'quality': 60}, blank=True, null=True)
     photo = models.ImageField(
         _("photo"), upload_to="photos/%Y/", blank=True, null=True)
     objects = UserManager()
@@ -61,7 +66,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
 # STUDENT
 
 
@@ -101,20 +105,16 @@ class GroupRequest(models.Model):
         _("status"), max_length=1, choices=constants.STATUS, default="P")
     team = models.ForeignKey("api.Team", verbose_name=_(
         "team"), on_delete=models.CASCADE)
-
-
 # COORDINATOR
 
 
 class Coordinator(User):
     pass
-
 # ASSISTANT
 
 
 class Assistant(User):
     pass
-
 # GUIDE
 
 
@@ -124,7 +124,6 @@ class Guide(User):
     initials = models.CharField(_("initials"), max_length=10)
     preferences = models.ManyToManyField(
         "api.Preference", verbose_name=_("preferences"), blank=True)
-
 # OTHER MODELS
 
 
