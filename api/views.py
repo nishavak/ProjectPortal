@@ -768,6 +768,93 @@ def createTeam(request):
 
 @api_view()
 def studentAssignments(request):
+    student = Student.objects.get(id=request.user.id)
+    grades = Grade.objects.filter(student=student)
+    # print(grades)
+    response = []
+    for grade in grades:
+        assignment = Assignment.objects.get(id=grade.assignment.id)
+        submission_status = None
+        if grade.turned_in:
+            submission_status = "submitted"
+            if grade.marks_obtained != None:
+                submission_status = "graded"
+        else:
+            submission_status = "not-submitted"
+        try:
+            due = assignment.due.strftime("%d/%m/%Y, %H:%M:%S")
+        except:
+            due = None
+        t = {
+            "id": assignment.id,
+            "title": assignment.title,
+            "due": due,
+            "weightage": assignment.weightage,
+            "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+            "status": submission_status
+        }
+        response.append(t)
+    return Response(data=response)
+
+
+@api_view()
+def groupData(request):
+    student = Student.objects.get(id=request.user.id)
+    team = Team.objects.get(id=student.team.id)
+    leader = team.leader
+
+    students = Student.objects.filter(team=team)
+    members = []
+    for student in students:
+        t = {
+            "name": student.name,
+            "roll_number": student.roll_number,
+            "branch": dict(constants.BRANCH)[student.branch],
+            "email": student.email,
+        }
+        members.append(t)
+
+    response = {
+        "group_id": team.id,
+        "leader_name": leader.name,
+        "members": members
+    }
+    return Response(data=response)
+
+
+@api_view()
+def assignment(request, id):
+    try:
+        assignment = Assignment.objects.get(id=id)
+        files = File.objects.filter(assignment=assignment, team=None)
+        attachments = []
+        for attachment in files:
+            t = {
+                "id": attachment.id,
+                "name": attachment.file.name,
+                "url": "/api" + attachment.file.url
+            }
+            attachments.append(t)
+        try:
+            due = assignment.due.strftime("%d/%m/%Y, %H:%M:%S")
+        except:
+            due = None
+        response = {
+            "title": assignment.title,
+            "description": assignment.description,
+            "due": due,
+            "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+            "weightage": assignment.weightage,
+            "attachments": attachments
+        }
+        return Response(data=response)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["POST"])
+def assignmentSubmit(request, id):
+    print(request.POST, request.FILES)
     return Response()
 
 
@@ -894,7 +981,7 @@ def changePassword(request):
 @api_view(["POST"])
 def changePhoto(request):
     user = request.user
-
+    print(request.POST, request.FILES)
     form = forms.StudentForm(request.POST, request.FILES)
     if form.is_valid():
         f = form.save(commit=False)

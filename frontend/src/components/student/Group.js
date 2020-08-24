@@ -7,6 +7,7 @@ export default class Group extends Component {
     super(props);
 
     this.leader = false;
+    this.data = {};
   }
 
   componentDidMount() {
@@ -19,8 +20,20 @@ export default class Group extends Component {
       .catch((err) => {
         console.log(err);
       });
+    axios
+      .get("groupData/")
+      .then(({ data }) => {
+        this.data = data;
+        this.setState({});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     $("#addStudent").on("shown.bs.modal", function () {
-      $("#roll_number").focus();
+      $("#add_roll_number").focus();
+    });
+    $("#removeStudent").on("shown.bs.modal", function () {
+      $("#remove_roll_number").focus();
     });
   }
 
@@ -32,11 +45,11 @@ export default class Group extends Component {
       >
         <div className="">
           <b>Group Id</b>
-          <p>12</p>
+          <p>{!$.isEmptyObject(this.data) && this.data.group_id}</p>
         </div>
         <div className="">
           <b>Group leader</b>
-          <p>Nishavak Santosh Naik</p>
+          <p>{!$.isEmptyObject(this.data) && this.data.leader_name}</p>
         </div>
         {this.leader && (
           <div className="py-2 d-flex flex-column">
@@ -60,39 +73,20 @@ export default class Group extends Component {
         )}
         <div className="">
           <b>Members</b>
-          <div
-            className="studentCard w-75 my-2 rounded p-2"
-            style={{
-              background: "linear-gradient(to right, #f8f9fa, #ffffff)",
-            }}
-          >
-            <b className="d-block">Nishavak Santosh Naik</b>
-            <span className="d-block">1814040</span>
-            <span className="d-block">Information Technology</span>
-            <span className="d-block">nishavak.n@somaiya.edu</span>
-          </div>
-          <div
-            className="studentCard w-75 my-2 rounded p-2"
-            style={{
-              background: "linear-gradient(to right, #f8f9fa, #ffffff)",
-            }}
-          >
-            <b className="d-block">Atharva Kitkaru</b>
-            <span className="d-block">1814033</span>
-            <span className="d-block">Information Technology</span>
-            <span className="d-block">atharva.kitkaru@somaiya.edu</span>
-          </div>
-          <div
-            className="studentCard w-75 my-2 rounded p-2"
-            style={{
-              background: "linear-gradient(to right, #f8f9fa, #ffffff)",
-            }}
-          >
-            <b className="d-block">Jill Shah</b>
-            <span className="d-block">1814055</span>
-            <span className="d-block">Information Technology</span>
-            <span className="d-block">jill25@somaiya.edu</span>
-          </div>
+          {!$.isEmptyObject(this.data) &&
+            this.data.members.map((member) => (
+              <div
+                className="studentCard w-75 my-2 rounded p-2"
+                style={{
+                  background: "linear-gradient(to right, #f8f9fa, #ffffff)",
+                }}
+              >
+                <b className="d-block">{member.name}</b>
+                <span className="d-block">{member.roll_number}</span>
+                <span className="d-block">{member.branch}</span>
+                <span className="d-block">{member.email}</span>
+              </div>
+            ))}
         </div>
       </div>
     );

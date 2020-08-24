@@ -1,43 +1,33 @@
+import axios from "../../axios";
 import React, { Component } from "react";
 import AssignmentCard from "./AssignmentCard";
 import "./Assignments.scss";
 import { Route } from "react-router-dom";
+import Loading from "../shared/Loading";
 
 export class Assignments extends Component {
-  state = {
-    tab: "all",
-    assignments: [
-      {
-        id: 1,
-        status: "submitted",
-      },
-      {
-        id: 2,
-        status: "not-submitted",
-      },
-      {
-        id: 3,
-        status: "graded",
-      },
-      {
-        id: 4,
-        status: "graded",
-      },
-      {
-        id: 4,
-        status: "graded",
-      },
-      {
-        id: 4,
-        status: "graded",
-      },
-      {
-        id: 4,
-        status: "graded",
-      },
-    ],
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      tab: "all",
+    };
+    this.assignments = [];
+  }
+
+  componentDidMount() {
+    axios
+      .get("studentAssignments/")
+      .then(({ data }) => {
+        this.assignments = data;
+        this.setState({ loading: false });
+      })
+      .catch((err) => {});
+  }
+
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div id="Assignments">
         <div className="container">
@@ -100,39 +90,85 @@ export class Assignments extends Component {
             </label>
           </nav>
           {this.state.tab === "all" &&
-            this.state.assignments.map((assignment) => (
-              <Route render={(props) => <AssignmentCard {...props} id={1} />} />
-            ))}
+            (this.assignments.length
+              ? this.assignments.map((assignment) => (
+                  <Route
+                    render={(props) => (
+                      <AssignmentCard
+                        {...props}
+                        id={assignment.id}
+                        title={assignment.title}
+                        due={assignment.due}
+                        weightage={assignment.weightage}
+                        posted={assignment.posted}
+                      />
+                    )}
+                  />
+                ))
+              : "No assignments")}
           {this.state.tab === "submitted" &&
-            this.state.assignments
-              .filter((assignment) => assignment.status === "submitted")
-              .map((assignment) => (
-                <Route
-                  render={(props) => (
-                    <AssignmentCard {...props} id={assignment.id} />
-                  )}
-                />
-              ))}
+            (this.assignments.filter(
+              (assignment) => assignment.status === "submitted"
+            ).length
+              ? this.assignments
+                  .filter((assignment) => assignment.status === "submitted")
+                  .map((assignment) => (
+                    <Route
+                      render={(props) => (
+                        <AssignmentCard
+                          {...props}
+                          id={assignment.id}
+                          title={assignment.title}
+                          due={assignment.due}
+                          weightage={assignment.weightage}
+                          posted={assignment.posted}
+                        />
+                      )}
+                    />
+                  ))
+              : "No assignments")}
           {this.state.tab === "not-submitted" &&
-            this.state.assignments
-              .filter((assignment) => assignment.status === "not-submitted")
-              .map((assignment) => (
-                <Route
-                  render={(props) => (
-                    <AssignmentCard {...props} id={assignment.id} />
-                  )}
-                />
-              ))}
+            (this.assignments.filter(
+              (assignment) => assignment.status === "not-submitted"
+            ).length
+              ? this.assignments
+                  .filter((assignment) => assignment.status === "not-submitted")
+                  .map((assignment) => (
+                    <Route
+                      render={(props) => (
+                        <AssignmentCard
+                          {...props}
+                          id={assignment.id}
+                          title={assignment.title}
+                          due={assignment.due}
+                          weightage={assignment.weightage}
+                          posted={assignment.posted}
+                        />
+                      )}
+                    />
+                  ))
+              : "No assignments")}
           {this.state.tab === "graded" &&
-            this.state.assignments
-              .filter((assignment) => assignment.status === "graded")
-              .map((assignment) => (
-                <Route
-                  render={(props) => (
-                    <AssignmentCard {...props} id={assignment.id} />
-                  )}
-                />
-              ))}
+            (this.assignments.filter(
+              (assignment) => assignment.status === "graded"
+            ).length
+              ? this.assignments
+                  .filter((assignment) => assignment.status === "graded")
+                  .map((assignment) => (
+                    <Route
+                      render={(props) => (
+                        <AssignmentCard
+                          {...props}
+                          id={assignment.id}
+                          title={assignment.title}
+                          due={assignment.due}
+                          weightage={assignment.weightage}
+                          posted={assignment.posted}
+                        />
+                      )}
+                    />
+                  ))
+              : "No assignments")}
         </div>
       </div>
     );

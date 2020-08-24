@@ -44,6 +44,9 @@ urlpatterns = [
     path('groupRegistered/', views.groupRegistered),
     path('myRollNumber/', views.myRollNumber),
     path('createTeam/', views.createTeam),
+    path('groupData/', views.groupData),
+    path('assignment/<int:id>', views.assignment),
+    path('assignmentSubmit/<int:id>', views.assignmentSubmit),
     # ASSISTANT
     # AUTHENTICATION
     path('whoAmI/', views.whoAmI),

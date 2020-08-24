@@ -88,7 +88,7 @@ export default class Profile extends Component {
           className="col-0 col-md-1"
           style={{ background: "linear-gradient(to right, #f8f9fa, #ffffff)" }}
         ></div>
-        <div className="col-12 col-md-7 offset-md-1 p-md-2">
+        <div className="col-12 col-md-7 offset-md-1 p-md-2 my-5 my-xl-0">
           <Switch>
             <Route path="/profile/personal/" exact component={Personal} />
             <Route path="/profile/group/" exact component={Group} />

@@ -1,3 +1,4 @@
+import $ from "jquery";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Assignment from "../components/student/Assignment";
@@ -8,6 +9,7 @@ import axios from "../axios";
 import ChangePassword from "../components/shared/ChangePassword";
 import GroupRegistration from "../components/student/GroupRegistration";
 import Loading from "../components/shared/Loading";
+import { NotificationManager } from "react-notifications";
 
 export default class Student extends React.Component {
   constructor(props) {
@@ -39,6 +41,23 @@ export default class Student extends React.Component {
       });
   }
 
+  addStudent = (event) => {
+    event.preventDefault();
+    if (this.leader) {
+      // $("#roll_number").val;
+      // axios.post("addStudent/", $("#roll_number").val);
+    } else {
+      NotificationManager.error("Ask the group leader to add a member");
+    }
+  };
+  removeStudent = (event) => {
+    event.preventDefault();
+    if (this.leader) {
+    } else {
+      NotificationManager.error("Ask the group leader to remove a member");
+    }
+  };
+
   render() {
     if (this.state.loading) return <Loading />;
     if (!this.group_registered) return <GroupRegistration />;
@@ -58,13 +77,15 @@ export default class Student extends React.Component {
               >
                 <div className="modal-content border-0 shadow-sm">
                   <div className="modal-body">
-                    <form action="">
+                    <form autoComplete="off" onSubmit={this.addStudent}>
                       <div className="form-group">
-                        <label htmlFor="roll_number">Enter roll number</label>
+                        <label htmlFor="add_roll_number">
+                          Enter roll number
+                        </label>
                         <input
                           type="number"
-                          name="roll_number"
-                          id="roll_number"
+                          name="add_roll_number"
+                          id="add_roll_number"
                           className="form-control"
                           required
                           min="0"
@@ -92,13 +113,15 @@ export default class Student extends React.Component {
               >
                 <div className="modal-content border-0 shadow-sm">
                   <div className="modal-body">
-                    <form action="">
+                    <form autoComplete="off" onSubmit={this.removeStudent}>
                       <div className="form-group">
-                        <label htmlFor="roll_number">Enter roll number</label>
+                        <label htmlFor="remove_roll_number">
+                          Enter roll number
+                        </label>
                         <input
                           type="number"
-                          name="roll_number"
-                          id="roll_number"
+                          name="remove_roll_number"
+                          id="remove_roll_number"
                           className="form-control"
                           required
                           min="0"

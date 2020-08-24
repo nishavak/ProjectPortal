@@ -1,8 +1,35 @@
 import React, { Component } from "react";
 import Uploader from "./Uploader";
+import Loading from "../shared/Loading";
+import $ from "jquery";
+import axios from "../../axios";
+import { Route } from "react-router-dom";
 
 export default class Assignment extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    };
+
+    this.assignment = {};
+  }
+
+  componentDidMount() {
+    axios
+      .get(`assignment/${this.props.match.params.id}`)
+      .then(({ data }) => {
+        this.assignment = data;
+        this.setState({ loading: false });
+      })
+      .catch((err) => {
+        this.props.history.goBack();
+      });
+  }
+
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div>
         <div className="col-12 col-md-11 mx-auto slide-in-bottom ">
@@ -14,72 +41,69 @@ export default class Assignment extends Component {
               }}
             >
               <p className="text-justify" style={{ fontWeight: "800" }}>
-                This is the title of sample assignment Lorem ipsum dolor, sit
-                amet consectetur adipisicing elit. Soluta inventore esse odit
-                ab, nam deserunt adipisci nemo maxime quaerat sit. Repudiandae
-                odio ex exercitationem iste, mollitia laboriosam temporibus
-                reiciendis. Consectetur.
+                {!$.isEmptyObject(this.assignment) && this.assignment.title}
               </p>
               <hr />
               <div className="">
                 <div className="d-flex justify-content-between">
                   <p className="m-0">Posted on:</p>
-                  <p className="m-0">20/08/2020</p>
+                  <p className="m-0">
+                    {!$.isEmptyObject(this.assignment) &&
+                      this.assignment.posted}
+                  </p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p className="m-0">Weightage:</p>
-                  <p className="m-0">25</p>
+                  <p className="m-0">
+                    {(!$.isEmptyObject(this.assignment) &&
+                      this.assignment.weightage) ||
+                      "-"}
+                  </p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p className="m-0">Due on:</p>
-                  <p className="m-0">20/08/2020</p>
+                  <p className="m-0">
+                    {(!$.isEmptyObject(this.assignment) &&
+                      this.assignment.due) ||
+                      "-"}
+                  </p>
                 </div>
               </div>
               <hr />
               <div className="text-justify">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Corporis molestiae necessitatibus deleniti ea sed totam
-                accusantium reiciendis nobis perspiciatis, culpa saepe obcaecati
-                repellendus alias fugiat mollitia assumenda ipsam repellat
-                doloremque!
+                {(!$.isEmptyObject(this.assignment) &&
+                  this.assignment.description) ||
+                  "No description provided."}
               </div>
               <hr />
               <div className="">
                 <ul className="list-group">
-                  <li
-                    className="attachment text-primary list-group-item border-0"
-                    style={{ cursor: "pointer" }}
-                  >
-                    File.pdf
-                  </li>
-                  <li
-                    className="attachment text-primary list-group-item border-0"
-                    style={{ cursor: "pointer" }}
-                  >
-                    File.pdf
-                  </li>
-                  <li
-                    className="attachment text-primary list-group-item border-0"
-                    style={{ cursor: "pointer" }}
-                  >
-                    File.pdf
-                  </li>
-                  <li
-                    className="attachment text-primary list-group-item border-0"
-                    style={{ cursor: "pointer" }}
-                  >
-                    File.pdf
-                  </li>
+                  {!$.isEmptyObject(this.assignment) &&
+                  !this.assignment.attachments.length
+                    ? "No attachments"
+                    : this.assignment.attachments.map((attachment) => (
+                        <li
+                          className="attachment text-primary list-group-item border-0"
+                          style={{ cursor: "pointer" }}
+                          key={attachment.id}
+                          onClick={() =>
+                            // (window.location.href = `${attachment.url}`)
+                            window.open(attachment.url, "_blank")
+                          }
+                        >
+                          {attachment.name}
+                        </li>
+                      ))}
                 </ul>
               </div>
             </div>
             <div
-              className="col-12 col-md-4 offset-md-1 bg-white rounded-lg shadow"
+              className="col-12 col-md-4 offset-md-1 bg-white rounded-lg shadow my-4 my-xl-0"
               style={{
-                height: "75vh",
+                minHeight: "75vh",
               }}
             >
-              <Uploader />
+              <Route component={Uploader} />
             </div>
           </div>
         </div>
