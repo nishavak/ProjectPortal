@@ -146,7 +146,19 @@ class Uploader extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     if (!this.getUploadList().length) {
-      alert("Blank Submission");
+      let approval = "Blank Submission";
+      if (approval) {
+        axios
+          .post(`assignmentSubmit/${this.props.match.params.id}`)
+          .then(({ data }) => {
+            window.location.reload();
+          })
+          .catch((err) => {
+            NotificationManager.error("Error uploading files");
+          });
+      } else {
+        alert("Upload cancelled");
+      }
     } else {
       let approval = window.confirm(
         `Upload these ${this.getUploadList().length} files?`
@@ -177,7 +189,9 @@ class Uploader extends Component {
           .then(({ data }) => {
             window.location.reload();
           })
-          .catch((err) => NotificationManager.error(err.response.data));
+          .catch((err) => {
+            NotificationManager.error("Error uploading files");
+          });
       } else {
         alert("Upload cancelled");
       }
@@ -192,7 +206,6 @@ class Uploader extends Component {
     axios
       .get(`studentAssignmentDetails/${this.props.match.params.id}`)
       .then(({ data }) => {
-        console.log(data);
         this.turned_in = data.grade.turned_in;
         this.marks_obtained = data.grade.marks_obtained;
         this.my_submissions = data.my_submissions;
@@ -207,7 +220,7 @@ class Uploader extends Component {
     return (
       <div className="">
         <p className="text-center pt-4">
-          {this.turned_in ? "My Submissions" : "Upload Files"}
+          {this.turned_in ? "Team Submissions" : "Upload Files"}
         </p>
         <hr />
         {/* <div className="progress">
