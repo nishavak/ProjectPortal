@@ -48,11 +48,10 @@ class GroupRegistration extends Component {
     axios
       .post("createTeam/", data)
       .then(() => {
-        console.log("team created");
+        window.location.href = "/";
       })
       .catch((err) => {
-        // NotificationManager.error(err.message);
-        console.log(err);
+        NotificationManager.error(err.response.data);
       });
   };
 

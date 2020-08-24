@@ -200,3 +200,10 @@ def create_grades(sender, instance, created, **kwargs):
     if created:
         for student in Student.objects.all():
             Grade.objects.create(student=student, assignment=instance)
+
+
+@receiver(post_save, sender=Student)
+def create_grades_assignments(sender, instance, created, **kwargs):
+    if created:
+        for assignment in Assignment.objects.all():
+            Grade.objects.create(student=instance, assignment=assignment)

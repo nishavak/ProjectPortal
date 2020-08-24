@@ -738,10 +738,32 @@ def createTeam(request):
     roll2 = request.data["roll2"]
     roll3 = request.data["roll3"]
     roll4 = request.data["roll4"]
-    # check if in any group
-    # create team object
-    # return 201
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    roll_list = [roll1, roll2, roll3, roll4]
+    try:
+        roll_list = [int(roll) for roll in roll_list if roll != ""]
+    except:
+        return Response(data="Roll number is badly formatted", status=status.HTTP_400_BAD_REQUEST)
+
+    student_list = []
+    for roll_number in set(roll_list):
+        try:
+            student = Student.objects.get(roll_number=roll_number)
+        except:
+            return Response(data=f"{roll_number} has not signed up", status=status.HTTP_400_BAD_REQUEST)
+        if student.team != None:
+            del student_list
+            return Response(data=f"{roll_number} is already in a group", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            student_list.append(student)
+
+    leader = Student.objects.get(id=request.user.id)
+    team = Team.objects.create(leader=leader)
+    for student in student_list:
+        student.team = team
+        student.save()
+
+    return Response(status=status.HTTP_201_CREATED)
 
 
 @api_view()
