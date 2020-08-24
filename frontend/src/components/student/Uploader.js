@@ -9,8 +9,12 @@ class Uploader extends Component {
     this.state = {
       inputId: 0,
       files: [],
+      // progress: "0",
     };
     this.turned_in = false;
+    this.marks_obtained = null;
+    this.my_submissions = [];
+    this.leader = false;
   }
 
   /* 
@@ -148,17 +152,29 @@ class Uploader extends Component {
         `Upload these ${this.getUploadList().length} files?`
       );
       if (approval) {
-        console.log(this.getUploadList());
         let formData = new FormData();
-        formData.append("files", this.state.files);
+        for (let i = 0; i < this.getUploadList().length; i++) {
+          formData.append(`file[${i}]`, this.getUploadList()[i]);
+        }
+        const that = this;
+        const config = {
+          onUploadProgress: function (progressEvent) {
+            var percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log(percentCompleted);
+          },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
         axios
-          .post(`assignmentSubmit/${this.props.match.params.id}`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
+          .post(
+            `assignmentSubmit/${this.props.match.params.id}`,
+            formData,
+            config
+          )
           .then(({ data }) => {
-            alert("Uploaded");
             window.location.reload();
           })
           .catch((err) => NotificationManager.error(err.response.data));
@@ -168,53 +184,136 @@ class Uploader extends Component {
     }
   };
 
+  componentDidMount() {
+    axios
+      .get("amILeader/")
+      .then(({ data }) => (this.leader = data))
+      .catch((err) => {});
+    axios
+      .get(`studentAssignmentDetails/${this.props.match.params.id}`)
+      .then(({ data }) => {
+        console.log(data);
+        this.turned_in = data.grade.turned_in;
+        this.marks_obtained = data.grade.marks_obtained;
+        this.my_submissions = data.my_submissions;
+        this.setState({});
+      })
+      .catch((err) => {
+        this.props.history.goBack();
+      });
+  }
+
   render() {
     return (
       <div className="">
-        <p className="text-center py-4">Upload Files</p>
-        <div
-          className="mx-auto my-4 w-100 bg-light shadow-sm overflow-auto row"
-          style={{
-            height: "50vh",
-          }}
-        >
-          <div id="uploadFilesInputContainer" hidden></div>
-          <ul
-            className="list-group list-group-flush w-100"
-            id="uploadFilesList"
-          ></ul>
-        </div>
-        <div className="d-flex justify-content-between">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => this.addInput("files")}
-          >
-            Attach Files
-          </button>
-          <button
-            type="button"
-            className="btn btn-info"
-            onClick={() => this.addInput("folder")}
-          >
-            Attach Folder
-          </button>
-        </div>
-        <div className="my-5 w-100">
-          {this.turned_in ? (
-            <div className="w-100 text-center">
-              <button className="btn btn-dark" onClick={() => {}}>
-                Unsubmit
+        <p className="text-center pt-4">
+          {this.turned_in ? "My Submissions" : "Upload Files"}
+        </p>
+        <hr />
+        {/* <div className="progress">
+          <div
+            className="progress-bar progress-bar-striped bg-danger"
+            role="progressbar"
+            style={{ width: "100%" }}
+            aria-valuenow={this.state.progress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div> */}
+        {this.turned_in && this.marks_obtained !== null && (
+          <>
+            <div className="w-100 py-2 text-center">
+              Marks obtained: {this.marks_obtained}
+            </div>
+            <hr />
+          </>
+        )}
+        {this.turned_in ? (
+          <>
+            <div
+              className="mx-auto my-4 w-100 bg-light shadow-sm overflow-auto row"
+              style={{
+                height: "50vh",
+              }}
+            >
+              <ul className="list-group list-group-flush w-100">
+                {this.my_submissions.length
+                  ? this.my_submissions.map((file) => (
+                      <li
+                        key={file.id}
+                        className="list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => window.open(file.url)}
+                      >
+                        {file.name}
+                      </li>
+                    ))
+                  : "No submissions"}
+              </ul>
+            </div>
+          </>
+        ) : this.leader ? (
+          <>
+            <div
+              className="mx-auto my-4 w-100 bg-light shadow-sm overflow-auto row"
+              style={{
+                height: "50vh",
+              }}
+            >
+              <div id="uploadFilesInputContainer" hidden></div>
+              <ul
+                className="list-group list-group-flush w-100"
+                id="uploadFilesList"
+              ></ul>
+            </div>
+            <div className="d-flex justify-content-between">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => this.addInput("files")}
+              >
+                Attach Files
+              </button>
+              <button
+                type="button"
+                className="btn btn-info"
+                onClick={() => this.addInput("folder")}
+              >
+                Attach Folder
               </button>
             </div>
-          ) : (
-            <div className="w-100 text-center">
-              <button className="btn btn-dark" onClick={this.handleSubmit}>
-                Turn In
-              </button>
-            </div>
-          )}
-        </div>
+          </>
+        ) : (
+          "Leader has not made any submissions yet"
+        )}
+        {this.leader && (
+          <div className="my-5 w-100">
+            {this.turned_in ? (
+              <div className="w-100 text-center">
+                <p>Unsubmitting will result in deletion of submitted files.</p>
+                <button
+                  className="btn btn-dark"
+                  onClick={() => {
+                    axios
+                      .delete(
+                        `studentUnsubmitAssignment/${this.props.match.params.id}`
+                      )
+                      .then(() => window.location.reload())
+                      .catch((err) => window.location.reload());
+                  }}
+                >
+                  Unsubmit
+                </button>
+              </div>
+            ) : (
+              <div className="w-100 text-center">
+                <button className="btn btn-dark" onClick={this.handleSubmit}>
+                  Turn In
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

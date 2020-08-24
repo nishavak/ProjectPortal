@@ -831,7 +831,7 @@ def assignment(request, id):
         for attachment in files:
             t = {
                 "id": attachment.id,
-                "name": attachment.file.name,
+                "name": attachment.file.name.split("/")[-1],
                 "url": "/api" + attachment.file.url
             }
             attachments.append(t)
@@ -854,8 +854,55 @@ def assignment(request, id):
 
 @api_view(["POST"])
 def assignmentSubmit(request, id):
-    print(request.POST, request.FILES)
-    return Response()
+    user = request.user
+    team = Student.objects.get(id=user.id).team
+    assignment = Assignment.objects.get(id=id)
+    for file in request.FILES.values():
+        try:
+            form = File.objects.create(
+                submitted_by=user.email, assignment=assignment, team=team, file=file)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    for student in Student.objects.filter(team=team):
+        grade = Grade.objects.get(assignment=Assignment.objects.get(
+            id=id), student=student)
+        grade.turned_in = True
+        grade.save()
+    return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view()
+def studentAssignmentDetails(request, id):
+    student = Student.objects.get(id=request.user.id)
+    assignment = Assignment.objects.get(id=id)
+    grade = Grade.objects.get(assignment=assignment, student=student)
+    grade = GradeSerializer(instance=grade)
+    files = File.objects.filter(team=student.team)
+    response = {
+        "grade": grade.data,
+        "my_submissions": [{"id": _file.id,
+                            "name": _file.file.name.split("/")[-1],
+                            "url": "/api" + _file.file.url} for _file in files]
+    }
+    return Response(data=response)
+
+
+@api_view(["DELETE"])
+def studentUnsubmitAssignment(request, id):
+    student = Student.objects.get(id=request.user.id)
+    assignment = Assignment.objects.get(id=id)
+    team_members = Student.objects.filter(team=student.team)
+    for member in team_members:
+        grade = Grade.objects.get(assignment=assignment, student=member)
+        grade.turned_in = False
+        grade.marks_obtained = None
+        grade.guide = None
+        grade.save()
+    files = File.objects.filter(assignment=assignment, team=student.team)
+    for file in files:
+        file.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # * ASSISTANT
@@ -981,7 +1028,7 @@ def changePassword(request):
 @api_view(["POST"])
 def changePhoto(request):
     user = request.user
-    print(request.POST, request.FILES)
+
     form = forms.StudentForm(request.POST, request.FILES)
     if form.is_valid():
         f = form.save(commit=False)

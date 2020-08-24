@@ -172,7 +172,7 @@ class Preference(models.Model):
 class File(models.Model):
     assignment = models.ForeignKey("api.Assignment", verbose_name=_(
         "assignment"), on_delete=models.CASCADE)
-    file = models.FileField(_("file"), upload_to="")
+    file = models.FileField(_("file"), upload_to="files/")
     submitted_by = models.EmailField(_("submitted by"), max_length=320)
     team = models.ForeignKey("api.Team", verbose_name=_(
         "team"), on_delete=models.SET_NULL, blank=True, null=True)

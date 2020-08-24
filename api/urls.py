@@ -47,6 +47,8 @@ urlpatterns = [
     path('groupData/', views.groupData),
     path('assignment/<int:id>', views.assignment),
     path('assignmentSubmit/<int:id>', views.assignmentSubmit),
+    path('studentAssignmentDetails/<int:id>', views.studentAssignmentDetails),
+    path('studentUnsubmitAssignment/<int:id>', views.studentUnsubmitAssignment),
     # ASSISTANT
     # AUTHENTICATION
     path('whoAmI/', views.whoAmI),
