@@ -17,7 +17,7 @@ export class SignIn extends Component {
     axios
       .post("signIn/", this.state)
       .then(() => {
-        window.location.reload();
+        window.location.href = "/";
       })
       .catch((err) => {
         NotificationManager.error("Check credentials");

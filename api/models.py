@@ -45,12 +45,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_("is active"), default=True)
     is_staff = models.BooleanField(_("is staff"), default=False)
     name = models.CharField(_("name"), max_length=400)
-    # photo = ProcessedImageField(upload_to='photos/%Y/',
-    #                             processors=[ResizeToFill(400, 400)],
-    #                             format='JPEG',
-    #                             options={'quality': 60}, blank=True, null=True)
-    photo = models.ImageField(
-        _("photo"), upload_to="photos/%Y/", blank=True, null=True)
+    photo = ProcessedImageField(upload_to='photos/%Y/',
+                                processors=[ResizeToFill(400, 400)],
+                                format='JPEG',
+                                options={'quality': 60}, blank=True, null=True)
     objects = UserManager()
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

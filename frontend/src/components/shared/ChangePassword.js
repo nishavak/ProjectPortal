@@ -23,16 +23,18 @@ export default class ChangePassword extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("changePassword/", this.state)
-      .then(() => {
-        $("#change-password").modal("hide");
-        NotificationManager.success("Password updated");
-      })
-      .catch((err) => {
-        $("#change-password").modal("hide");
-        NotificationManager.error("Error updating password");
-      });
+    if (this.securePassword())
+      axios
+        .post("changePassword/", this.state)
+        .then(() => {
+          $("#change-password").modal("hide");
+          NotificationManager.success("Password updated");
+        })
+        .catch((err) => {
+          $("#change-password").modal("hide");
+          NotificationManager.error("Error updating password");
+        });
+    else NotificationManager.error("Form tampered");
   };
   render() {
     return (

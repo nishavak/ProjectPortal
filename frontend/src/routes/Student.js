@@ -4,16 +4,44 @@ import Assignment from "../components/student/Assignment";
 import Assignments from "../components/student/Assignments";
 import Header from "../components/student/Header";
 import Profile from "../components/student/Profile";
+import axios from "../axios";
 import ChangePassword from "../components/shared/ChangePassword";
+import GroupRegistration from "../components/student/GroupRegistration";
+import Loading from "../components/shared/Loading";
 
 export default class Student extends React.Component {
   constructor(props) {
     super(props);
 
-    this.leader = true;
+    this.state = { loading: true };
+
+    this.leader = false;
+    this.group_registered = false;
+  }
+
+  componentDidMount() {
+    axios
+      .get("groupRegistered/")
+      .then(({ data }) => {
+        this.group_registered = data;
+        axios
+          .get("amILeader/")
+          .then(({ data }) => {
+            this.leader = data;
+            this.setState({ loading: false });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+      });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
+    if (!this.group_registered) return <GroupRegistration />;
     return (
       <>
         {this.leader && (

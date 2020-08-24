@@ -27,8 +27,6 @@ export default class Personal extends Component {
         .catch((err) => {
           NotificationManager.error("Error updating profile picture");
         });
-
-      window.location.reload();
     } else {
       alert("Action cancelled");
     }

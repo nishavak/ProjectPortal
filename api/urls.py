@@ -39,6 +39,11 @@ urlpatterns = [
     path("guideProfile/", views.guideProfile),
     # STUDENT
     path('studentPersonal/', views.studentPersonal),
+    path('studentAssignments/', views.studentAssignments),
+    path('amILeader/', views.amILeader),
+    path('groupRegistered/', views.groupRegistered),
+    path('myRollNumber/', views.myRollNumber),
+    path('createTeam/', views.createTeam),
     # ASSISTANT
     # AUTHENTICATION
     path('whoAmI/', views.whoAmI),

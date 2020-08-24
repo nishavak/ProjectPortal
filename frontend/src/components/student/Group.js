@@ -1,14 +1,24 @@
 import React, { Component } from "react";
 import $ from "jquery";
+import axios from "../../axios";
 
 export default class Group extends Component {
   constructor(props) {
     super(props);
 
-    this.leader = true;
+    this.leader = false;
   }
 
   componentDidMount() {
+    axios
+      .get("amILeader/")
+      .then(({ data }) => {
+        this.leader = data;
+        this.setState({});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     $("#addStudent").on("shown.bs.modal", function () {
       $("#roll_number").focus();
     });

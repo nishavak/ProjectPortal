@@ -627,9 +627,9 @@ def guideDetailsForm(request):
         if len(data["preferences"]) > 4:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         for preference in data["preferences"]:
-            if not preference["area of interest"] in [i[0] for i in domains]:
+            if not preference["area of interest"] in [i[0] for i in constants.DOMAIN]:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            if not preference["thrust area"] in [i[0] for i in thrust_areas]:
+            if not preference["thrust area"] in [i[0] for i in constants.THRUST_AREA]:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         guide.initials = data["guide initials"]
         guide.preferences.clear()
@@ -703,6 +703,50 @@ def studentPersonal(request):
         "email": student.email,
     }
     return Response(data=response)
+
+
+@api_view()
+def amILeader(request):
+    student = Student.objects.get(id=request.user.id)
+    try:
+        if student.team.leader == student:
+            return Response(data=True)
+        else:
+            return Response(data=False)
+    except:
+        return Response(data=False)
+
+
+@api_view()
+def groupRegistered(request):
+    student = Student.objects.get(id=request.user.id)
+    if student.team:
+        return Response(data=True)
+    else:
+        return Response(data=False, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view()
+def myRollNumber(request):
+    student = Student.objects.get(id=request.user.id)
+    return Response(data=student.roll_number)
+
+
+@api_view(["POST"])
+def createTeam(request):
+    roll1 = Student.objects.get(id=request.user.id).roll_number
+    roll2 = request.data["roll2"]
+    roll3 = request.data["roll3"]
+    roll4 = request.data["roll4"]
+    # check if in any group
+    # create team object
+    # return 201
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view()
+def studentAssignments(request):
+    return Response()
 
 
 # * ASSISTANT
