@@ -1,76 +1,68 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./GroupList.scss";
-import ReactSearchBox from "react-search-box";
 import $ from "jquery";
 // import GroupDetails from "./GroupDetails";
 import GroupCardView from "./GroupCardView";
 import GroupListView from "./GroupListView";
+import saveCsv from "save-csv/save-csv.min.js";
+import axios from "../../axios";
+
 class GroupList extends React.Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      viewType: "card",
+      // viewType: "card",
     };
+    this.groups = [];
+    this.downloadable = [];
   }
- 
+  componentDidMount() {
+    axios
+      .get("coordinatorGroup/")
+      .then(({ data }) => {
+        console.log(data);
+        this.groups = data;
+        this.downloadable.push(
+          this.groups.map((group) => {
+            return {
+              id: group.team_id,
+              project_name: group.project_data.project_name,
+              member_count: group.student_data.length,
+              project_type: group.project_data.project_type,
+              leader_name: group.leader_name,
+              guide_name: group.guide_data.guide_name,
+            };
+          })
+        );
+        console.log(this.downloadable);
+        this.setState({});
+      })
+      .catch((err) => console.log(err));
+  }
+
   render() {
     return (
-      <div className='groups mx-auto' style={{ width: "90%" }}>
+      <div className="groups mx-auto" style={{ width: "90%" }}>
         <br />
-        {/* <div className = "container-fluid bg-primary">
-          abc
-        </div> */}
+
         <div
-          className='p-2   text-center shadow-sm rounded font-weight-bold  mx-auto'
+          className="p-2   text-center shadow-sm rounded font-weight-bold  mx-auto"
           style={{
             color: "rgb(183, 32, 46)",
             fontSize: "1.1em",
             width: "auto",
             backgroundColor: "rgba(231, 231, 231, 0.459)",
-          }}>
+          }}
+        >
           Select Group
         </div>
-        <div className='d-flex my-4 '>
-          <div className=' col-9 '>
-            <ReactSearchBox
-              placeholder='Search for groups here ...'
-              data={this.data}
-              autoFocus='true'
-              inputBoxBorderColor='#e1e6e2'
-              callback={(record) => console.log(record)}
-            />
-          </div>
-          {/* toggle view */}
+        {/* <div className='d-flex my-4 '> */}
+        {/* toggle view */}
 
-          <div
+        {/* <div
             className='col-2 d-flex h-100  bg-white shadow-sm rounded p-0   my-auto'
             style={{
               color: "rgb(183, 32, 46)",
-              // fontSize: "2.4vw",
-              // backgroundColor: "#ccc6c6",
             }}>
             <div
               id='card'
@@ -95,24 +87,32 @@ class GroupList extends React.Component {
               <i className='fa fa-list' aria-hidden='true'></i>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* toggle view ends here */}
-        <div className='p-3'>
+        {/* <div className='p-3'>
           {this.state.viewType === "card" ? (
-            <GroupCardView />
+            <GroupCardView data={this.groups} />
           ) : (
-            <GroupListView />
+            <GroupListView data={this.groups} />
           )}
-        </div>
-
+        </div> */}
         <br />
-        <Link to='/groups'>
-          <div className='mx-auto back-button p-2 text-center my-4 rounded-lg'>
-            <i className='fa fa-arrow-down mr-2' aria-hidden='true' />
+        <GroupListView data={this.groups} />
+        <br />
+        <div className="w-100 d-flex justify-content-center">
+          <div
+            className="btn btn-danger"
+            onClick={() =>
+              saveCsv(this.downloadable[0], {
+                filename: "group-list.csv",
+              })
+            }
+          >
+            <i className="fa fa-arrow-down mr-2" />
             Download
           </div>
-        </Link>
+        </div>
       </div>
     );
   }

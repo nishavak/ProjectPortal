@@ -1,141 +1,103 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
 import "./ProjectList.scss";
-import ReactSearchBox from "react-search-box";
+import saveCsv from "save-csv/save-csv.min.js";
+import axios from "../../axios";
 
 class ProjectList extends React.Component {
-  data = [
-    {
-      key: "john",
-      value: "John Doe",
-    },
-    {
-      key: "jane",
-      value: "Jane Doe",
-    },
-    {
-      key: "mary",
-      value: "Mary Phillips",
-    },
-    {
-      key: "robert",
-      value: "Robert",
-    },
-    {
-      key: "karius",
-      value: "Karius",
-    },
-  ];
   constructor(props) {
     super(props);
-    this.state = { redirect: null };
+    this.projects = [];
+    this.downloadable = [];
   }
-  detailInfo = () => {
-    this.setState({ redirect: "/project/:id" });
-  };
+  componentDidMount() {
+    axios.get("coordinatorProject/").then(({ data }) => {
+      console.log(data);
+      this.projects = data;
+      this.downloadable.push(
+        this.projects.map((project) => {
+          return {
+            project_id: project.project_id,
+            project_name: project.project_name,
+            group_id: project.group_id,
+            guide_name: project.guide_name,
+            project_domain: project.project_domain,
+            guide_name: project.guide_name,
+            project_category: project.project_category,
+            project_description: project.project_description,
+            project_explanatory_field: project.project_explanatory_field,
+          };
+        })
+      );
+      console.log(this.downloadable);
+      this.setState({});
+    });
+  }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />;
-    }
     return (
-      <div className='project mx-auto' style={{ width: "90%" }}>
+      <div className="project mx-auto" style={{ width: "90%" }}>
         <br />
         <div
-          className='p-2 px-3 text-center shadow-sm rounded font-weight-bold'
+          className="p-2 px-3 text-center shadow-sm rounded font-weight-bold"
           style={{
             color: "rgb(183, 32, 46)",
             fontSize: "1.1em",
             backgroundColor: "rgba(231, 231, 231, 0.459)",
-          }}>
+          }}
+        >
           Project List
         </div>
-        <div className='my-4'>
-          <ReactSearchBox
-            placeholder='Search for projects here ...'
-            data={this.data}
-            autoFocus='true'
-            inputBoxBorderColor='#e1e6e2'
-            callback={(record) => console.log(record)}
-          />
-        </div>
 
-        <div class='table-responsive-sm'>
-          <table class='ui striped table'>
-            <thead class='text-center'>
-              <tr class=''>
-                <th class='' scope='col'>
-                  Project Name
+        <div class="table-responsive-sm">
+          <table class="ui striped table">
+            <thead class="text-center">
+              <tr class="">
+                <th class="" scope="col">
+                  Projec t Name
                 </th>
-                <th class='' scope='col'>
+                <th class="" scope="col">
                   Guide Name
                 </th>
-                <th class='' scope='col'>
+                <th class="" scope="col">
                   Group Number
                 </th>
-                <th class='' scope='col'>
+                <th class="" scope="col">
                   Domain
                 </th>
               </tr>
             </thead>
-            <tbody class='text-center'>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart Cities Mission</td>
-                <td class=''>ABCD</td>
-                <td class=''>5</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart India</td>
-                <td class=''>ABC</td>
-                <td class=''>1</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Project India</td>
-                <td class=''>AB</td>
-                <td class=''>3</td>
-                <td class=''>NS</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart Cities Mission</td>
-                <td class=''>ABCD</td>
-                <td class=''>5</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart India</td>
-                <td class=''>ABC</td>
-                <td class=''>1</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Project India</td>
-                <td class=''>AB</td>
-                <td class=''>3</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart Cities Mission</td>
-                <td class=''>ABCD</td>
-                <td class=''>5</td>
-                <td class=''>AI</td>
-              </tr>
-              <tr class='' onClick={this.detailInfo}>
-                <td class=''>Smart India</td>
-                <td class=''>ABC</td>
-                <td class=''>1</td>
-                <td class=''>AI</td>
-              </tr>
+            <tbody class="text-center">
+              {this.projects.length &&
+                this.projects.map((project) => (
+                  <tr
+                    class=""
+                    onClick={() =>
+                      this.props.history.push(`/project/${project.project_id}`)
+                    }
+                  >
+                    <td class="">{project.project_title}</td>
+                    <td class="">{project.guide_name}</td>
+                    <td class="">{project.group_id}</td>
+                    <td class="">{project.project_domain}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
-        <Link to='/projects'>
-          <div className='mx-auto back-button p-2 text-center my-4 rounded-lg'>
-            <i className='fa fa-arrow-down mr-2' aria-hidden='true' />
+        <div className="w-100 d-flex justify-content-center">
+          <div
+            className="btn btn-danger"
+            onClick={() =>
+              saveCsv(this.downloadable[0], {
+                filename: "project-list.csv",
+              })
+            }
+          >
+            <i className="fa fa-arrow-down mr-2" />
             Download
           </div>
-        </Link>
+        </div>
       </div>
     );
   }

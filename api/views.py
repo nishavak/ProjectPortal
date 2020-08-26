@@ -62,6 +62,7 @@ def coordinatorStudentDetail(request, id):
         student = Student.objects.get(id=id)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
     student_data = {
         "student_branch": student.branch,
         "student_email": student.email,
@@ -101,7 +102,7 @@ def coordinatorGroup(request):
         }
         project_data = {}
         try:
-            project = Project.objects.get(team=team.id)
+            project = Project.objects.get(team_id=team.id)
             project_data.setdefault("project_id", project.id)
             project_data.setdefault("project_name", project.title)
             project_data.setdefault("project_type", project.category)
@@ -143,6 +144,60 @@ def coordinatorGroup(request):
 
 
 @api_view()
+def coordinatorGroupDetail(request, id):
+    response = {}
+    try:
+        team = Team.objects.get(id=id)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    team_data = {
+        "team_id": team.id,
+    }
+    project_data = {}
+    try:
+        project = Project.objects.get(team_id=team.id)
+        project_data.setdefault("project_id", project.id)
+        project_data.setdefault("project_name", project.title)
+        project_data.setdefault("project_type", project.category)
+    except:
+        project_data.setdefault("project_id", None)
+        project_data.setdefault("project_name", None)
+        project_data.setdefault("project_type", None)
+    team_data.setdefault("project_data", project_data)
+    try:
+        # ! team without students should not exist
+        students = Student.objects.filter(team_id=team.id)
+        leader = Student.objects.get(id=team.leader_id)
+        students_data_array = []
+        for student in students:
+            student_data = {}
+            student_data.setdefault("student_id", student.id)
+            student_data.setdefault("student_name", student.name)
+            student_data.setdefault(
+                "student_photo", student.photo or None)
+            students_data_array.append(student_data)
+        team_data.setdefault("leader_name", leader.name)
+        team_data.setdefault("student_data", students_data_array)
+    except:
+        team_data.setdefault("leader_name", None)
+        team_data.setdefault("student_data", None)
+    guide_data = {}
+    try:
+        guide = Guide.objects.get(id=team.guide_id)
+        guide_data.setdefault("guide_id", guide.id)
+        guide_data.setdefault("guide_photo", guide.photo or None)
+        guide_data.setdefault("guide_name", guide.name)
+    except:
+        guide_data.setdefault("guide_id", None)
+        guide_data.setdefault("guide_name", None)
+        guide_data.setdefault("guide_photo", None)
+    team_data.setdefault("guide_data", guide_data)
+    response = team_data
+    return Response(data=response, status=status.HTTP_200_OK)
+
+
+@api_view()
 def coordinatorGuide(request):
     response = []
     for guide in Guide.objects.all():
@@ -171,6 +226,51 @@ def coordinatorGuide(request):
         except:
             guide_data.setdefault("team_data", None)
         response.append(guide_data)
+
+    return Response(data=response, status=status.HTTP_200_OK)
+
+
+@api_view()
+def coordinatorGuideDetail(request, id):
+    response = {}
+    try:
+        guide = Guide.objects.get(id=id)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    preferences = []
+    for preference in guide.preferences.all():
+        p = Preference.objects.get(id=preference.id)
+        preferences.append(
+            {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area})
+    guide_data = {
+        "guide_branch": guide.branch,
+        "guide_id": guide.id,
+        "guide_name": guide.name,
+        "guide_email": guide.email,
+        "guide_preferences": preferences,
+    }
+    try:
+        teams = Team.objects.filter(guide=guide)
+        team_data = []
+        for team in teams:
+            temp_team_data = {
+                "team_id": team.id
+            }
+            try:
+                project = Project.objects.get(team=team)
+                temp_team_data.setdefault("project_id", project.id)
+                temp_team_data.setdefault("project_title", project.title)
+            except:
+                temp_team_data.setdefault("project_id", None)
+                temp_team_data.setdefault("project_title", None)
+            finally:
+                team_data.append(temp_team_data)
+        guide_data.setdefault("team_data", team_data)
+    except:
+        guide_data.setdefault("team_data", None)
+
+    response = guide_data
+    print(response)
     return Response(data=response, status=status.HTTP_200_OK)
 
 
@@ -186,7 +286,6 @@ def coordinatorProject(request):
             project = Project.objects.get(team=team)
             project_data.setdefault("project_exists", True)
             project_data.setdefault("project_id", project.id)
-            project_data.setdefault("project_status", project.status)
             project_data.setdefault("project_title", project.title)
             project_data.setdefault("project_category", project.category)
             project_data.setdefault("project_domain", project.domain)
@@ -196,13 +295,49 @@ def coordinatorProject(request):
         except:
             project_data.setdefault("project_exists", False)
         try:
-            guide = Guide.objects.get(team=team)
+            guide = Guide.objects.get(id=team.guide.id)
             project_data.setdefault("guide_name", guide.name)
             project_data.setdefault("guide_id", guide.id)
         except:
             project_data.setdefault("guide_name", None)
             project_data.setdefault("guide_id", None)
         response.append(project_data)
+        print(response)
+    return Response(data=response, status=status.HTTP_200_OK)
+
+
+@api_view()
+def coordinatorProjectDetail(request, id):
+    response = {}
+    try:
+        project = Project.objects.get(id=id)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    team = Team.objects.get(id=project.team.id)
+    project_data = {
+        "team_id": team.id
+    }
+    try:
+        project_data.setdefault("project_exists", True)
+        project_data.setdefault("project_id", project.id)
+        project_data.setdefault("project_title", project.title)
+        project_data.setdefault("project_category", project.category)
+        project_data.setdefault("project_domain", project.domain)
+        project_data.setdefault("project_description", project.description)
+        project_data.setdefault(
+            "project_explanatory_field", project.explanatory_field or None)
+    except:
+        project_data.setdefault("project_exists", False)
+    try:
+        guide = Guide.objects.get(team=team)
+        project_data.setdefault("guide_name", guide.name)
+        project_data.setdefault("guide_id", guide.id)
+    except:
+        project_data.setdefault("guide_name", None)
+        project_data.setdefault("guide_id", None)
+    response = project_data
+
     return Response(data=response, status=status.HTTP_200_OK)
 
 
@@ -232,14 +367,24 @@ def coordinatorAssignmentDetail(request, id):
                 "file_name": file.file.name,
                 "file_url": file.file.url,
             })
-        _assignment = {
-            "assignment_id": assignment.id,
-            "assignment_title": assignment.title,
-            "assignment_weightage": assignment.weightage,
-            "assignment_description": assignment.description,
-            "assignment_due_on": assignment.due,
-            "assignment_posted_on": assignment.posted
-        }
+        try:
+            _assignment = {
+                "assignment_id": assignment.id,
+                "assignment_title": assignment.title,
+                "assignment_weightage": assignment.weightage,
+                "assignment_description": assignment.description,
+                "assignment_due_on": assignment.due.strftime("%Y-%m-%d"),
+                "assignment_posted_on": assignment.posted
+            }
+        except:
+            _assignment = {
+                "assignment_id": assignment.id,
+                "assignment_title": assignment.title,
+                "assignment_weightage": assignment.weightage,
+                "assignment_description": assignment.description,
+                "assignment_due_on": None,
+                "assignment_posted_on": assignment.posted
+            }
         assignment_details.setdefault("assignment", _assignment)
         assignment_details.setdefault("files", _files)
         response.setdefault("assignment_details", assignment_details)
@@ -263,6 +408,30 @@ def coordinatorAssignmentDetail(request, id):
             submission_status.append(_submission_status)
         response.setdefault("submissionStatus", submission_status)
         return Response(data=response)
+    elif request.method == "DELETE":
+        try:
+            assignment = Assignment.objects.get(id=id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        assignment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == "PUT":
+        try:
+            assignment = Assignment.objects.get(id=id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        print(request.data)
+        data = {
+            "title": request.data["title"],
+            "description": request.data["description"],
+            "weightage": request.data["weightage"],
+            "due": 0,
+        }
+        serializer = AssignmentSerializer(assignment, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view()
@@ -312,9 +481,10 @@ def coordinatorCreateAssignment(request):
     title = request.data.get('title')
     description = request.data.get('description')
     weightage = int(request.data.get('weightage'))
-    posted = timezone.datetime.fromtimestamp(int(request.data.get('posted')))
+    posted = request.data.get('posted')
     due = timezone.datetime.fromtimestamp(int(request.data.get('due')))
     coordinator = request.data.get("coordinator")
+
     data = {
         "title": title,
         "description": description,
@@ -332,6 +502,7 @@ def coordinatorCreateAssignment(request):
             Grade.objects.create(
                 student=student, guide=None, assignment=assignment)
         return Response(status=status.HTTP_201_CREATED)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -452,10 +623,10 @@ def coordinatorGroupRequestManage(request, id, status):
     return Response()
 
 
-@api_view(["GET", "PUT"])
+@api_view(["GET"])
 def coordinatorProjectRequest(request):
     res = {}
-    project_requests = ProjectRequest.objects.all()
+    project_requests = ProjectRequest.objects.all().order_by("created")
     project_req_list = []
     for project_request in project_requests:
         _t = {
@@ -482,10 +653,7 @@ def coordinatorProjectRequestManage(request, id, status):
         project.delete()
         project_request.delete()
         project_request.save()
-    if status == "R":
-        project = Project.objects.get(id=project_request.project.id)
-        project.delete()
-        project_request.delete()
+
     return Response()
 # * GUIDE
 
@@ -977,14 +1145,14 @@ def signUp(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@ api_view(['POST'])
+@api_view(['POST'])
 def guideSignUp(request):
     if request.method == 'POST':
         if request.user.has_perm('api.add_guide'):
             email = request.data.get("email")
             password = request.data.get("password")
             name = request.data.get("name")
-            initials = request.data.get("initials")
+            # initials = request.data.get("initials")
             branch = request.data.get("branch")
             if branch == "Information Technology":
                 branch = "IT"
@@ -1002,11 +1170,12 @@ def guideSignUp(request):
                 "email": email,
                 "password": password,
                 "branch": branch,
-                "initials": initials,
+                "initials": None,
                 "photo": None,
                 "is_staff": False,
                 "is_active": True
             }
+
             serializer = GuideSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()

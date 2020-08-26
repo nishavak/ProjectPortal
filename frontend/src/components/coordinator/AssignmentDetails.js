@@ -6,43 +6,69 @@ import Uploader from "../student/Uploader";
 import $ from "jquery";
 import SubmissionStatus from "./SubmissionStatus";
 //import DateTimePicker from "react-datetime-picker";
-
+import axios from "../../axios";
 class AssignmentDetails extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {};
-    // JSON.parse(localStorage.getItem("projectRegistrationFormData")) || {};
+    this.id = this.props.match.params.id;
+    this.ass = {};
   }
+
   componentDidMount() {
     $("#save").attr("disabled", true);
+    axios
+      .get(`coordinatorAssignmentDetail/${this.id}/`)
+      .then(({ data }) => {
+        console.log(data);
+        this.ass = data;
+        this.setState({
+          title: data.assignment_details.assignment.assignment_title,
+          due: data.assignment_details.assignment.assignment_due,
+          description:
+            data.assignment_details.assignment.assignment_description,
+          weightage: data.assignment_details.assignment.assignment_weightage,
+        });
+      })
+      .catch((err) => this.props.history.goBack());
   }
-  handleChange = e => {
-    console.log(e.target.value);
+
+  handleChange = (e) => {
+    console.log(this.state);
 
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
   allowEdit = () => {
-    $("#title").attr("readOnly", false);
-    $("#date").attr("readOnly", false);
-    $("#weightage").attr("readOnly", false);
-    $("#description").attr("readOnly", false);
+    $("#title").attr("disabled", false);
+    $("#due").attr("disabled", false);
+    $("#weightage").attr("disabled", false);
+    $("#description").attr("disabled", false);
     $("#edit").attr("disabled", true);
     $("#save").attr("disabled", false);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    this.setState({ successfulSubmission: true });
-    $("#title").attr("readOnly", true);
-    $("#date").attr("readOnly", true);
-    $("#weightage").attr("readOnly", true);
-    $("#description").attr("readOnly", true);
+    $("#title").attr("disabled", true);
+    $("#due").attr("disabled", true);
+    $("#weightage").attr("disabled", true);
+    $("#description").attr("disabled", true);
     $("#save").attr("disabled", true);
     $("#edit").attr("disabled", false);
-  };
 
-  //let [value, onChange] = useState(new Date());
+    axios
+      .put(`coordinatorAssignmentDetail/${this.id}/`, this.state)
+      .catch((err) => console.log(err));
+  };
+  deleteAss = () => {
+    axios
+      .delete(`coordinatorAssignmentDetail/${this.id}/`)
+      .then((res) => {
+        this.props.history.goBack();
+      })
+      .catch((err) => console.log(err));
+  };
   render() {
     return (
       <div className="assignment-details mx-auto" style={{ width: "90%" }}>
@@ -53,31 +79,14 @@ class AssignmentDetails extends React.Component {
             color: "rgb(183, 32, 46)",
             fontSize: "1.1em",
             width: "auto",
-            backgroundColor: "rgba(231, 231, 231, 0.459)"
+            backgroundColor: "rgba(231, 231, 231, 0.459)",
           }}
         >
           Assignment Details
         </div>
         <div className="p-3 text-center form-section mx-auto">
           <div className="mt-4">
-            <form
-              id="assignment-form"
-              onSubmit={this.handleSubmit}
-              /*onSubmit={e => {
-                e.preventDefault();
-                let i;
-                for (
-                  i = 0;
-                  i <
-                  document.getElementById("assignment-form").elements.length;
-                  i++
-                ) {
-                  document.getElementById("assignment-form").elements[i].value =
-                    "";
-                }
-                //value = "";
-              }}*/
-            >
+            <form id="assignment-form" onSubmit={this.handleSubmit}>
               <div className="form-group">
                 <label for="title">
                   Title <span style={{ color: "red" }}>*</span>
@@ -89,8 +98,8 @@ class AssignmentDetails extends React.Component {
                   name="title"
                   placeholder="Enter title here ..."
                   onChange={this.handleChange}
-                  value={this.state.title}
-                  readOnly={true}
+                  value={this.ass.assignment_details ? this.state.title : ""}
+                  disabled={true}
                   required
                 />
               </div>
@@ -103,37 +112,39 @@ class AssignmentDetails extends React.Component {
                   rows="3"
                   placeholder="Enter description here ..."
                   onChange={this.handleChange}
-                  value={this.state.description}
-                  readOnly={true}
+                  value={
+                    this.ass.assignment_details ? this.state.description : ""
+                  }
+                  disabled={true}
                 />
               </div>
               <div className="form-group">
-                <label for="weightage">Weightage</label>
+                <label for="weightage">Weightage (optional)</label>
                 <input
                   type="number"
                   className="form-control"
                   id="weightage"
-                  name="number"
+                  name="weightage"
                   placeholder="Enter marks weightage here..."
                   onChange={this.handleChange}
-                  value={this.state.weightage}
-                  readOnly={true}
-                  required
+                  value={
+                    this.ass.assignment_details ? this.state.weightage : ""
+                  }
+                  disabled={true}
                 />
               </div>
               <div className="form-group d-flex flex-md-row flex-column">
                 <div className="col-md-6 p-1">
                   <div className="form-group">
-                    <label for="date">Due Date and Time</label>
+                    <label for="due">Due Date and Time (optional)</label>
                     <input
-                      type="date"
+                      type="datetime-local"
                       className="form-control"
-                      id="date"
-                      name="date"
+                      id="due"
+                      name="due"
                       onChange={this.handleChange}
-                      value={this.state.date}
-                      readOnly={true}
-                      required
+                      value={this.ass.assignment_details ? this.state.due : ""}
+                      disabled={true}
                     />
                   </div>
                   {/*<p>Due Date and Time</p><DateTimePicker onChange={onChange} value={value} />*/}
@@ -146,7 +157,6 @@ class AssignmentDetails extends React.Component {
               </div>
               <div className="form-group buttons">
                 <Button variant="outline-success" id="save" type="submit">
-                  {/*style={{ display: "none" }}*/}
                   Save
                 </Button>
                 <Button
@@ -160,7 +170,9 @@ class AssignmentDetails extends React.Component {
                   variant="outline-danger"
                   id="delete"
                   style={{ marginRight: "2em" }}
+                  onClick={this.deleteAss}
                 >
+                  {" "}
                   Delete
                 </Button>
               </div>
@@ -174,19 +186,22 @@ class AssignmentDetails extends React.Component {
               color: "rgb(183, 32, 46)",
               fontSize: "1.1em",
               width: "auto",
-              backgroundColor: "rgba(231, 231, 231, 0.459)"
+              backgroundColor: "rgba(231, 231, 231, 0.459)",
             }}
           >
             Submission Status of Groups
           </div>
-          <SubmissionStatus />
+          <SubmissionStatus id={this.id} />
         </div>
-        <Link to="/assignments">
-          <div className="back-button mx-auto p-2 text-center my-5 rounded-lg text-wrap text-break">
-            <i className="fa fa-arrow-left mr-2" aria-hidden="true" />
-            Back to Assignments
-          </div>
-        </Link>
+
+        <div className="back-button mx-auto p-2 text-center my-5 rounded-lg text-wrap text-break">
+          <Link to="/assignments">
+            <div className="w-100">
+              <i className="fa fa-arrow-left mr-2" aria-hidden="true" />
+              Back to Assignments
+            </div>
+          </Link>
+        </div>
       </div>
     );
   }

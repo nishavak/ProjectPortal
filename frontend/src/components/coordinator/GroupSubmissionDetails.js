@@ -1,10 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
-//import { Button } from "react-bootstrap";
-// import "./GroupSubmissionDetails.scss";
-// import GuideCommentSection from "../guide/assignment_details/GuideCommentSection";
-
+import axios from "../../axios";
 class GroupSubmissionDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.ass_id = this.props.match.params.assignment;
+    this.team_id = this.props.match.params.team;
+    this.file_list = [];
+    this.students_data = [];
+    this.weightage = null;
+  }
+
+  componentDidMount() {
+    axios
+      .get(`coordinatorGroupSubmissionDetails/${this.ass_id}/${this.team_id}/`)
+      .then(({ data }) => {
+        console.log(data);
+        this.file_list = data.file_list;
+        this.students_data = data.students_data;
+        this.weightage = data.weightage;
+        this.setState({});
+      })
+      .catch((err) => this.props.history.goBack());
+  }
+
   render() {
     return (
       <div
@@ -30,99 +50,48 @@ class GroupSubmissionDetails extends React.Component {
           >
             <h5 className="text-center">Submission Files</h5>
             <hr />
-            <Link
-              to="files/dummy.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div
-                className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded"
-                style={{ borderColor: "gray" }}
-              >
-                dummy.pdf
-              </div>
-            </Link>
-            <Link
-              to="files/dummy.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div
-                className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded"
-                style={{ borderColor: "gray" }}
-              >
-                dummy.pdf
-              </div>
-            </Link>
-            <Link
-              to="files/dummy.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div
-                className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded"
-                style={{ borderColor: "gray" }}
-              >
-                dummy.pdf
-              </div>
-            </Link>
-            <Link
-              to="files/dummy.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div
-                className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded"
-                style={{ borderColor: "gray" }}
-              >
-                dummy.pdf
-              </div>
-            </Link>
-            <Link
-              to="files/dummy.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div
-                className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded"
-                style={{ borderColor: "gray" }}
-              >
-                dummy.pdf
-              </div>
-            </Link>
+            {this.file_list &&
+              this.file_list.map((file) => {
+                return (
+                  <Link
+                    to={file.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div
+                      className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded text-wrap "
+                      style={{ borderColor: "gray", wordBreak: "break-word" }}
+                    >
+                      {file.file_name}
+                    </div>
+                  </Link>
+                );
+              })}
           </div>
           <div className="col-md-9 col-12">
             <div className="shadow-sm p-3">
               <h5 className="text-center p-2">Grades and Submission Status</h5>
               <hr />
-              {/* <form> */}
-              <div className="row">
-                <div className="col-md-4 col-12 text-center">
-                  <p className="text-center">Weightage:</p>
-                  <p className="text-center">25</p>
-                </div>
-                <div class="form-group col-md-8 col-12 text-center">
-                  <p className="text-center">Marks Assigned:</p>
-                  <p className="text-center">25</p>
-                </div>
+              <p className="text-center">Weightage: {this.weightage}</p>
+              <p className="text-center">Marks Assigned:</p>
+
+              <div className="d-flex flex-column ">
+                {this.students_data &&
+                  this.students_data.map((student) => {
+                    return (
+                      <div className="d-flex flex-row text-center">
+                        <div className="col-md-6  ">
+                          {student.student_roll_number}
+                        </div>
+                        <div class="col-md-6">
+                          <span className="">
+                            {student.student_marks || "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
-              {/* <div className='form-group text-center'>
-                  <button
-                    type='submit'
-                    id='save'
-                    class='btn btn-outline-success mb-2'
-                    style={{ marginLeft: "1em" }}>
-                    Save
-                  </button>
-                  <button
-                    type='submit'
-                    id='edit'
-                    class='btn btn-outline-primary mb-2'
-                    style={{ marginLeft: "1em" }}>
-                    Edit
-                  </button>
-                </div> */}
-              {/* </form> */}
             </div>
             <div className="col-12 p-0">{/* <GuideCommentSection /> */}</div>
           </div>

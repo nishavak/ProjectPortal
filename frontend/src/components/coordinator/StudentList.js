@@ -26,6 +26,7 @@ class StudentList extends Component {
           };
         })
       );
+      console.log(this.downloadable);
       this.setState({});
     });
   }

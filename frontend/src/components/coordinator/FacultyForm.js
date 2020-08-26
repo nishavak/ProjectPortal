@@ -1,5 +1,4 @@
 import React from "react";
-// import app from "../../Firebase";
 import axios from "../../axios";
 import $ from "jquery";
 
@@ -26,7 +25,7 @@ class FacultyForm extends React.Component {
     this.state.email.match(/^\w+([.]?\w+)*@somaiya\.edu$/) ? true : false;
   securePassword = () =>
     this.state.password.match(
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,256}$/,
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,256}$/
     )
       ? true
       : false;
@@ -64,16 +63,7 @@ class FacultyForm extends React.Component {
       }
     });
   };
-  raiseAlert = (type, message) => {
-    $("#signup-feedback")
-      .html(() =>
-        $("<div>", {
-          class: `alert alert-${type}`,
-          role: "alert",
-        }).html(message),
-      )
-      .fadeIn();
-  };
+
   isFormValid = () => {
     return this.somaiyaEmail() &&
       this.securePassword() &&
@@ -85,86 +75,66 @@ class FacultyForm extends React.Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    $("#signup-feedback").fadeOut("fast", () => $(this).html(""));
-    // if (this.isFormValid())
-    // app.auth()
-    // 	.createUserWithEmailAndPassword(
-    // 		this.state.email,
-    // 		this.state.password
-    // 	)
-    // 	.then(({ user }) => {
-    // 		app.firestore()
-    // 			.collection("users")
-    // 			.doc(user.uid)
-    // 			.set({
-    // 				name: this.state.name,
-    // 				email: this.state.email,
+    axios.post("guideSignUp/", this.state).catch((err) => console.log(err));
 
-    // 				branch: this.state.branch,
-    // 				group: null,
-    // 				isLeader: false,
-    // 				emailVerified: false,
-    // 				userType: "student",
-    // 			})
-    // 			.then(() => {
-    // 				user.updateProfile({
-    // 					displayName: this.state.name,
-    // 				});
-    // 				user.sendEmailVerification().then(() => {
-    // 					this.raiseAlert(
-    // 						"success",
-    // 						"Verification email has been sent.<br />Please sign in after verification to complete registration process."
-    // 					);
-    // 				});
-    // 			})
-    // 			.catch((err) => this.raiseAlert("danger", err.message))
-    // 			.finally(() => app.auth().signOut());
-    // 	})
-    // 	.catch((err) => this.raiseAlert("danger", err.message));
-    // else this.raiseAlert("warning", "Form should not be tampered.");
+    let i;
+    for (
+      i = 0;
+      i < document.getElementById("guide-signup-form").elements.length;
+      i++
+    ) {
+      document.getElementById("guide-signup-form").elements[i].value = "";
+    }
   };
   render() {
     return (
-      <div className='faculty-form mx-auto' style={{ width: "90%" }}>
+      <div className="faculty-form mx-auto" style={{ width: "90%" }}>
         <br />
         <div
-          className='p-2 text-center shadow-sm rounded font-weight-bold  mx-auto'
+          className="p-2 text-center shadow-sm rounded font-weight-bold  mx-auto"
           style={{
             color: "rgb(183, 32, 46)",
             fontSize: "1.1em",
             width: "auto",
             backgroundColor: "rgba(231, 231, 231, 0.459)",
-          }}>
+          }}
+        >
           Faculty Sign Up Form
         </div>
         <br />
         <div
-          className='col-12 col-xl-12 d-flex flex-column rounded justify-content-center overflow-auto '
+          className="col-12 col-xl-12 d-flex flex-column rounded justify-content-center overflow-auto "
           style={{
             fontSize: "1.1em",
             width: "auto",
             backgroundColor: "rgba(231, 231, 231, 0.459)",
-          }}>
+          }}
+        >
           <br />
-          <form autoComplete='off' onSubmit={this.handleSubmit}>
-            <div className='form-group'>
-              <label htmlFor='name'>Faculty Name</label>
+          <form
+            id="guide-signup-form"
+            autoComplete="off"
+            onSubmit={this.handleSubmit}
+          >
+            <div className="form-group">
+              <label htmlFor="name">Faculty Name</label>
               <input
-                type='text'
-                name='name'
-                id='name'
-                className='form-control border-0'
+                type="text"
+                name="name"
+                id="name"
+                className="form-control border-0"
                 onChange={this.handleChange}
               />
             </div>
-            <div className='form-group'>
-              <label htmlFor='branch'>Branch</label>
+            <div className="form-group">
+              <label htmlFor="branch">Branch</label>
               <select
-                name='branch'
-                id='branch'
-                className='custom-select border-0'
+                name="branch"
+                id="branch"
+                className="custom-select border-0"
                 onChange={this.handleChange}
-                value={this.state.branch}>
+                value={this.state.branch}
+              >
                 {branch.map((branchItem) => (
                   <option value={branchItem} key={branch.indexOf(branchItem)}>
                     {branchItem}
@@ -172,20 +142,20 @@ class FacultyForm extends React.Component {
                 ))}
               </select>
             </div>
-            <div className='form-group'>
-              <label htmlFor='email'>Email</label>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
               <input
-                type='email'
-                name='email'
-                id='email'
-                className='form-control border-0'
+                type="email"
+                name="email"
+                id="email"
+                className="form-control border-0"
                 onChange={this.handleChange}
               />
-              <small className='form-text invalid-feedback'>
+              <small className="form-text invalid-feedback">
                 Please use valid <b>Somaiya</b> email address.
               </small>
               <small
-                className='form-text text-muted text-right'
+                className="form-text text-muted text-right"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   this.setState(
@@ -203,25 +173,26 @@ class FacultyForm extends React.Component {
                           .addClass("is-invalid")
                           .removeClass("is-valid");
                       }
-                    },
+                    }
                   );
-                }}>
+                }}
+              >
                 append @somaiya.edu
               </small>
             </div>
-            <div className='form-group'>
-              <label htmlFor='password'>Password</label>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <input
-                type='password'
-                name='password'
-                id='password'
-                className='form-control border-0'
+                type="password"
+                name="password"
+                id="password"
+                className="form-control border-0"
                 onChange={this.handleChange}
               />
-              <small className='form-text invalid-feedback'>
+              <small className="form-text invalid-feedback">
                 Password not secure enough.
               </small>
-              <small className='form-text text-muted'>
+              <small className="form-text text-muted">
                 At least 8 characters—the more characters, the better.
                 <br /> A mixture of both uppercase and lowercase letters.
                 <br /> A mixture of letters and numbers.
@@ -229,28 +200,30 @@ class FacultyForm extends React.Component {
                 ? &#93;
               </small>
             </div>
-            <div className='form-group'>
-              <label htmlFor='confirmPassword'>Re-enter password</label>
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Re-enter password</label>
               <input
-                type='password'
-                name='confirmPassword'
-                id='confirmPassword'
-                className='form-control border-0'
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                className="form-control border-0"
                 onChange={this.handleChange}
                 disabled={!this.securePassword()}
               />
-              <small className='form-text invalid-feedback'>
+              <small className="form-text invalid-feedback">
                 Passwords do not match.
               </small>
             </div>
-            <div className='form-group d-flex justify-content-between'>
+            <div className="form-group d-flex justify-content-between">
               <button
-                className='btn btn-success'
-                disabled={!this.isFormValid()}>
+                className="btn btn-success"
+                type="submit"
+                disabled={!this.isFormValid()}
+              >
                 Create faculty credentials
               </button>
             </div>
-            <div className='form-group' id='signup-feedback' />
+            <div className="form-group" id="signup-feedback" />
           </form>
         </div>
         <br />

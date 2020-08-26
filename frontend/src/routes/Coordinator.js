@@ -255,10 +255,10 @@ class Coordinator extends React.Component {
               />
               <Route
                 exact
-                path="/submission-statistcs"
+                path="/submission-statistics"
                 component={Statistics}
               />
-              <Route exact path="/grade-statistcs" component={GradingStats} />
+              <Route exact path="/grade-statistics" component={GradingStats} />
               <Route exact path="/projects" component={ProjectList} />
               <Route exact path="/project/:id" component={ProjectDetails} />
               <Route

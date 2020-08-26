@@ -1,16 +1,17 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-
 from . import views
-
 urlpatterns = [
     # COORDINATOR
     path('coordinatorStudent/', views.coordinatorStudent),
     path('coordinatorStudentDetail/<int:id>/', views.coordinatorStudentDetail),
     path('coordinatorGroup/', views.coordinatorGroup),
+    path('coordinatorGroupDetail/', views.coordinatorGroupDetail),
     path('coordinatorGuide/', views.coordinatorGuide),
+    path('coordinatorGuideDetail/<int:id>/', views.coordinatorGuideDetail),
     path('coordinatorProject/', views.coordinatorProject),
+    path('coordinatorProjectDetail/<int:id>/', views.coordinatorProjectDetail),
     path('coordinatorAssignmentList/', views.coordinatorAssignmentList),
     path('coordinatorGroupSubmissionDetails/<int:assignmentId>/<int:teamId>/',
          views.coordinatorGroupSubmissionDetails),
