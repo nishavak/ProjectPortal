@@ -48,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     photo = ProcessedImageField(upload_to='photos/%Y/',
                                 processors=[ResizeToFill(400, 400)],
                                 format='JPEG',
-                                options={'quality': 60}, blank=True, null=True)
+                                options={'quality': 60}, blank=True, null=True, default="User.png")
     objects = UserManager()
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

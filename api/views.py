@@ -121,7 +121,7 @@ def coordinatorGroup(request):
                 student_data.setdefault("student_id", student.id)
                 student_data.setdefault("student_name", student.name)
                 student_data.setdefault(
-                    "student_photo", student.photo or None)
+                    "student_photo", student.photo.url or None)
                 students_data_array.append(student_data)
             team_data.setdefault("leader_name", leader.name)
             team_data.setdefault("student_data", students_data_array)
@@ -132,7 +132,7 @@ def coordinatorGroup(request):
         try:
             guide = Guide.objects.get(id=team.guide_id)
             guide_data.setdefault("guide_id", guide.id)
-            guide_data.setdefault("guide_photo", guide.photo or None)
+            guide_data.setdefault("guide_photo", guide.photo.url or None)
             guide_data.setdefault("guide_name", guide.name)
         except:
             guide_data.setdefault("guide_id", None)
@@ -167,16 +167,21 @@ def coordinatorGroupDetail(request, id):
     team_data.setdefault("project_data", project_data)
     try:
         # ! team without students should not exist
-        students = Student.objects.filter(team_id=team.id)
-        leader = Student.objects.get(id=team.leader_id)
+        students = Student.objects.filter(team=team)
+        print(students)
+        leader = Student.objects.get(id=team.leader.id)
+        print(leader)
         students_data_array = []
         for student in students:
+            print(student)
             student_data = {}
             student_data.setdefault("student_id", student.id)
             student_data.setdefault("student_name", student.name)
             student_data.setdefault(
-                "student_photo", student.photo or None)
+                "student_photo", ("/api" + student.photo.url) or "")
+            print(student_data)
             students_data_array.append(student_data)
+        print("Student data array:\t", students_data_array)
         team_data.setdefault("leader_name", leader.name)
         team_data.setdefault("student_data", students_data_array)
     except:
@@ -184,16 +189,17 @@ def coordinatorGroupDetail(request, id):
         team_data.setdefault("student_data", None)
     guide_data = {}
     try:
-        guide = Guide.objects.get(id=team.guide_id)
+        guide = Guide.objects.get(id=team.guide.id)
         guide_data.setdefault("guide_id", guide.id)
-        guide_data.setdefault("guide_photo", guide.photo or None)
         guide_data.setdefault("guide_name", guide.name)
+        guide_data.setdefault("guide_photo", guide.photo.url or None)
     except:
         guide_data.setdefault("guide_id", None)
         guide_data.setdefault("guide_name", None)
         guide_data.setdefault("guide_photo", None)
     team_data.setdefault("guide_data", guide_data)
     response = team_data
+    print(response)
     return Response(data=response, status=status.HTTP_200_OK)
 
 
@@ -286,6 +292,7 @@ def coordinatorProject(request):
             project = Project.objects.get(team=team)
             project_data.setdefault("project_exists", True)
             project_data.setdefault("project_id", project.id)
+            project_data.setdefault("project_status", project.status)
             project_data.setdefault("project_title", project.title)
             project_data.setdefault("project_category", project.category)
             project_data.setdefault("project_domain", project.domain)
@@ -302,7 +309,6 @@ def coordinatorProject(request):
             project_data.setdefault("guide_name", None)
             project_data.setdefault("guide_id", None)
         response.append(project_data)
-        print(response)
     return Response(data=response, status=status.HTTP_200_OK)
 
 
@@ -314,13 +320,14 @@ def coordinatorProjectDetail(request, id):
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    team = Team.objects.get(id=project.team.id)
+    team = Team.objects.get(team_id=project.team.id)
     project_data = {
         "team_id": team.id
     }
     try:
         project_data.setdefault("project_exists", True)
         project_data.setdefault("project_id", project.id)
+        project_data.setdefault("project_status", project.status)
         project_data.setdefault("project_title", project.title)
         project_data.setdefault("project_category", project.category)
         project_data.setdefault("project_domain", project.domain)
@@ -567,15 +574,19 @@ def coordinatorGroupRequest(request):
     response = {}
     # GET
     group_requests = []
-    for group_request in GroupRequest.objects.all():
+    for group_request in GroupRequest.objects.all().order_by("generated"):
+        print(type(group_request.add_student))
+
+        print(group_request.add_student)
+
         _t = {
             "id": group_request.id,
             "action": group_request.action,
             "status": group_request.status,
-            "new_leader": group_request.new_leader,
-            "old_leader": group_request.old_leader,
-            "add_student": group_request.add_student,
-            "remove_student": group_request.remove_student,
+            "new_leader": group_request.new_leader.id,
+            "old_leader": group_request.old_leader.id,
+            "add_student":  group_request.add_student.id if (type(group_request.add_student) is not None) else None,
+            "remove_student": group_request.remove_student.id,
             "team": group_request.team.id,
             "description": group_request.description,
             "generated": group_request.generated.strftime("%d/%m/%Y, %H:%M:%S"),
@@ -836,7 +847,7 @@ def guideProfile(request):
         for student in students:
             _s = {
                 "student_name": student.name,
-                "student_photo": student.photo or None,
+                "student_photo": student.photo.url or None,
                 "student_email": student.email,
                 "student_roll number": student.roll_number,
                 "student_branch": student.branch

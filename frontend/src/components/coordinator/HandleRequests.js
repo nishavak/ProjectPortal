@@ -9,6 +9,7 @@ class HandleRequests extends React.Component {
     super();
     this.state = {
       view: "All",
+      status: "",
     };
     this.project_requests = [];
     this.group_requests = [];
@@ -113,18 +114,40 @@ class HandleRequests extends React.Component {
                 <div className="d-flex flex-md-row flex-column py-1">
                   <div className="d-flex flex-row px-2 col-md-6 col-12">
                     <div className="pr-1">
-                      <button className="btn btn-outline-success ">
+                      <button
+                        className="btn btn-outline-success"
+                        onClick={() => {
+                          this.setState({ status: "A" });
+                          axios
+                            .put(
+                              `coordinatorProjectRequestManage/${req.id}`,
+                              this.state.status
+                            )
+                            .catch((err) => console.log(err));
+                        }}
+                      >
                         Accept
                       </button>
                     </div>
                     <div className="pl-1">
-                      <button className="btn btn-outline-danger ">
+                      <button
+                        className="btn btn-outline-danger "
+                        onClick={() => {
+                          this.setState({ status: "R" });
+                          axios
+                            .put(
+                              `coordinatorProjectRequestManage / ${req.id}`,
+                              this.state.status
+                            )
+                            .catch((err) => console.log(err));
+                        }}
+                      >
                         Reject
                       </button>
                     </div>
                   </div>
                   <div className="col-md-6 col-12 d-flex link  align-items-center py-2">
-                    <Link to="/group/:id">
+                    <Link to={`/group/${req.team}`}>
                       <div className="text-primary">View Group Details</div>
                     </Link>
                   </div>
@@ -166,20 +189,42 @@ class HandleRequests extends React.Component {
                 </div>
                 <div className="d-flex flex-md-row  flex-column py-1">
                   <div className="col-md-6 col-12">
-                    <form>
-                      <div className="d-flex flex-row px-2">
-                        <div className="pr-1">
-                          <button className="btn btn-outline-success ">
-                            Accept
-                          </button>
-                        </div>
-                        <div className="pl-1">
-                          <button className="btn btn-outline-danger ">
-                            Reject
-                          </button>
-                        </div>
+                    {/* <form onSubmit = {this.handleSubmit}  method = "PUT"> */}
+                    <div className="d-flex flex-row px-2">
+                      <div className="pr-1">
+                        <button
+                          className="btn btn-outline-success"
+                          onClick={() => {
+                            this.setState({ status: "A" });
+                            axios
+                              .put(
+                                `coordinatorProjectRequestManage/${req.id}`,
+                                this.state.status
+                              )
+                              .catch((err) => console.log(err));
+                          }}
+                        >
+                          Accept
+                        </button>
                       </div>
-                    </form>
+                      <div className="pl-1">
+                        <button
+                          className="btn btn-outline-danger "
+                          onClick={() => {
+                            this.setState({ status: "R" });
+                            axios
+                              .put(
+                                `coordinatorProjectRequestManage / ${req.id}`,
+                                this.state.status
+                              )
+                              .catch((err) => console.log(err));
+                          }}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                    {/* </form> */}
                   </div>
                   <div className="col-md-6 col-12 d-flex link  align-items-center py-2">
                     <Link to={`/project/${req.project}`}>
@@ -190,114 +235,6 @@ class HandleRequests extends React.Component {
               </div>
             );
           })}
-
-        {/* <div className='container'>
-          <div className='p-2 px-3 d-flex flex-md-row flex-column'>
-            <div className='col-md-4 pb-4'>
-              <Card className='shadow' border='light'>
-                <Card.Body>
-                  <Card.Title className='text-center'>
-                    Change Leader Request
-                  </Card.Title>
-                  <Card.Text className='text-center'>
-                    <Link to='/group/:id' style={{ textDecoration: "none" }}>
-                      Click to view group details
-                    </Link>
-                  </Card.Text>
-                </Card.Body>
-                <ListGroup className='list-group-flush'>
-                  <ListGroupItem>
-                    Group Number: <span style={{ float: "right" }}>1</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    Current Leader:{" "}
-                    <span style={{ float: "right" }}>Jill Shah</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    New Leader:{" "}
-                    <span style={{ float: "right" }}>Atharva Kitkaru</span>
-                  </ListGroupItem>
-                </ListGroup>
-                <div className='d-flex flex-md-row flex-column bg-warning mx-auto'>
-                  <div className='col-md-4 col-12 text-center p-2'>
-                    <Button variant='success'>Accept</Button>
-                  </div>
-                  <div className='col-md-4 col-12 text-center p-2'>
-                    <Button variant='danger'>Reject</Button>
-                  </div>
-                </div>
-              </Card>
-            </div>
-            <div className='col-md-4 pb-4'>
-              <Card className='shadow' border='light'>
-                <Card.Body>
-                  <Card.Title className='text-center'>
-                    Remove Member Request
-                  </Card.Title>
-                  <Card.Text className='text-center'>
-                    <Link to='/group/:id' style={{ textDecoration: "none" }}>
-                      Click to view group details
-                    </Link>
-                  </Card.Text>
-                </Card.Body>
-                <ListGroup className='list-group-flush'>
-                  <ListGroupItem>
-                    Member Name:{" "}
-                    <span style={{ float: "right" }}>Jill Shah</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    Group Number: <span style={{ float: "right" }}>1</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    Guide Name: <span style={{ float: "right" }}>ABCD</span>
-                  </ListGroupItem>
-                </ListGroup>
-                <Card.Body>
-                  <Button variant='success' style={{ float: "left" }}>
-                    Remove
-                  </Button>
-                  <Button variant='danger' style={{ float: "right" }}>
-                    Reject request
-                  </Button>
-                </Card.Body>
-              </Card>
-            </div>
-            <div className='col-md-4 pb-4'>
-              <Card className='shadow' border='light'>
-                <Card.Body>
-                  <Card.Title className='text-center'>
-                    Project Approval Request
-                  </Card.Title>
-                  <Card.Text className='text-center'>
-                    <Link to='/project/:id' style={{ textDecoration: "none" }}>
-                      Click to view project details
-                    </Link>
-                  </Card.Text>
-                </Card.Body>
-                <ListGroup className='list-group-flush'>
-                  <ListGroupItem>
-                    Group Number: <span style={{ float: "right" }}>1</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    Leader Name:{" "}
-                    <span style={{ float: "right" }}>Jill Shah</span>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    Guide Name: <span style={{ float: "right" }}>ABCD</span>
-                  </ListGroupItem>
-                </ListGroup>
-                <Card.Body>
-                  <Button variant='success' style={{ float: "left" }}>
-                    Approve project
-                  </Button>
-                  <Button variant='danger' style={{ float: "right" }}>
-                    Reject project
-                  </Button>
-                </Card.Body>
-              </Card>
-            </div>
-          </div>
-        </div> */}
       </div>
     );
   }

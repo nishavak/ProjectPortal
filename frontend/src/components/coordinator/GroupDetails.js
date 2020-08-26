@@ -13,7 +13,7 @@ class GroupDetails extends React.Component {
 
   componentDidMount() {
     axios
-      .get(`coordinatorGroupDetail/${this.id}/`)
+      .get(`coordinatorGroupDetail/${this.id}`)
       .then(({ data }) => {
         this.team = data;
         this.setState({});
@@ -39,26 +39,34 @@ class GroupDetails extends React.Component {
         <div className="d-flex flex-md-row flex-column my-3 py-3">
           <div className="col-md-6 left-panel">
             <div className="">
-              <p className="text-muted">{this.team && this.team.team_id}</p>
-              <p className="font-weight-bold">2</p>
+              <p className="text-muted">Group Id</p>
+              <p className="font-weight-bold">
+                {this.team && this.team.team_id}
+              </p>
             </div>
             <hr />
             <ul className="list-group ">
               <div className="my-2">
                 <p className="text-muted">Guide</p>
                 <Link
-                  to={`/guide/${this.team && this.team.guide_data.guide_id}`}
+                  to={`/guide/${
+                    this.team.guide_data && this.team.guide_data.guide_id
+                  }`}
                 >
                   <li className="list-group-item d-flex list-group-item-action my-2">
                     <div className="col-2 m-0 p-0">
                       <img
-                        src={this.team && this.team.guide_data.guide_photo}
+                        src={
+                          this.team.guide_data &&
+                          this.team.guide_data.guide_photo
+                        }
                         alt="profile_pic"
                       />
                     </div>
                     <div className="col-10 m-0 px-1">
                       <span>
-                        {this.team && this.team.guide_data.guide_name}
+                        {this.team.guide_data &&
+                          this.team.guide_data.guide_name}
                       </span>
                     </div>
                   </li>
@@ -70,12 +78,13 @@ class GroupDetails extends React.Component {
                 <p className="text-muted">Project</p>
                 <Link
                   to={`/project/${
-                    this.team && this.team.project_data.project_id
+                    this.team.project_data && this.team.project_data.project_id
                   }`}
                 >
                   <li className="list-group-item list-group-item-action">
                     <span>
-                      {this.team && this.team.project_data.project_name}
+                      {this.team.project_data &&
+                        this.team.project_data.project_name}
                     </span>
                   </li>
                 </Link>
@@ -86,10 +95,12 @@ class GroupDetails extends React.Component {
             <ul className="list-group">
               <p className="text-muted">
                 Members
-                <span className="badge badge-info mx-1 p-1">3</span>
+                <span className="badge badge-info mx-1 p-1">
+                  {this.team.student_data && this.team.student_data.length}
+                </span>
               </p>
 
-              {this.team &&
+              {this.team.student_data &&
                 this.team.student_data.map((student) => {
                   return (
                     <Link to={`/student/${student.student_id}`}>
