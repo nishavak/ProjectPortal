@@ -6,12 +6,15 @@ import GroupCardView from "./GroupCardView";
 import GroupListView from "./GroupListView";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
+import { Route } from "react-router-dom";
 
 class GroupList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       // viewType: "card",
+      loading: true,
     };
     this.groups = [];
     this.downloadable = [];
@@ -35,12 +38,13 @@ class GroupList extends React.Component {
           })
         );
         console.log(this.downloadable);
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => console.log(err));
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="groups mx-auto" style={{ width: "90%" }}>
         <br />
@@ -98,7 +102,9 @@ class GroupList extends React.Component {
           )}
         </div> */}
         <br />
-        <GroupListView data={this.groups} />
+        <Route
+          render={(props) => <GroupListView {...props} data={this.groups} />}
+        />
         <br />
         <div className="w-100 d-flex justify-content-center">
           <div
@@ -109,7 +115,7 @@ class GroupList extends React.Component {
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

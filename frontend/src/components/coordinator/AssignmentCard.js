@@ -6,7 +6,7 @@ class AssignmentCard extends Component {
   render() {
     return (
       <Link
-        to={`/assignment/${this.props.info.id}`}
+        to={`/assignment/${this.props.info.assignment_id}`}
         id="AssignmentCard"
         className="text-dark"
         style={{ textDecoration: "none" }}
@@ -14,7 +14,7 @@ class AssignmentCard extends Component {
         <div className="card border-0 rounded shadow my-4 assignmentCard">
           <div className="card-header d-flex align-items-center m-0 border-0 shadow-sm">
             <div className="card-title font-weight-bold p-0 m-0">
-              {this.props.info.title || "-"}
+              {this.props.info.assignment_title || "-"}
             </div>
           </div>
           <div className="card-body">
@@ -22,20 +22,20 @@ class AssignmentCard extends Component {
               <p className="p-0 m-0 d-flex justify-content-between">
                 <b className="mr-2">Posted on:</b>
                 <span>
-                  {(this.props.info.posted &&
-                    this.props.info.posted.toLocaleString()) ||
+                  {(this.props.info.assignment_posted &&
+                    this.props.info.assignment_posted) ||
                     "-"}
                 </span>
               </p>
               <p className="p-0 m-0 d-flex justify-content-between">
                 <b className="mr-2">Weightage:</b>
-                <span>{this.props.info.weightage || "-"}</span>
+                <span>{this.props.info.assignment_weightage || "-"}</span>
               </p>
               <p className="p-0 m-0 d-flex justify-content-between">
                 <b className="mr-2">Due date:</b>
                 <span>
-                  {(this.props.info.due &&
-                    this.props.info.due.toLocaleString()) ||
+                  {(this.props.info.assignment_due &&
+                    this.props.info.assignment_due) ||
                     "-"}
                 </span>
               </p>

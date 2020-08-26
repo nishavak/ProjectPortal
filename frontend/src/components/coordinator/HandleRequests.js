@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./HandleRequests.scss";
 import axios from "../../axios";

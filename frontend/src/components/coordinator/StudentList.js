@@ -3,12 +3,14 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "../../axios";
 import "./StudentList.scss";
 import saveCsv from "save-csv/save-csv.min.js";
+import Loading from "../shared/Loading";
 
 class StudentList extends Component {
   constructor(props) {
     super(props);
     this.students = [];
     this.downloadable = [];
+    this.state = { loading: true };
   }
   componentDidMount() {
     axios.get("coordinatorStudent/").then(({ data }) => {
@@ -27,11 +29,12 @@ class StudentList extends Component {
         })
       );
       console.log(this.downloadable);
-      this.setState({});
+      this.setState({ loading: false });
     });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="student-list mx-auto" style={{ width: "90%" }}>
         <br />
@@ -99,7 +102,7 @@ class StudentList extends Component {
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

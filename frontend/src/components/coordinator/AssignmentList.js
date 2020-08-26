@@ -1,19 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import AssignmentCard from "./AssignmentCard";
 import "./AssignmentList.scss";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 class AssignmentList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    };
+    this.assignments = [];
+  }
+
   componentDidMount() {
     axios
       .get(`coordinatorAssignmentList/`)
       .then(({ data }) => {
         this.assignments = data;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => console.log(err));
   }
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="assignment-list mx-auto " style={{ width: "90%" }}>
         <br />
@@ -28,22 +39,24 @@ class AssignmentList extends React.Component {
         >
           Assignments
         </div>
-        <div className=" d-flex  flex-md-row flex-column justify-content-between mx-auto mt-4 p-0">
-          <div className="col-md-3  text-center align-self-center p-0 my-1">
+        <div className=" d-flex  flex-md-row flex-column justify-content-between mx-auto mt-4 p-0 bg-">
+          <div className="col-md-3  align-self-center  p-0 my-1 bg-">
             <div class="dropdown ">
               <button
-                className="btn  dropdown-toggle"
+                className="btn btn-danger dropdown-toggle"
                 type="button"
                 id="dropdownMenuButton"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
-                style={{
-                  backgroundColor: "rgb(183, 32, 46)",
-                  color: "white",
-                  outline: "0",
-                  boxShadow: "none",
-                }}
+                style={
+                  {
+                    // backgroundColor: "rgb(183, 32, 46)",
+                    // color: "white",
+                    // outline: "0",
+                    // boxShadow: "none",
+                  }
+                }
               >
                 Actions
               </button>
@@ -68,10 +81,14 @@ class AssignmentList extends React.Component {
         </div>
 
         <div className="p-2">
-          {this.assignments &&
-            this.assignments.map((assignment) => {
-              return <AssignmentCard info={assignment} />;
-            })}
+          {this.assignments.length &&
+            this.assignments.map((assignment) => (
+              <Route
+                render={(props) => (
+                  <AssignmentCard {...props} info={assignment} />
+                )}
+              />
+            ))}
         </div>
       </div>
     );

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import "./AssignmentDetails.scss";
 import { Link } from "react-router-dom";
-import Uploader from "../student/Uploader";
+// import Uploader from "../student/Uploader";
 import $ from "jquery";
 import SubmissionStatus from "./SubmissionStatus";
 //import DateTimePicker from "react-datetime-picker";
@@ -58,7 +58,10 @@ class AssignmentDetails extends React.Component {
     $("#edit").attr("disabled", false);
 
     axios
-      .put(`coordinatorAssignmentDetail/${this.id}/`, this.state)
+      .put(`coordinatorAssignmentDetail/${this.id}/`, {
+        ...this.state,
+        due: Date.parse(new Date(this.state.due)),
+      })
       .catch((err) => console.log(err));
   };
   deleteAss = () => {
@@ -150,9 +153,7 @@ class AssignmentDetails extends React.Component {
                   {/*<p>Due Date and Time</p><DateTimePicker onChange={onChange} value={value} />*/}
                 </div>
                 <div className="col-md-6 p-1">
-                  <div className="form-group">
-                    <Uploader />
-                  </div>
+                  <div className="form-group">{/* <Uploader /> */}</div>
                 </div>
               </div>
               <div className="form-group buttons">
@@ -194,11 +195,11 @@ class AssignmentDetails extends React.Component {
           <SubmissionStatus id={this.id} />
         </div>
 
-        <div className="back-button mx-auto p-2 text-center my-5 rounded-lg text-wrap text-break">
+        <div className="w-100 d-flex justify-content-center">
           <Link to="/assignments">
-            <div className="w-100">
-              <i className="fa fa-arrow-left mr-2" aria-hidden="true" />
-              Back to Assignments
+            <div className="btn btn-danger">
+              {/* <i className="fa fa-arrow-left mr-2" aria-hidden="true" /> */}
+              Assignments
             </div>
           </Link>
         </div>

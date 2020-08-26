@@ -26,7 +26,7 @@ def coordinatorStudent(request):
     response = []
     for student in Student.objects.all().order_by('roll_number'):
         student_data = {
-            "student_branch": student.branch,
+            "student_branch": dict(constants.BRANCH)[student.branch],
             "student_email": student.email,
             "student_id": student.id,
             "student_name": student.name,
@@ -64,11 +64,12 @@ def coordinatorStudentDetail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     student_data = {
-        "student_branch": student.branch,
+        "student_branch": dict(constants.BRANCH)[student.branch],
         "student_email": student.email,
         "student_id": student.id,
         "student_name": student.name,
         "student_roll_number": student.roll_number,
+        "student_photo": "/api" + student.photo.url or None,
     }
     try:
         project = Project.objects.get(student=student)
@@ -121,7 +122,7 @@ def coordinatorGroup(request):
                 student_data.setdefault("student_id", student.id)
                 student_data.setdefault("student_name", student.name)
                 student_data.setdefault(
-                    "student_photo", student.photo.url or None)
+                    "student_photo", ("/api" + student.photo.url) or None)
                 students_data_array.append(student_data)
             team_data.setdefault("leader_name", leader.name)
             team_data.setdefault("student_data", students_data_array)
@@ -132,7 +133,8 @@ def coordinatorGroup(request):
         try:
             guide = Guide.objects.get(id=team.guide_id)
             guide_data.setdefault("guide_id", guide.id)
-            guide_data.setdefault("guide_photo", guide.photo.url or None)
+            guide_data.setdefault("guide_photo", ("/api" +
+                                                  guide.photo.url) or None)
             guide_data.setdefault("guide_name", guide.name)
         except:
             guide_data.setdefault("guide_id", None)
@@ -192,7 +194,8 @@ def coordinatorGroupDetail(request, id):
         guide = Guide.objects.get(id=team.guide.id)
         guide_data.setdefault("guide_id", guide.id)
         guide_data.setdefault("guide_name", guide.name)
-        guide_data.setdefault("guide_photo", guide.photo.url or None)
+        guide_data.setdefault(
+            "guide_photo", ("/api" + guide.photo.url) or None)
     except:
         guide_data.setdefault("guide_id", None)
         guide_data.setdefault("guide_name", None)
@@ -208,7 +211,7 @@ def coordinatorGuide(request):
     response = []
     for guide in Guide.objects.all():
         guide_data = {
-            "guide_branch": guide.branch,
+            "guide_branch": dict(constants.BRANCH)[guide.branch],
             "guide_id": guide.id,
             "guide_name": guide.name
         }
@@ -249,11 +252,12 @@ def coordinatorGuideDetail(request, id):
         preferences.append(
             {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area})
     guide_data = {
-        "guide_branch": guide.branch,
+        "guide_branch": dict(constants.BRANCH)[guide.branch],
         "guide_id": guide.id,
         "guide_name": guide.name,
         "guide_email": guide.email,
         "guide_preferences": preferences,
+        "guide_photo": "/api" + guide.photo.url or None,
     }
     try:
         teams = Team.objects.filter(guide=guide)
@@ -292,7 +296,6 @@ def coordinatorProject(request):
             project = Project.objects.get(team=team)
             project_data.setdefault("project_exists", True)
             project_data.setdefault("project_id", project.id)
-            project_data.setdefault("project_status", project.status)
             project_data.setdefault("project_title", project.title)
             project_data.setdefault("project_category", project.category)
             project_data.setdefault("project_domain", project.domain)
@@ -320,14 +323,13 @@ def coordinatorProjectDetail(request, id):
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    team = Team.objects.get(team_id=project.team.id)
+    team = Team.objects.get(id=project.team.id)
     project_data = {
         "team_id": team.id
     }
     try:
         project_data.setdefault("project_exists", True)
         project_data.setdefault("project_id", project.id)
-        project_data.setdefault("project_status", project.status)
         project_data.setdefault("project_title", project.title)
         project_data.setdefault("project_category", project.category)
         project_data.setdefault("project_domain", project.domain)
@@ -350,10 +352,29 @@ def coordinatorProjectDetail(request, id):
 
 @api_view()
 def coordinatorAssignmentList(request):
-    data = Assignment.objects.all()
-    serializer = AssignmentSerializer(
-        data, context={'request': request}, many=True)
-    return Response(serializer.data)
+    assignments = Assignment.objects.all()
+    response = []
+    for assignment in assignments:
+        try:
+            _assignment = {
+                "assignment_id": assignment.id,
+                "assignment_title": assignment.title,
+                "assignment_weightage": assignment.weightage,
+                "assignment_description": assignment.description,
+                "assignment_due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
+            }
+        except:
+            _assignment = {
+                "assignment_id": assignment.id,
+                "assignment_title": assignment.title,
+                "assignment_weightage": assignment.weightage,
+                "assignment_description": assignment.description,
+                "assignment_due": None,
+                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
+            }
+        response.append(_assignment)
+    return Response(data=response)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -380,8 +401,8 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_title": assignment.title,
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
-                "assignment_due_on": assignment.due.strftime("%Y-%m-%d"),
-                "assignment_posted_on": assignment.posted
+                "assignment_due": assignment.due.strftime("%Y-%m-%dT%H:%M"),
+                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M")
             }
         except:
             _assignment = {
@@ -389,8 +410,8 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_title": assignment.title,
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
-                "assignment_due_on": None,
-                "assignment_posted_on": assignment.posted
+                "assignment_due": None,
+                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M")
             }
         assignment_details.setdefault("assignment", _assignment)
         assignment_details.setdefault("files", _files)
@@ -402,7 +423,9 @@ def coordinatorAssignmentDetail(request, id):
                 "team_id": team.id
             }
             try:
-                grade = Grade.objects.get(student=team.leader)
+                grade = Grade.objects.filter(
+                    assignment=assignment).get(student=team.leader)
+                print(grade.marks_obtained)
                 if grade.turned_in:
                     _submission_status.setdefault("status", "Submitted")
                     if grade.marks_obtained != None:
@@ -427,13 +450,15 @@ def coordinatorAssignmentDetail(request, id):
             assignment = Assignment.objects.get(id=id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        print(request.data)
         data = {
             "title": request.data["title"],
             "description": request.data["description"],
             "weightage": request.data["weightage"],
-            "due": 0,
+            "due": timezone.datetime.fromtimestamp(request.data["due"] / 1000),
+            "coordinator": Coordinator.objects.get(id=request.user.id),
+            "posted": assignment.posted
         }
+        print(data)
         serializer = AssignmentSerializer(assignment, data=data)
         if serializer.is_valid():
             serializer.save()
@@ -471,8 +496,8 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
         for file in files:
             _file = {
                 "id": file.id,
-                "file_name": file.file.name,
-                "file_url": file.file.url
+                "file_name": file.file.name.split("/")[-1],
+                "file_url": "/api" + file.file.url
             }
             file_list.append(_file)
     except:
@@ -522,7 +547,7 @@ def coordinatorSubmissionStatistics(request):
         }
         grade_list = []
         try:
-            grades = Grade.objects.filter(team=team)
+            grades = Grade.objects.filter(student=team.leader)
             for grade in grades:
                 submission_status = "Not submitted"
                 _t_grade = {}
@@ -847,7 +872,7 @@ def guideProfile(request):
         for student in students:
             _s = {
                 "student_name": student.name,
-                "student_photo": student.photo.url or None,
+                "student_photo": ("/api" + student.photo.url) or None,
                 "student_email": student.email,
                 "student_roll number": student.roll_number,
                 "student_branch": student.branch
@@ -1011,7 +1036,7 @@ def assignment(request, id):
             t = {
                 "id": attachment.id,
                 "name": attachment.file.name.split("/")[-1],
-                "url": "/api" + attachment.file.url
+                "url": ("/api" + attachment.file.url)
             }
             attachments.append(t)
         try:
@@ -1062,7 +1087,7 @@ def studentAssignmentDetails(request, id):
         "grade": grade.data,
         "my_submissions": [{"id": _file.id,
                             "name": _file.file.name.split("/")[-1],
-                            "url": "/api" + _file.file.url} for _file in files]
+                            "url": ("/api" + _file.file.url)} for _file in files]
     }
     return Response(data=response)
 
@@ -1145,7 +1170,7 @@ def signUp(request):
             "password": password,
             "branch": branch,
             "roll_number": roll_number,
-            "photo": None,
+            # "photo": None,
             "is_staff": False,
             "is_active": True
         }
@@ -1163,7 +1188,7 @@ def guideSignUp(request):
             email = request.data.get("email")
             password = request.data.get("password")
             name = request.data.get("name")
-            # initials = request.data.get("initials")
+            initials = request.data.get("initials")
             branch = request.data.get("branch")
             if branch == "Information Technology":
                 branch = "IT"
@@ -1181,8 +1206,8 @@ def guideSignUp(request):
                 "email": email,
                 "password": password,
                 "branch": branch,
-                "initials": None,
-                "photo": None,
+                "initials": initials,
+                # "photo": None,
                 "is_staff": False,
                 "is_active": True
             }
@@ -1221,7 +1246,7 @@ def changePhoto(request):
 @api_view()
 def getImage(request):
     try:
-        url = "/api" + request.user.photo.url
+        url = ("/api" + request.user.photo).url
         return Response(data=url, status=status.HTTP_200_OK)
     except:
         url = None

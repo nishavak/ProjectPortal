@@ -230,7 +230,7 @@ class Coordinator extends React.Component {
               </div>
             </div>
           </div>
-          <div className="col-lg-10 offset-lg-2 p-0">
+          <div className="col-lg-10 offset-lg-2 p-0 mb-5">
             <Switch>
               <Route
                 path={["/signin", "/signup", "/forgot-password"]}

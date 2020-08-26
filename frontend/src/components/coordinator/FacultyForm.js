@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "../../axios";
 import $ from "jquery";
+import { NotificationManager } from "react-notifications";
 
 const branch = [
   "Information Technology",
@@ -14,6 +15,7 @@ class FacultyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      initials: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -69,22 +71,20 @@ class FacultyForm extends React.Component {
       this.securePassword() &&
       this.state.password === this.state.confirmPassword &&
       this.state.name !== "" &&
+      this.state.initials !== "" &&
       branch.includes(this.state.branch)
       ? true
       : false;
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    axios.post("guideSignUp/", this.state).catch((err) => console.log(err));
-
-    let i;
-    for (
-      i = 0;
-      i < document.getElementById("guide-signup-form").elements.length;
-      i++
-    ) {
-      document.getElementById("guide-signup-form").elements[i].value = "";
-    }
+    axios
+      .post("guideSignUp/", this.state)
+      .then(() => {
+        alert("Faculty created");
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
   };
   render() {
     return (
@@ -122,6 +122,16 @@ class FacultyForm extends React.Component {
                 type="text"
                 name="name"
                 id="name"
+                className="form-control border-0"
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">Faculty Initials</label>
+              <input
+                type="text"
+                name="initials"
+                id="initials"
                 className="form-control border-0"
                 onChange={this.handleChange}
               />
@@ -220,7 +230,7 @@ class FacultyForm extends React.Component {
                 type="submit"
                 disabled={!this.isFormValid()}
               >
-                Create faculty credentials
+                Create faculty
               </button>
             </div>
             <div className="form-group" id="signup-feedback" />

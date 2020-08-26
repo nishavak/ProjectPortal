@@ -3,10 +3,12 @@ import { Redirect, Link } from "react-router-dom";
 import "./GuideList.scss";
 import axios from "../../axios";
 import saveCsv from "save-csv/save-csv.min.js";
+import Loading from "../shared/Loading";
 
 class Guide extends Component {
   constructor(props) {
     super(props);
+    this.state = { loading: true };
     this.guides = [];
     this.team_ids = [];
     this.downloadable = [];
@@ -42,10 +44,11 @@ class Guide extends Component {
       });
 
       console.log(this.downloadable);
-      this.setState({});
+      this.setState({ loading: false });
     });
   }
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="guide mx-auto" style={{ width: "90%" }}>
         <br />
@@ -61,13 +64,10 @@ class Guide extends Component {
         </div>
         <div className=" d-flex flex-md-row flex-column justify-content-between mx-auto mt-4 p-0">
           <div className="col-md-3 col-12 text-center p-0 my-1">
-            <Link to="/guide-detailed">
-              <div
-                className="back-button rounded-lg py-2 px-0 mx-auto"
-                style={{ marginBottom: "1em" }}
-              >
-                <i className="fa fa-list mr-2" aria-hidden="true" />
-                See Detailed List
+            <Link to="/guide-detailed" className="d-flex justify-content-start">
+              <div className="btn btn-danger" style={{ marginBottom: "1em" }}>
+                {/* <i className="fa fa-list mr-2" aria-hidden="true" /> */}
+                Detailed List
               </div>
             </Link>
           </div>
@@ -102,9 +102,10 @@ class Guide extends Component {
                     <td class="">{guide.guide_name}</td>
 
                     <td class="">
-                      {this.team_ids.map((id) => {
-                        return <span>{id},</span>;
-                      })}
+                      {guide.team_data.length &&
+                        guide.team_data.map((team) => {
+                          return <span>{team.team_id},</span>;
+                        })}
                     </td>
                     <td class="">{guide.guide_branch}</td>
                   </tr>
@@ -122,7 +123,7 @@ class Guide extends Component {
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

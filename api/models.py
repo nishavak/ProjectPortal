@@ -140,7 +140,7 @@ class Grade(models.Model):
     assignment = models.ForeignKey("api.Assignment", verbose_name=_(
         "assignment"), on_delete=models.CASCADE)
     graded_on = models.DateTimeField(_("graded on"), auto_now_add=True)
-    guide = models.OneToOneField("api.Guide", verbose_name=_(
+    guide = models.ForeignKey("api.Guide", verbose_name=_(
         "guide"), on_delete=models.SET_NULL, blank=True, null=True)
     marks_obtained = models.IntegerField(
         _("marks obtained"), blank=True, null=True, default=None)

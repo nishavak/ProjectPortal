@@ -59,7 +59,7 @@ class GroupSubmissionDetails extends React.Component {
                     rel="noopener noreferrer"
                   >
                     <div
-                      className="file-container mt-3 mr-3 py-1 px-3 text-center border rounded text-wrap "
+                      className="file-container mt-3 mr-3 py-1 px-3 text- border rounded text-wrap "
                       style={{ borderColor: "gray", wordBreak: "break-word" }}
                     >
                       {file.file_name}
@@ -72,14 +72,14 @@ class GroupSubmissionDetails extends React.Component {
             <div className="shadow-sm p-3">
               <h5 className="text-center p-2">Grades and Submission Status</h5>
               <hr />
-              <p className="text-center">Weightage: {this.weightage}</p>
-              <p className="text-center">Marks Assigned:</p>
+              <p className="text-">Weightage: {this.weightage || "-"}</p>
+              <p className="text-">Marks Assigned:</p>
 
               <div className="d-flex flex-column ">
                 {this.students_data &&
                   this.students_data.map((student) => {
                     return (
-                      <div className="d-flex flex-row text-center">
+                      <div className="d-flex flex-row text-">
                         <div className="col-md-6  ">
                           {student.student_roll_number}
                         </div>

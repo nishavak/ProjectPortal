@@ -3,12 +3,14 @@ import "./GuideDetailedList.scss";
 import { Link } from "react-router-dom";
 import axios from "../../axios";
 import saveCsv from "save-csv/save-csv.min.js";
+import Loading from "../shared/Loading";
 
 class GuideDetailedList extends React.Component {
   constructor(props) {
     super(props);
     this.guides = [];
     this.downloadable = [];
+    this.state = { loading: true };
   }
   componentDidMount() {
     axios.get("coordinatorGuide/").then(({ data }) => {
@@ -38,11 +40,12 @@ class GuideDetailedList extends React.Component {
       });
 
       console.log(this.downloadable);
-      this.setState({});
+      this.setState({ loading: false });
     });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="detailed-list mx-auto" style={{ width: "90%" }}>
         <br />
@@ -58,13 +61,10 @@ class GuideDetailedList extends React.Component {
         </div>
         <div className=" d-flex flex-md-row flex-column justify-content-between mx-auto mt-4 p-0">
           <div className="col-md-3 col-12 text-center p-0 my-1">
-            <Link to="/guides">
-              <div
-                className="back-button rounded-lg py-2 px-0 mx-auto"
-                style={{ marginBottom: "1em" }}
-              >
-                <i className="fa fa-list mr-2" aria-hidden="true" />
-                Back to Normal List
+            <Link to="/guides" className="d-flex justify-content-start">
+              <div className="btn btn-danger" style={{ marginBottom: "1em" }}>
+                {/* <i className="fa fa-list mr-2" aria-hidden="true" /> */}
+                Overview List
               </div>
             </Link>
           </div>
@@ -132,7 +132,6 @@ class GuideDetailedList extends React.Component {
               })}
             </tbody>
           </table>
-          <hr />
         </div>
         <div className="w-100 d-flex justify-content-center">
           <div
@@ -143,7 +142,7 @@ class GuideDetailedList extends React.Component {
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

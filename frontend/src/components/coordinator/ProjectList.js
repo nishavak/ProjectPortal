@@ -3,12 +3,14 @@ import { Redirect, Link } from "react-router-dom";
 import "./ProjectList.scss";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 class ProjectList extends React.Component {
   constructor(props) {
     super(props);
     this.projects = [];
     this.downloadable = [];
+    this.state = { loading: true };
   }
   componentDidMount() {
     axios.get("coordinatorProject/").then(({ data }) => {
@@ -30,11 +32,12 @@ class ProjectList extends React.Component {
         })
       );
       console.log(this.downloadable);
-      this.setState({});
+      this.setState({ loading: false });
     });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="project mx-auto" style={{ width: "90%" }}>
         <br />
@@ -49,12 +52,12 @@ class ProjectList extends React.Component {
           Project List
         </div>
 
-        <div class="table-responsive-sm">
+        <div class="table-responsive-sm mt-2">
           <table class="ui striped table">
             <thead class="text-center">
               <tr class="">
                 <th class="" scope="col">
-                  Projec t Name
+                  Project Name
                 </th>
                 <th class="" scope="col">
                   Guide Name
@@ -69,19 +72,23 @@ class ProjectList extends React.Component {
             </thead>
             <tbody class="text-center">
               {this.projects.length &&
-                this.projects.map((project) => (
-                  <tr
-                    class=""
-                    onClick={() =>
-                      this.props.history.push(`/project/${project.project_id}`)
-                    }
-                  >
-                    <td class="">{project.project_title}</td>
-                    <td class="">{project.guide_name}</td>
-                    <td class="">{project.group_id}</td>
-                    <td class="">{project.project_domain}</td>
-                  </tr>
-                ))}
+                this.projects
+                  .filter((project) => project.project_exists === true)
+                  .map((project) => (
+                    <tr
+                      class=""
+                      onClick={() =>
+                        this.props.history.push(
+                          `/project/${project.project_id}`
+                        )
+                      }
+                    >
+                      <td class="">{project.project_title}</td>
+                      <td class="">{project.guide_name}</td>
+                      <td class="">{project.team_id}</td>
+                      <td class="">{project.project_domain}</td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
@@ -94,7 +101,7 @@ class ProjectList extends React.Component {
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

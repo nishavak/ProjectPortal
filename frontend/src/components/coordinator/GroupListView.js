@@ -37,9 +37,9 @@ export class GroupListView extends Component {
                 return (
                   <tr
                     class=""
-                    onClick={() => {
-                      window.location.href = `/group/${team.team_id}`;
-                    }}
+                    onClick={() =>
+                      this.props.history.push(`/group/${team.team_id}`)
+                    }
                   >
                     <td class="">{team.team_id}</td>
                     <td class="">{team.project_data.project_name || "-"}</td>
