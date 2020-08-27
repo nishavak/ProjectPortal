@@ -911,6 +911,7 @@ def guideGroup(request, groupId):
     response.setdefault("students", member_list)
     response.setdefault("project", project_details)
     return Response(data=response)
+
 # * STUDENT
 
 

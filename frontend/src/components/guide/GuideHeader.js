@@ -6,12 +6,12 @@ import axios from "../../axios";
 import UserImage from "../../assets/images/User.png";
 
 class GuideHeader extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.image = null;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     axios.get("getImage/").then(({ data }) => {
       this.image = data;
       this.setState({});
@@ -52,14 +52,14 @@ class GuideHeader extends Component {
               </Link>
 
               <Link to="/guide-request" className="dropdown-item">
-                <i className="fa fa-wpforms fa-fw mr-2" />
+                <i className="fa fa-bolt fa-fw mr-2" />
                 Guide Request
               </Link>
               <div
                 className="dropdown-item"
                 onClick={() =>
-                    axios.get("signOut/").then(() => window.location.reload())
-                  }
+                  axios.get("signOut/").then(() => window.location.reload())
+                }
               >
                 <i className="fa fa-lock fa-fw mr-2" />
                 Sign out
