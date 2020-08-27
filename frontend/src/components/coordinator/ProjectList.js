@@ -1,5 +1,4 @@
 import React from "react";
-import { Redirect, Link } from "react-router-dom";
 import "./ProjectList.scss";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
@@ -19,15 +18,16 @@ class ProjectList extends React.Component {
       this.downloadable.push(
         this.projects.map((project) => {
           return {
-            project_id: project.project_id,
-            project_name: project.project_name,
-            group_id: project.group_id,
-            guide_name: project.guide_name,
-            project_domain: project.project_domain,
-            guide_name: project.guide_name,
-            project_category: project.project_category,
-            project_description: project.project_description,
-            project_explanatory_field: project.project_explanatory_field,
+            project_id: project.project_id || null,
+            project_name: project.project_title || null,
+            group_id: project.team_id || null,
+            guide_name: project.guide_name || null,
+            project_domain: project.project_domain || null,
+            guide_name: project.guide_name || null,
+            project_category: project.project_category || null,
+            project_description: project.project_description || null,
+            project_explanatory_field:
+              project.project_explanatory_field || null,
           };
         })
       );
@@ -101,7 +101,6 @@ class ProjectList extends React.Component {
               })
             }
           >
-            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
         </div>

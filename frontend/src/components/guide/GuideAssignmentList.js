@@ -92,12 +92,7 @@ class GuideAssignmentList extends Component {
             </nav>
             {this.list &&
               this.list.map((assignment) => {
-                if (
-                  assignment.grading_status === "Submitted" ||
-                  assignment.grading_status === "Not Submitted" ||
-                  assignment.grading_status === "Graded" &&
-                  this.state.tab === "All"
-                ) {
+                if (this.state.tab === "All") {
                   return (
                     <Route
                       render={(props) => (
@@ -112,8 +107,7 @@ class GuideAssignmentList extends Component {
                       )}
                     />
                   );
-                }
-                if (this.state.tab === assignment.grading_status) {
+                } else if (this.state.tab === assignment.grading_status) {
                   return (
                     <Route
                       render={(props) => (

@@ -600,25 +600,24 @@ def coordinatorGroupRequest(request):
     # GET
     group_requests = []
     for group_request in GroupRequest.objects.all().order_by("generated"):
-        print(type(group_request.add_student))
 
-        print(group_request.add_student)
+        print(group_request)
 
         _t = {
             "id": group_request.id,
-            "action": group_request.action,
-            "status": group_request.status,
-            "new_leader": group_request.new_leader.id,
-            "old_leader": group_request.old_leader.id,
-            "add_student":  group_request.add_student.id if (type(group_request.add_student) is not None) else None,
-            "remove_student": group_request.remove_student.id,
+            "action": dict(constants.GROUP_ACTION)[group_request.action],
+            "status": dict(constants.STATUS)[group_request.status],
+            "new_leader": group_request.new_leader.id if (type(group_request.new_leader) is not type(None)) else None,
+            "old_leader": group_request.old_leader.id if (type(group_request.old_leader) is not type(None)) else None,
+            "add_student":  group_request.add_student.id if (type(group_request.add_student) is not type(None)) else None,
+            "remove_student": group_request.remove_student.id if (type(group_request.remove_student) is not type(None)) else None,
             "team": group_request.team.id,
             "description": group_request.description,
             "generated": group_request.generated.strftime("%d/%m/%Y, %H:%M:%S"),
             "processed": group_request.processed.strftime("%d/%m/%Y, %H:%M:%S"),
         }
         group_requests.append(_t)
-    response.setdefault("group requests", group_requests)
+    response.setdefault("group_requests", group_requests)
     return Response(data=response)
 
 

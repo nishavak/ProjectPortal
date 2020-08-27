@@ -87,10 +87,10 @@ class HandleRequests extends React.Component {
                     {req.action === "Change Leader" && (
                       <span>Current Leader: {req.old_leader}</span>
                     )}
-                    {req.action === "Removal" && (
+                    {req.action === "Removal of a student from group" && (
                       <span>Student to be removed: {req.remove_student}</span>
                     )}
-                    {req.action === "Add" && (
+                    {req.action === "Addition of a student to a group" && (
                       <span>Student to be added: {req.add_student}</span>
                     )}
                   </div>
