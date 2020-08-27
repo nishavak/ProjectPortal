@@ -1109,6 +1109,25 @@ def studentUnsubmitAssignment(request, id):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(["POST"])
+def addStudent(request):
+    try:
+        student_to_add = Student.objects.get(
+            roll_number=int(request.data["roll"]))
+        if student_to_add.team == None:
+            me = Student.objects.get(id=request.user.id)
+            if len(Student.objects.filter(team=me.team)) <= 3:
+                student_to_add.team = me.team
+                student_to_add.save()
+                return Response(data="Added student to the group", status=status.HTTP_201_CREATED)
+            else:
+                return Response(data="Maximum four students can be in a group", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data="Student is already in some group", status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response(data="Student has not registered", status=status.HTTP_400_BAD_REQUEST)
+
+
 # * ASSISTANT
 # * AUTHENTICATION AND MISCELLANEOUS
 """ change profile picture and password """
@@ -1246,7 +1265,7 @@ def changePhoto(request):
 @api_view()
 def getImage(request):
     try:
-        url = ("/api" + request.user.photo).url
+        url = ("/api" + request.user.photo.url)
         return Response(data=url, status=status.HTTP_200_OK)
     except:
         url = None

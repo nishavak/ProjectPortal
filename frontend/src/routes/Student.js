@@ -19,6 +19,7 @@ export default class Student extends React.Component {
 
     this.leader = false;
     this.group_registered = false;
+    this.roll = null;
   }
 
   componentDidMount() {
@@ -44,8 +45,10 @@ export default class Student extends React.Component {
   addStudent = (event) => {
     event.preventDefault();
     if (this.leader) {
-      // $("#roll_number").val;
-      // axios.post("addStudent/", $("#roll_number").val);
+      axios
+        .post("addStudent/", { roll: this.roll })
+        .then(({ data }) => NotificationManager.success(data))
+        .catch((err) => NotificationManager.error(err.response.data));
     } else {
       NotificationManager.error("Ask the group leader to add a member");
     }
@@ -53,6 +56,10 @@ export default class Student extends React.Component {
   removeStudent = (event) => {
     event.preventDefault();
     if (this.leader) {
+      axios
+        .post("removeStudent/", { roll: this.roll })
+        .then(({ data }) => NotificationManager.success(data))
+        .catch((err) => NotificationManager.error(err.response.data));
     } else {
       NotificationManager.error("Ask the group leader to remove a member");
     }
@@ -84,6 +91,7 @@ export default class Student extends React.Component {
                         </label>
                         <input
                           type="number"
+                          onChange={(event) => (this.roll = event.target.value)}
                           name="add_roll_number"
                           id="add_roll_number"
                           className="form-control"
@@ -120,6 +128,7 @@ export default class Student extends React.Component {
                         </label>
                         <input
                           type="number"
+                          onChange={(event) => (this.roll = event.target.value)}
                           name="remove_roll_number"
                           id="remove_roll_number"
                           className="form-control"
