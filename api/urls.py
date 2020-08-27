@@ -32,12 +32,14 @@ urlpatterns = [
          views.coordinatorProjectRequestManage),
     # GUIDE
     path('guideDashboard/', views.guideDashboard),
-    path('guideAssignmentList/<int:groupId>', views.guideAssignmentList),
-    path('guideAssignmentDetails/<int:groupId>/<int:pk>',
+    path('guideAssignmentList/<int:groupId>/', views.guideAssignmentList),
+    path('guideAssignmentDetails/<int:groupId>/<int:pk>/',
          views.guideAssignmentDetails),
     path("guideAssignGrades/", views.guideAssignGrades),
     path("guideDetailsForm/", views.guideDetailsForm),
-    path("guideProfile/", views.guideProfile),
+    path("guideGroup/<int:groupId>/", views.guideGroup),
+    path("guidePersonal/", views.guidePersonal),
+
     # STUDENT
     path('studentPersonal/', views.studentPersonal),
     path('studentAssignments/', views.studentAssignments),

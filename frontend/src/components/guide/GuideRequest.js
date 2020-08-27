@@ -6,10 +6,6 @@ export default class GuideRequest extends React.Component {
   }
 
   render() {
-    return (
-      <div className="guide-requests">
-        <p>h</p>
-      </div>
-    );
+    return <div className="guide-requests"></div>;
   }
 }

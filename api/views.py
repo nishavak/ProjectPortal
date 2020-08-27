@@ -697,13 +697,13 @@ def coordinatorProjectRequestManage(request, id, status):
 @api_view()
 def guideDashboard(request):
     response = {}
-    _user = Guide.objects.get(user=request.user)
+    _user = Guide.objects.get(id=request.user.id)
     group_info = []
     for team in Team.objects.filter(guide=_user):
         member_count = len(Student.objects.filter(team=team))
         _t = {
             "id": team.id,
-            "leader_name": team.leader.first_name,
+            "leader_name": team.leader.name,
             "member_count": member_count,
         }
         try:
@@ -719,11 +719,12 @@ def guideDashboard(request):
 
 @api_view()
 def guideAssignmentDetails(request, pk, groupId):
+    guide = Guide.objects.get(id=request.user.id)
     response = {}
     studentList = []
     for student in Student.objects.filter(team_id=groupId):
         studentData = {
-            "student roll number": student.roll_number
+            "student_roll_number": student.roll_number
         }
         try:
             grade = Grade.objects.get(
@@ -733,6 +734,7 @@ def guideAssignmentDetails(request, pk, groupId):
             studentData.setdefault("grade", None)
         studentList.append(studentData)
     assignment = Assignment.objects.get(pk=pk)
+    print(assignment)
     assignmentDetails = {
         "title": assignment.title,
         "description": assignment.description,
@@ -762,11 +764,13 @@ def guideAssignmentDetails(request, pk, groupId):
     response.setdefault("student_list", studentList)
     response.setdefault("assignment_details", assignmentDetails)
     response.setdefault("team_submissions", teamSubmissions)
+    print(response)
     return Response(data=response)
 
 
 @api_view(["PUT"])
 def guideAssignGrades(request):
+    guide = Guide.objects.get(id=request.user.id)
     student_grade = request.data.get("student_grade")
     # print(request.data, type(request.data))
     for i in student_grade:
@@ -783,116 +787,129 @@ def guideAssignGrades(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def guideAssignmentList(request, groupId):
+    guide = Guide.objects.get(id=request.user.id)
     team = Team.objects.get(id=groupId)
     grades = Grade.objects.filter(student=team.leader)
     response = []
     for grade in grades:
         _assignment = Assignment.objects.get(grade=grade)
-        _t = {
-            "assignment_id": _assignment.id,
-            "assignment_title": _assignment.title,
-            "assignment_due": _assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-            "assignment_posted": _assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "assignment_weightage": _assignment.weightage,
-        }
+        try:
+            _t = {
+                "assignment_id": _assignment.id,
+                "assignment_title": _assignment.title,
+                "assignment_due": _assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_posted": _assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_weightage": _assignment.weightage,
+            }
+        except:
+            _t = {
+                "assignment_id": _assignment.id,
+                "assignment_title": _assignment.title,
+                "assignment_due": None,
+                "assignment_posted": _assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_weightage": _assignment.weightage,
+            }
         if grade.turned_in:
             _t.setdefault("grading_status", "Submitted")
             if grade.marks_obtained != None:
                 _t.setdefault("grading_status", "Graded")
         else:
             _t.setdefault("grading_status", "Not Submitted")
+        _t.setdefault("team_id", team.id)
         response.append(_t)
     return Response(data=response)
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['PUT'])
 def guideDetailsForm(request):
-    if request.method == "GET":
-        guide = Guide.objects.all()[0]
-        # print(request.user)
-        # guide = Guide.objects.get(id=request.user.id)
-        response = {
-            "guide_initials": guide.initials,
-        }
-        preferences = guide.preferences.all()
-        _preferences = []
-        for preference in preferences:
-            _t = {
-                "area_of_interest": preference.area_of_interest,
-                "thrust_area": preference.thrust_area
-            }
-            _preferences.append(_t)
-        response.setdefault("preferences", _preferences)
-        return Response(data=response)
-    elif request.method == "PUT":
-        # guide = Guide.objects.all()[0]
-        guide = Guide.objects.get(id=request.user.id)
-        data = request.data
-        if len(data["preferences"]) > 4:
+    guide = Guide.objects.get(id=request.user.id)
+    data = request.data
+    # if len(data["preferences"]) > 4:
+    #    return Response(status=status.HTTP_400_BAD_REQUEST)
+    for preference in data["preferences"]:
+        if not preference["area_of_interest"] in [i[0] for i in constants.DOMAIN]:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        for preference in data["preferences"]:
-            if not preference["area of interest"] in [i[0] for i in constants.DOMAIN]:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            if not preference["thrust area"] in [i[0] for i in constants.THRUST_AREA]:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        guide.initials = data["guide initials"]
-        guide.preferences.clear()
-        guide.save()
-        for preference in data["preferences"]:
-            _p = Preference.objects.filter(area_of_interest=preference["area of interest"]).filter(
-                thrust_area=preference["thrust area"]).first()
-            if _p == None:
-                _p = Preference.objects.create(
-                    area_of_interest=preference["area of interest"], thrust_area=preference["thrust area"])
-            guide.preferences.add(_p)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if not preference["thrust_area"] in [i[0] for i in constants.THRUST_AREA]:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    guide.initials = data["initials"]
+    guide.preferences.clear()
+    guide.save()
+    for preference in data["preferences"]:
+        _p = Preference.objects.filter(area_of_interest=preference["area_of_interest"]).filter(
+            thrust_area=preference["thrust_area"]).first()
+        if _p == None:
+            _p = Preference.objects.create(
+                area_of_interest=preference["area_of_interest"], thrust_area=preference["thrust_area"])
+        guide.preferences.add(_p)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view()
-def guideProfile(request):
-    guide = Guide.objects.all()[0]
-    # request.user
-    response = {
-        "personal": {
-            "name": guide.name,
-            "initials": guide.initials,
-            "email": guide.email
-        }
+def guidePersonal(request):
+    guide = Guide.objects.get(id=request.user.id)
+    guide_data = {
+        "branch": guide.branch,
+        "id": guide.id,
+        "initials": guide.initials,
+        "name": guide.name,
+        "email": guide.email,
     }
-    group_details = []
-    teams = Team.objects.filter(guide=guide)
-    for team in teams:
-        leader = Student.objects.get(id=team.leader.id)
-        _t = {
-            "team_id": team.id,
-            "leader": leader.name,
+    preferences = []
+    if(guide.preferences.all()):
+        for preference in guide.preferences.all():
+            p = Preference.objects.get(id=preference.id)
+            preferences.append(
+                {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area})
+    else:
+        preferences = None
+    try:
+        teams = Team.objects.filter(guide=guide)
+        team_data = []
+        for team in teams:
+            temp_team_data = {
+                "team_id": team.id
+            }
+            team_data.append(temp_team_data)
+        guide_data.setdefault("teams", team_data)
+    except:
+        guide_data.setdefault("teams", None)
+    guide_data.setdefault("preferences", preferences)
+    return Response(data=guide_data)
+
+
+@api_view(['GET'])
+def guideGroup(request, groupId):
+    guide = Guide.objects.get(id=request.user.id)
+    team = Team.objects.get(id=groupId)
+    leader = Student.objects.get(id=team.leader.id)
+    students = Student.objects.filter(team=team.id)
+    response = {
+        "team_id": team.id,
+        "leader": leader.name
+    }
+    member_list = []
+    for student in students:
+        _s = {
+            "student_name": student.name,
+            "student_email": student.email,
+            "student_roll_number": student.roll_number,
+            "student_branch": student.branch
         }
-        students = Student.objects.filter(team=team)
-        member_list = []
-        for student in students:
-            _s = {
-                "student_name": student.name,
-                "student_photo": ("/api" + student.photo.url) or None,
-                "student_email": student.email,
-                "student_roll number": student.roll_number,
-                "student_branch": student.branch
-            }
-            member_list.append(_s)
-        project = Project.objects.filter(team=team).first()
-        if project != None:
-            project_details = {
-                "project_title": project.title,
-                "project_description": project.description,
-                "project_domain": project.domain,
-                "project_category": project.category,
-                "project_explanatory field": project.explanatory_field,
-            }
-        else:
-            project_details = {}
-        _t.setdefault("member_list", member_list)
-        _t.setdefault("project", project_details)
-        group_details.append(_t)
-    response.setdefault("group_details", group_details)
+        member_list.append(_s)
+    project = Project.objects.filter(team=team).first()
+    if project != None:
+        project_details = {
+            "project_id": project.id,
+            "project_title": project.title,
+            "project_description": project.description,
+            "project_domain": dict(constants.DOMAIN)[project.domain],
+            "project_category": dict(constants.CATEGORY)[project.category],
+            "project_explanatory_field": project.explanatory_field,
+        }
+    else:
+        project_details = {}
+    response.setdefault("students", member_list)
+    response.setdefault("project", project_details)
     return Response(data=response)
 # * STUDENT
 
