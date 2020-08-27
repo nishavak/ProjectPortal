@@ -8,7 +8,7 @@ class Statistics extends React.Component {
     super(props);
     this.assignment_list = [];
     this.subStats = [];
-    this.downloadable = [];
+    // this.downloadable = [];
   }
   componentDidMount() {
     axios.get("coordinatorSubmissionStatistics/").then(({ data }) => {
@@ -19,24 +19,24 @@ class Statistics extends React.Component {
         });
       }
       this.subStats = data;
-      this.subStats.forEach((element) => {
-        if (element.grades.length !== 0) {
-          element.grades.forEach((grade) => {
-            this.downloadable.push({
-              team_id: element.team_id,
-              assignment_name: grade.assignment_name,
-              submission_status: grade.submission_status,
-            });
-          });
-        } else {
-          this.downloadable.push({
-            team_id: element.team_id,
-            assignment_name: null,
-            submission_status: null,
-          });
-        }
-      });
-      console.log(this.downloadable);
+      // this.subStats.forEach((element) => {
+      //   if (element.grades.length !== 0) {
+      //     element.grades.forEach((grade) => {
+      //       this.downloadable.push({
+      //         team_id: element.team_id,
+      //         assignment_name: grade.assignment_name,
+      //         submission_status: grade.submission_status,
+      //       });
+      //     });
+      //   } else {
+      //     this.downloadable.push({
+      //       team_id: element.team_id,
+      //       assignment_name: null,
+      //       submission_status: null,
+      //     });
+      //   }
+      // });
+      // console.log(this.downloadable);
       this.setState({});
     });
   }
@@ -90,7 +90,7 @@ class Statistics extends React.Component {
             </tbody>
           </table>
         </div>
-        <div className="w-100 d-flex justify-content-center">
+        {/* <div className="w-100 d-flex justify-content-center">
           <div
             className="btn btn-danger"
             onClick={() =>
@@ -102,7 +102,7 @@ class Statistics extends React.Component {
             <i className="fa fa-arrow-down mr-2" />
             Download
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
