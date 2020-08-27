@@ -1,0 +1,34 @@
+#guide-header {
+  .dropdown-menu {
+    margin-top: 0.2em;
+    .dropdown-item {
+      cursor: pointer;
+    }
+  }
+  .dropdown .dropdown-menu {
+    transition: all 0.3s;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .dropdown.show .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+  }
+  @media only screen and (max-width: 992px) {
+    .dropdown-item:hover {
+      background: none;
+    }
+  }
+  .dropdown-item {
+    &:active {
+      color: white;
+      background: rgb(183, 32, 46);
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+}
+
+  

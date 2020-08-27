@@ -1,0 +1,8 @@
+#group-card{
+    &:hover{
+        #card-header{
+            transition: all 0.15s;
+            background-color: rgb(235, 235, 235);
+        }
+    }
+}

@@ -20,6 +20,7 @@ export default class Student extends React.Component {
     this.leader = false;
     this.group_registered = false;
     this.roll = null;
+    this.reason = null;
   }
 
   componentDidMount() {
@@ -57,7 +58,7 @@ export default class Student extends React.Component {
     event.preventDefault();
     if (this.leader) {
       axios
-        .post("removeStudent/", { roll: this.roll })
+        .post("removeStudent/", { roll: this.roll, reason: this.reason })
         .then(({ data }) => NotificationManager.success(data))
         .catch((err) => NotificationManager.error(err.response.data));
     } else {
@@ -139,6 +140,9 @@ export default class Student extends React.Component {
                       <div className="form-group">
                         <label htmlFor="reason">Reason</label>
                         <textarea
+                          onChange={(event) =>
+                            (this.reason = event.target.value)
+                          }
                           name="reason"
                           id="reason"
                           cols="30"

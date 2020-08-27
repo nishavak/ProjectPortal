@@ -1128,6 +1128,21 @@ def addStudent(request):
         return Response(data="Student has not registered", status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(["POST"])
+def removeStudent(request):
+    try:
+        student_to_remove = Student.objects.get(
+            roll_number=int(request.data["roll"]))
+        try:
+            GroupRequest.objects.create(status="P", action="Removal", remove_student=student_to_remove,
+                                        description=request.data["reason"], team=Student.objects.get(id=request.user.id).team)
+            return Response(data="Removal Request has been sent", status=status.HTTP_201_CREATED)
+        except:
+            return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
+
+
 # * ASSISTANT
 # * AUTHENTICATION AND MISCELLANEOUS
 """ change profile picture and password """

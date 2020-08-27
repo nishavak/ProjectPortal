@@ -47,6 +47,7 @@ urlpatterns = [
     path('createTeam/', views.createTeam),
     path('groupData/', views.groupData),
     path('addStudent/', views.addStudent),
+    path('removeStudent/', views.removeStudent),
     path('assignment/<int:id>', views.assignment),
     path('assignmentSubmit/<int:id>', views.assignmentSubmit),
     path('studentAssignmentDetails/<int:id>', views.studentAssignmentDetails),

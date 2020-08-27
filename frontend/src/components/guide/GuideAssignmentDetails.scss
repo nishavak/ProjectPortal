@@ -1,0 +1,23 @@
+#guide-assignment-details{
+    .file-container:hover{
+        background-color: rgb(250, 246, 246);
+        
+    }
+    a:hover{
+     
+        text-decoration: none;
+    }
+    .btn{
+        outline: 0;
+        box-shadow: none;
+    }
+    .btn:hover{
+        background-color: rgb(183, 32, 46);
+        color:white;
+    }
+    #grade{
+        border:none;
+        outline: 0;
+        box-shadow: none;
+    }
+}

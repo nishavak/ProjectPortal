@@ -1,0 +1,15 @@
+#GuideAssignmentList {
+    .nav-pills .nav-link:not(.active) {
+      background-color: white;
+      color: rgb(183, 32, 46);
+    }
+    .nav-pills .nav-link {
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+    .bg {
+      background-image: url("/assets/images/EvilNextDevilfish-small.gif");
+      filter: blur(0.6em);
+    }
+  }
+  
