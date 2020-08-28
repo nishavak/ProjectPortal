@@ -510,12 +510,13 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
 
 @api_view(['POST'])
 def coordinatorCreateAssignment(request):
+    # print(request.data, request.POST, request.FILES)
     title = request.data.get('title')
     description = request.data.get('description')
     weightage = int(request.data.get('weightage'))
-    posted = request.data.get('posted')
+    posted = timezone.datetime.fromtimestamp(int(request.data.get('posted')))
     due = timezone.datetime.fromtimestamp(int(request.data.get('due')))
-    coordinator = request.data.get("coordinator")
+    coordinator = Coordinator.objects.get(id=request.user.id)
 
     data = {
         "title": title,
@@ -533,6 +534,9 @@ def coordinatorCreateAssignment(request):
         for student in Student.objects.all():
             Grade.objects.create(
                 student=student, guide=None, assignment=assignment)
+        for file in request.data["attachments"]:
+            File.objects.create(assignment=assignment, Team=None,
+                                submitted_by=coordinator.email, file=file)
         return Response(status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -817,6 +821,11 @@ def guideAssignmentList(request, groupId):
         _t.setdefault("team_id", team.id)
         response.append(_t)
     return Response(data=response)
+
+
+@api_view()
+def guideRequest(request):
+    return Response()
 
 
 @api_view(['PUT'])
