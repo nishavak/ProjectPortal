@@ -23,6 +23,7 @@ class AssignmentDetails extends React.Component {
     };
     this.id = this.props.match.params.id;
     this.ass = {};
+    this.deleteList = [];
   }
   /* 
   
@@ -178,6 +179,11 @@ class AssignmentDetails extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+
+    axios
+      .delete("coordinatorRemoveAttachments/", this.deleteList)
+      .then(({ data }) => console.log(data))
+      .catch((err) => console.log(err));
 
     let formData = new FormData();
     let u = this.getUploadList();
@@ -343,7 +349,15 @@ class AssignmentDetails extends React.Component {
                           style={{ cursor: "pointer" }}
                           onClick={() => window.open(file.url)}
                         >
-                          {file.name}
+                          <span>{file.name}</span>
+                          <i
+                            className="fa fa-close"
+                            role="button"
+                            onClick={(event) => {
+                              this.deleteList.push(file.id);
+                              $(event.target).parent().remove();
+                            }}
+                          ></i>
                         </li>
                       ))
                     : "No attachments"}

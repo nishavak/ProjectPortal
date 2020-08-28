@@ -18,6 +18,7 @@ urlpatterns = [
     path('coordinatorAssignmentDetail/<int:id>/',
          views.coordinatorAssignmentDetail),
     path('coordinatorCreateAssignment/', views.coordinatorCreateAssignment),
+    path('coordinatorRemoveAttachments/', views.coordinatorRemoveAttachments),
     path('coordinatorSubmissionStatistics/',
          views.coordinatorSubmissionStatistics),
     path('coordinatorGradingStatistics/',

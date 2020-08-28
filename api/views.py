@@ -376,6 +376,13 @@ def coordinatorAssignmentList(request):
     return Response(data=response)
 
 
+@api_view(["DELETE"])
+def coordinatorRemoveAttachments(request):
+    l = request.data["delete_list"]
+    print(l)
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def coordinatorAssignmentDetail(request, id):
     if request.method == "GET":
@@ -461,7 +468,12 @@ def coordinatorAssignmentDetail(request, id):
         serializer = AssignmentSerializer(assignment, data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            count = request.data["attachment_count"]
+            filekeylist = ["file["+str(i)+"]" for i in range(int(count))]
+            for i in range(int(count)):
+                File.objects.create(assignment=assignment, team=None,
+                                    submitted_by=Coordinator.objects.get(id=request.user.id).email, file=request.FILES[filekeylist[i]])
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
