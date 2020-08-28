@@ -158,7 +158,7 @@ class Coordinator extends React.Component {
           </div>
         </div>
         <div className="row mx-auto">
-          <div className="sidebar col-lg-2 col-12  d-lg-block d-none shadow-sm m-0">
+          <div className="sidebar col-lg-2 col-12  d-lg-block d-none shadow m-0">
             <div>
               <img
                 src={SomaiyaLogo}
@@ -171,55 +171,55 @@ class Coordinator extends React.Component {
               <div className="nav align-top ">
                 <Link
                   to="/students"
-                  className="nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
                   <i className="fa fa-user mr-3" aria-hidden="true" />
                   Student
                 </Link>
                 <Link
                   to="/groups"
-                  className="nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
                   <i className="fa fa-users mr-3" aria-hidden="true" />
                   Groups
                 </Link>
                 <Link
                   to="/guides"
-                  className="nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
                   <i className="fa fa-user mr-3" aria-hidden="true" />
                   Guide
                 </Link>
                 <Link
                   to="/assignments"
-                  className="nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
                   <i className="fa fa-tasks mr-3" aria-hidden="true" />
                   Assignments
                 </Link>
                 <Link
                   to="/projects"
-                  className="nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
                   <i className="fa fa-folder mr-3" aria-hidden="true" />
                   Projects
                 </Link>
                 <Link
                   to="/handle-requests"
-                  className="nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
                   <i className="fa fa-bolt mr-3" aria-hidden="true" />
                   Handle Requests
                 </Link>
                 <Link
                   to="/faculty-form"
-                  className="nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
                   <i className="fa fa-wpforms mr-3" aria-hidden="true" />
                   Guide Creation
                 </Link>
                 <div
-                  className="nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                   onClick={() =>
                     axios.get("signOut/").then(() => window.location.reload())
                   }

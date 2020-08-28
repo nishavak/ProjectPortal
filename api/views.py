@@ -673,7 +673,7 @@ def coordinatorProjectRequest(request):
     for project_request in project_requests:
         _t = {
             "project": project_request.project.id,
-            "description": project_request.description,
+            # "description": project_request.description,
             "status": project_request.status,
             "id": project_request.id,
             "created": project_request.created.strftime("%d/%m/%Y, %H:%M:%S"),
