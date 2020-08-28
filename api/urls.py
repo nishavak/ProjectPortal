@@ -25,11 +25,11 @@ urlpatterns = [
          views.coordinatorGradingStatistics),
     path('coordinatorGroupRequest/',
          views.coordinatorGroupRequest),
-    path('coordinatorGroupRequestManage/<int:id>/<slug:status>',
+    path('coordinatorGroupRequestManage/<int:id>/<slug:what>',
          views.coordinatorGroupRequestManage),
     path('coordinatorProjectRequest/',
          views.coordinatorProjectRequest),
-    path('coordinatorProjectRequestManage/<int:id>/<slug:status>',
+    path('coordinatorProjectRequestManage/<int:id>/<slug:what>',
          views.coordinatorProjectRequestManage),
     # GUIDE
     path('guideDashboard/', views.guideDashboard),

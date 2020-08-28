@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./HandleRequests.scss";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 class HandleRequests extends React.Component {
   constructor() {
@@ -9,6 +10,7 @@ class HandleRequests extends React.Component {
     this.state = {
       view: "All",
       status: "",
+      loading: true,
     };
     this.project_requests = [];
     this.group_requests = [];
@@ -28,12 +30,13 @@ class HandleRequests extends React.Component {
       .then(({ data }) => {
         this.project_requests = data.project_requests;
         console.log(this.project_requests);
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="handle-requests mx-auto" style={{ width: "85%" }}>
         <br />
@@ -116,13 +119,10 @@ class HandleRequests extends React.Component {
                       <button
                         className="btn btn-outline-success"
                         onClick={() => {
-                          this.setState({ status: "A" });
                           axios
-                            .put(
-                              `coordinatorProjectRequestManage/${req.id}`,
-                              this.state.status
-                            )
+                            .put(`coordinatorGroupRequestManage/${req.id}/A`)
                             .catch((err) => console.log(err));
+                          this.setState({ status: "A" });
                         }}
                       >
                         Accept
@@ -132,13 +132,10 @@ class HandleRequests extends React.Component {
                       <button
                         className="btn btn-outline-danger "
                         onClick={() => {
-                          this.setState({ status: "R" });
                           axios
-                            .put(
-                              `coordinatorProjectRequestManage / ${req.id}`,
-                              this.state.status
-                            )
+                            .put(`coordinatorGroupRequestManage/${req.id}/R`)
                             .catch((err) => console.log(err));
+                          this.setState({ status: "R" });
                         }}
                       >
                         Reject
@@ -194,13 +191,12 @@ class HandleRequests extends React.Component {
                         <button
                           className="btn btn-outline-success"
                           onClick={() => {
-                            this.setState({ status: "A" });
                             axios
                               .put(
-                                `coordinatorProjectRequestManage/${req.id}`,
-                                this.state.status
+                                `coordinatorProjectRequestManage/${req.id}/A`
                               )
                               .catch((err) => console.log(err));
+                            this.setState({ status: "A" });
                           }}
                         >
                           Accept
@@ -210,13 +206,12 @@ class HandleRequests extends React.Component {
                         <button
                           className="btn btn-outline-danger "
                           onClick={() => {
-                            this.setState({ status: "R" });
                             axios
                               .put(
-                                `coordinatorProjectRequestManage / ${req.id}`,
-                                this.state.status
+                                `coordinatorProjectRequestManage/${req.id}/R`
                               )
                               .catch((err) => console.log(err));
+                            this.setState({ status: "R" });
                           }}
                         >
                           Reject

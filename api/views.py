@@ -638,12 +638,12 @@ def coordinatorGroupRequest(request):
     return Response(data=response)
 
 
-@api_view(["GET", "PUT"])
-def coordinatorGroupRequestManage(request, id, status):
+@api_view(["PUT"])
+def coordinatorGroupRequestManage(request, id, what):
     group_request = GroupRequest.objects.get(id=id)
     action = group_request.action
     if action == "Change Leader":
-        if status == "A":
+        if what == "A":
             team = Team.objects.get(id=group_request.team.id)
             team.leader = group_request.new_leader
             team.save()
@@ -652,19 +652,9 @@ def coordinatorGroupRequestManage(request, id, status):
         else:
             group_request.status = "R"
             group_request.save()
-    elif action == "Add":
-        if status == "A":
-            student = Student.objects.get(id=group_request.add_student)
-            student.team = group_request.team
-            student.save()
-            group_request.status = "A"
-            group_request.save()
-        else:
-            group_request.status = "R"
-            group_request.save()
     else:
-        if status == "A":
-            student = Student.objects.get(id=group_request.add_student)
+        if what == "A":
+            student = Student.objects.get(id=group_request.remove_student)
             student.team = None
             student.save()
             group_request.status = "A"
@@ -672,7 +662,7 @@ def coordinatorGroupRequestManage(request, id, status):
         else:
             group_request.status = "R"
             group_request.save()
-    return Response()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(["GET"])
@@ -695,18 +685,18 @@ def coordinatorProjectRequest(request):
 
 
 @api_view(["GET", "PUT"])
-def coordinatorProjectRequestManage(request, id, status):
+def coordinatorProjectRequestManage(request, id, what):
     project_request = ProjectRequest.objects.get(id=id)
-    if status == "A":
+    if what == "A":
         project_request.status = "A"
         project_request.save()
-    if status == "R":
+    if what == "R":
         project = Project.objects.get(id=project_request.project.id)
         project.delete()
         project_request.delete()
-        project_request.save()
+        # student notify?
 
-    return Response()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 # * GUIDE
 
 
