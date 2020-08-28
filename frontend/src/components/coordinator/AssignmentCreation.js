@@ -297,12 +297,14 @@ export default class AssignmentCreation extends React.Component {
             </>
           </div>
         </div>
-        <Link to="/assignments">
-          <div className="back-button mx-auto p-2 text-center my-5 rounded-lg text-wrap text-break">
-            <i className="fa fa-arrow-left mr-2" aria-hidden="true" />
-            Back to Assignments
-          </div>
-        </Link>
+        <div className="w-100 d-flex justify-content-center">
+          <Link to="/assignments">
+            <button className="btn btn-danger">
+              {/* <i className="fa fa-arrow-left mr-2" aria-hidden="true" /> */}
+              Assignments
+            </button>
+          </Link>
+        </div>
       </div>
     );
   }

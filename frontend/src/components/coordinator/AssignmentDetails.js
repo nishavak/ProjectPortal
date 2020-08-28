@@ -290,21 +290,16 @@ class AssignmentDetails extends React.Component {
                     }
                   />
                 </div>
-                <div className="form-group d-flex flex-md-row flex-column">
-                  <div className="col-md-6 p-1">
-                    <div className="form-group">
-                      <label for="due">Due Date and Time (optional)</label>
-                      <input
-                        type="datetime-local"
-                        className="form-control"
-                        id="due"
-                        name="due"
-                        onChange={this.handleChange}
-                        value={this.ass.assignment_details ? this.state.due : 0}
-                      />
-                    </div>
-                    {/*<p>Due Date and Time</p><DateTimePicker onChange={onChange} value={value} />*/}
-                  </div>
+                <div className="form-group">
+                  <label for="due">Due Date and Time (optional)</label>
+                  <input
+                    type="datetime-local"
+                    className="form-control"
+                    id="due"
+                    name="due"
+                    onChange={this.handleChange}
+                    value={this.ass.assignment_details ? this.state.due : 0}
+                  />
                 </div>
                 <div className="form-group d-flex justify-content-between">
                   <Button variant="outline-success" id="save" type="submit">
@@ -336,28 +331,34 @@ class AssignmentDetails extends React.Component {
                   className="list-group list-group-flush w-100"
                   id="uploadFilesList"
                 >
-                  {this.ass.assignment_details.files.length
-                    ? this.ass.assignment_details.files.map((file) => (
-                        <li
-                          key={file.id}
-                          className="list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0"
-                          style={{ cursor: "pointer" }}
-                        >
-                          <span onClick={() => window.open(file.url)}>
-                            {file.name}
-                          </span>
-                          <i
-                            className="fa fa-close"
-                            role="button"
-                            onClick={(event) => {
-                              this.deleteList.push(file.id);
-                              console.log(this.deleteList);
-                              $(event.target).parent().remove();
-                            }}
-                          ></i>
-                        </li>
-                      ))
-                    : "No attachments"}
+                  {this.ass.assignment_details.files.length ? (
+                    this.ass.assignment_details.files.map((file) => (
+                      <li
+                        key={file.id}
+                        className="list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0"
+                        style={{ cursor: "pointer" }}
+                      >
+                        <span onClick={() => window.open(file.url)}>
+                          {file.name}
+                        </span>
+                        <i
+                          className="fa fa-close"
+                          role="button"
+                          onClick={(event) => {
+                            this.deleteList.push(file.id);
+                            console.log(this.deleteList);
+                            $(event.target).parent().remove();
+                          }}
+                        ></i>
+                      </li>
+                    ))
+                  ) : (
+                    <>
+                      <i className="text-center m-5 p-5 d-flex align-self-center">
+                        No attachments
+                      </i>
+                    </>
+                  )}
                 </ul>
               </div>
               <div
