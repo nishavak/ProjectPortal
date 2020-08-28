@@ -44,10 +44,7 @@ class GroupSubmissionDetails extends React.Component {
         </div>
         <br />
         <div className="row">
-          <div
-            className="shadow-sm col-12 col-md-3"
-            style={{ paddingBottom: "2em", height: "80%" }}
-          >
+          <div className="shadow-sm col-12 col-md-7 p-3">
             <h5 className="text-center">Submission Files</h5>
             <hr />
             {this.file_list &&
@@ -68,9 +65,9 @@ class GroupSubmissionDetails extends React.Component {
                 );
               })}
           </div>
-          <div className="col-md-9 col-12">
+          <div className="col-md-5 col-12">
             <div className="shadow-sm p-3">
-              <h5 className="text-center p-2">Grades and Submission Status</h5>
+              <h5 className="text-center">Grades</h5>
               <hr />
               <p className="text-">Weightage: {this.weightage || "-"}</p>
               <p className="text-">Marks Assigned:</p>

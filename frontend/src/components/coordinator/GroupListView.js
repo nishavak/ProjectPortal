@@ -12,7 +12,7 @@ export class GroupListView extends Component {
           <thead class="text-center">
             <tr class="">
               <th class="" scope="col">
-                Group Id
+                Group Number
               </th>
               <th class="" scope="col">
                 Project Name

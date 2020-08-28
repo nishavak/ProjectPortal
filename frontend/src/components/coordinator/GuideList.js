@@ -103,9 +103,12 @@ class Guide extends Component {
 
                     <td class="">
                       {guide.team_data.length
-                        ? guide.team_data.map((team) => {
-                            return <span>{team.team_id},</span>;
-                          })
+                        ? guide.team_data.map((team, i) => (
+                            <span>
+                              {team.team_id}
+                              {i < guide.team_data.length - 1 && ", "}
+                            </span>
+                          ))
                         : "-"}
                     </td>
                     <td class="">{guide.guide_branch}</td>

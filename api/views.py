@@ -216,7 +216,7 @@ def coordinatorGuide(request):
             "guide_name": guide.name
         }
         try:
-            teams = Team.objects.filter(guide=guide)
+            teams = Team.objects.filter(guide=guide).order_by("id")
             team_data = []
             for team in teams:
                 temp_team_data = {

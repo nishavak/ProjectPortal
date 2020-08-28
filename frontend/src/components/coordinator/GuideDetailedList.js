@@ -12,6 +12,7 @@ class GuideDetailedList extends React.Component {
     this.downloadable = [];
     this.state = { loading: true };
   }
+
   componentDidMount() {
     axios.get("coordinatorGuide/").then(({ data }) => {
       this.guides = data;
@@ -59,15 +60,32 @@ class GuideDetailedList extends React.Component {
         >
           Guide Detailed List
         </div>
-        <div className=" d-flex flex-md-row flex-column justify-content-between mx-auto mt-4 p-0">
-          <div className="col-md-3 col-12 text-center p-0 my-1">
-            <Link to="/guides" className="d-flex justify-content-start">
-              <div className="btn btn-danger" style={{ marginBottom: "1em" }}>
-                {/* <i className="fa fa-list mr-2" aria-hidden="true" /> */}
-                Overview List
+        <div className="d-flex flex-md-row flex-column justify-content-between my-4">
+          <Link to="/guides">
+            <button className="btn btn-danger">Overview list</button>
+          </Link>
+          {/* <div className="dropdown">
+            <button
+              className="btn btn-danger dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              Sort by
+            </button>
+            <div className="dropdown-menu">
+              <div
+                className="dropdown-item"
+                onClick={() => this.sort_by("guide_id")}
+              >
+                Guide Id
               </div>
-            </Link>
-          </div>
+              <div
+                className="dropdown-item"
+                onClick={() => this.sort_by("group_id")}
+              >
+                Group Number
+              </div>
+            </div>
+          </div> */}
         </div>
         <div class="table-responsive-sm">
           <table class="ui striped table">

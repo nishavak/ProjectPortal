@@ -5,6 +5,34 @@ import "./StudentList.scss";
 import saveCsv from "save-csv/save-csv.min.js";
 import Loading from "../shared/Loading";
 
+function compare_group_id(a, b) {
+  // Use toUpperCase() to ignore character casing
+  const studentA = a.group_id;
+  const studentB = b.group_id;
+
+  let comparison = 0;
+  if (studentA > studentB) {
+    comparison = 1;
+  } else if (studentA < studentB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+function compare_student_roll_number(a, b) {
+  // Use toUpperCase() to ignore character casing
+  const studentA = a.student_roll_number;
+  const studentB = b.student_roll_number;
+
+  let comparison = 0;
+  if (studentA > studentB) {
+    comparison = 1;
+  } else if (studentA < studentB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 class StudentList extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +40,14 @@ class StudentList extends Component {
     this.downloadable = [];
     this.state = { loading: true };
   }
+  sort_by = (q) => {
+    if (q === "group_id") {
+      this.students.sort(compare_group_id);
+    } else {
+      this.students.sort(compare_student_roll_number);
+    }
+    this.setState({ loading: false });
+  };
   componentDidMount() {
     axios.get("coordinatorStudent/").then(({ data }) => {
       console.table(data);
@@ -49,6 +85,34 @@ class StudentList extends Component {
           Student List
         </div>
         <br />
+
+        <div className="w-100">
+          <div className="dropdown">
+            <button
+              className="btn btn-danger dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              Sort by
+            </button>
+            <div className="dropdown-menu">
+              <div
+                className="dropdown-item"
+                onClick={() => this.sort_by("group_id")}
+              >
+                Group Id
+              </div>
+              <div
+                className="dropdown-item"
+                onClick={() => this.sort_by("student_roll_number")}
+              >
+                Roll number
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br />
+
         <div class="table-responsive">
           <table class="ui striped table">
             <thead class="text-center">
