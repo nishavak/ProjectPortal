@@ -514,7 +514,7 @@ def coordinatorCreateAssignment(request):
     title = request.data.get('title')
     description = request.data.get('description')
     weightage = int(request.data.get('weightage'))
-    posted = timezone.datetime.fromtimestamp(int(request.data.get('posted')))
+    posted = timezone.datetime.now()
     due = timezone.datetime.fromtimestamp(int(request.data.get('due')))
     coordinator = Coordinator.objects.get(id=request.user.id)
 
@@ -529,13 +529,9 @@ def coordinatorCreateAssignment(request):
     # file handling remaining
     serializer = AssignmentSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
-        assignment = Assignment.objects.get(title=title)
-        for student in Student.objects.all():
-            Grade.objects.create(
-                student=student, guide=None, assignment=assignment)
+        assignment = serializer.save()
         for file in request.data["attachments"]:
-            File.objects.create(assignment=assignment, Team=None,
+            File.objects.create(assignment=assignment, team=None,
                                 submitted_by=coordinator.email, file=file)
         return Response(status=status.HTTP_201_CREATED)
 
@@ -824,8 +820,12 @@ def guideAssignmentList(request, groupId):
 
 
 @api_view()
-def guideRequest(request):
-    return Response()
+def guideRequest(request, groupId):
+    guide = Guide.objects.get(id=request.user.id)
+    response = []
+    team = Team.objects.get(id=groupId)
+
+    return Response(data=response)
 
 
 @api_view(['PUT'])
@@ -1024,6 +1024,7 @@ def studentAssignments(request):
             "status": submission_status
         }
         response.append(t)
+    # print(response)
     return Response(data=response)
 
 

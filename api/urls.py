@@ -39,6 +39,7 @@ urlpatterns = [
     path("guideDetailsForm/", views.guideDetailsForm),
     path("guideGroup/<int:groupId>/", views.guideGroup),
     path("guidePersonal/", views.guidePersonal),
+    path("guideRequest/<int:groupId>/", views.guideRequest),
 
     # STUDENT
     path('studentPersonal/', views.studentPersonal),

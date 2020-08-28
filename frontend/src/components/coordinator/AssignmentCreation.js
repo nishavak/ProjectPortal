@@ -12,7 +12,6 @@ export default class AssignmentCreation extends React.Component {
       inputId: 0,
       files: [],
       due: new Date(),
-      posted: new Date().toLocaleString("en-IN"),
       title: "",
       description: "",
       weightage: "",
@@ -155,7 +154,6 @@ export default class AssignmentCreation extends React.Component {
     formData.append("title", this.state.title);
     formData.append("description", this.state.description);
     formData.append("due", Date.parse(new Date(this.state.due)) / 1000);
-    formData.append("posted", Date.parse(new Date(this.state.posted) / 1000));
     formData.append("weightage", this.state.weightage);
     const that = this;
     const config = {
