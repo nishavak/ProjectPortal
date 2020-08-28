@@ -147,10 +147,12 @@ export default class AssignmentCreation extends React.Component {
     e.preventDefault();
 
     let formData = new FormData();
-    // for (let i = 0; i < this.getUploadList().length; i++) {
-    //   formData.append(`file[${i}]`, this.getUploadList()[i]);
-    // }
-    formData.append("attachments", this.getUploadList());
+    let u = this.getUploadList();
+    for (let i = 0; i < u.length; i++) {
+      formData.append(`file[${i}]`, u[i]);
+    }
+    // formData.append("attachments", this.getUploadList());
+    formData.append("attachment_count", u.length);
     formData.append("title", this.state.title);
     formData.append("description", this.state.description);
     formData.append("due", Date.parse(new Date(this.state.due)) / 1000);
@@ -170,8 +172,8 @@ export default class AssignmentCreation extends React.Component {
     axios
       .post(`coordinatorCreateAssignment/`, formData, config)
       .then(({ data }) => {
-        window.location.reload();
         alert("Assignment created");
+        window.location.reload();
       })
       .catch((err) => {
         NotificationManager.error("Error creating assignment");
@@ -198,7 +200,7 @@ export default class AssignmentCreation extends React.Component {
         >
           Create Assignment
         </div>
-        <div className="d-flex">
+        <div className="d-flex flex-column flex-md-row">
           <div className=" text-left col-12 col-md-7 form-section mx-auto mt-4 ">
             <div className="">
               <form id="assignment-form" onSubmit={this.handleSubmit}>
@@ -241,7 +243,7 @@ export default class AssignmentCreation extends React.Component {
                 </div>
                 <div className="form-group d-flex flex-md-row flex-column">
                   <div className="col-md-6 p-1">
-                    <p>Due Date and Time</p>
+                    <p>Due Date and Time (optional)</p>
                     <input
                       type="datetime-local"
                       className="form-control"

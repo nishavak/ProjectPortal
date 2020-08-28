@@ -101,6 +101,7 @@ class GuideAssignmentList extends Component {
                           id={assignment.assignment_id}
                           groupId={this.groupId}
                           posted={assignment.assignment_posted}
+                          title={assignment.assignment_title}
                           due={assignment.assignment_due}
                           weightage={assignment.assignment_weightage}
                         />
@@ -115,6 +116,7 @@ class GuideAssignmentList extends Component {
                           {...props}
                           id={assignment.assignment_id}
                           groupId={this.groupId}
+                          title={assignment.assignment_title}
                           posted={assignment.assignment_posted}
                           due={assignment.assignment_due}
                           weightage={assignment.assignment_weightage}

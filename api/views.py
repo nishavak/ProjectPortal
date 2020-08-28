@@ -526,13 +526,14 @@ def coordinatorCreateAssignment(request):
         "weightage": weightage,
         "coordinator": coordinator
     }
-    # file handling remaining
     serializer = AssignmentSerializer(data=data)
     if serializer.is_valid():
         assignment = serializer.save()
-        for file in request.data["attachments"]:
+        count = request.data["attachment_count"]
+        filekeylist = ["file["+str(i)+"]" for i in range(int(count))]
+        for i in range(int(count)):
             File.objects.create(assignment=assignment, team=None,
-                                submitted_by=coordinator.email, file=file)
+                                submitted_by=coordinator.email, file=request.FILES[filekeylist[i]])
         return Response(status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -822,9 +823,12 @@ def guideAssignmentList(request, groupId):
 @api_view()
 def guideRequest(request, groupId):
     guide = Guide.objects.get(id=request.user.id)
-    response = []
+    response = {}
     team = Team.objects.get(id=groupId)
-
+    project = Project.objects.get(team=team)
+    response.setdefault("team_id", team.id)
+    response.setdefault("team_leader", team.leader)
+    response.setdefault("project_id", project.id)
     return Response(data=response)
 
 

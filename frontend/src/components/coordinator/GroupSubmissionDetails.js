@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import axios from "../../axios";
 class GroupSubmissionDetails extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class GroupSubmissionDetails extends React.Component {
         </div>
         <br />
         <div className="row">
-          <div className="shadow-sm col-12 col-md-7 p-3">
+          <div className="shadow-sm col-12 col-md-7 p-3 rounded">
             <h5 className="text-center">Submission Files</h5>
             <hr />
             {this.file_list &&
@@ -54,6 +55,7 @@ class GroupSubmissionDetails extends React.Component {
                     to={file.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    style={{ textDecoration: "none" }}
                   >
                     <div
                       className="file-container mt-3 mr-3 py-1 px-3 text- border rounded text-wrap "
