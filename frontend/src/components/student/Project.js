@@ -1,4 +1,7 @@
+import axios from "../../axios";
 import React, { Component } from "react";
+import { NotificationManager } from "react-notifications";
+import Loading from "../shared/Loading";
 
 const domain = [
   "Artifical Intelligence (Machine Learning, Natural Language Processing, Robotics)",
@@ -19,9 +22,10 @@ const domain = [
 export default class Project extends Component {
   constructor(props) {
     super(props);
-
+    this.registered = null;
+    this.amILeader = false;
     this.state = {
-      registered: false,
+      loading: true,
       title: "",
       description: "",
       domain: domain[0],
@@ -30,21 +34,59 @@ export default class Project extends Component {
     };
   }
 
+  componentDidMount() {
+    axios
+      .get("getProject/")
+      .then(({ data }) => {
+        axios
+          .get("amILeader/")
+          .then(({ data }) => {
+            this.amILeader = data;
+          })
+          .catch((err) => {});
+        if (data.registered === true) {
+          this.registered = data.registered;
+          this.setState({
+            title: data.title || "",
+            description: data.description || "",
+            domain: data.domain || domain[0],
+            type: data.type || "Internal",
+            interDisciplinaryReason: data.interDisciplinaryReason || "",
+          });
+        }
+        this.setState({ loading: false });
+      })
+      .catch((err) => {
+        NotificationManager.error(err.response.data.message);
+        this.setState({ loading: false });
+      });
+  }
+
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    axios
+      .post("createProject/", this.state)
+      .then(({ data }) => NotificationManager.success(data))
+      .catch((err) => NotificationManager.error(err.reponse.data));
+  };
+
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div
         className="d-flex flex-column justify-content-center slide-in-fwd-center"
         style={{ minHeight: "100%" }}
       >
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="title">Title</label>
             <input
-              disabled={this.state.registered}
+              value={this.state.title}
+              disabled={this.registered}
               onChange={this.handleChange}
               type="text"
               name="title"
@@ -55,7 +97,8 @@ export default class Project extends Component {
           <div className="form-group">
             <label htmlFor="description">Description</label>
             <textarea
-              disabled={this.state.registered}
+              value={this.state.description}
+              disabled={this.registered}
               onChange={this.handleChange}
               name="description"
               id="description"
@@ -65,7 +108,8 @@ export default class Project extends Component {
           <div className="form-group">
             <label htmlFor="type">Type of project</label>
             <select
-              disabled={this.state.registered}
+              value={this.state.type}
+              disabled={this.registered}
               onChange={this.handleChange}
               className="custom-select"
               name="type"
@@ -84,7 +128,8 @@ export default class Project extends Component {
                 Inter-disciplinary reason
               </label>
               <textarea
-                disabled={this.state.registered}
+                value={this.state.interDisciplinaryReason}
+                disabled={this.registered}
                 onChange={this.handleChange}
                 name="interDisciplinaryReason"
                 id="interDisciplinaryReason"
@@ -98,7 +143,8 @@ export default class Project extends Component {
           <div className="form-group">
             <label htmlFor="domain">Domain</label>
             <select
-              disabled={this.state.registered}
+              value={this.state.domain}
+              disabled={this.registered}
               onChange={this.handleChange}
               className="custom-select"
               name="domain"
@@ -109,16 +155,30 @@ export default class Project extends Component {
               ))}
             </select>
           </div>
-          <div className="form-group">
-            <button
-              hidden={this.state.registered}
-              disabled={this.state.registered}
-              type="submit"
-              className="btn btn-success"
-            >
-              Submit
-            </button>
-          </div>
+          {this.amILeader && !this.registered ? (
+            <div className="form-group">
+              <button
+                hidden={this.registered}
+                disabled={this.registered}
+                type="submit"
+                className="btn btn-success"
+              >
+                Submit
+              </button>
+            </div>
+          ) : (
+            <div className="form-group">
+              <button
+                hidden={this.registered}
+                disabled={this.registered}
+                type="button"
+                className="btn btn-danger"
+                onClick={() => alert("Cancel request")}
+              >
+                Cancel request
+              </button>
+            </div>
+          )}
         </form>
         <div className="">
           <a href="#">Old project records</a>

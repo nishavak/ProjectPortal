@@ -1180,6 +1180,57 @@ def removeStudent(request):
         return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(["POST"])
+def createProject(request):
+    student = Student.objects.get(id=request.user.id)
+    team = Team.objects.get(id=student.team.id)
+    data = {
+        "title": request.data["title"],
+        "description": request.data["description"],
+        "explanatory_field": request.data["interDisciplinaryReason"],
+        "domain": dict([(t[1], t[0]) for t in constants.DOMAIN])[request.data["domain"]],
+        "category": dict([(t[1], t[0]) for t in constants.CATEGORY])[request.data["type"]],
+        "team": team.id
+    }
+    s = ProjectSerializer(data=data)
+    print(data)
+    if s.is_valid():
+        ins = s.save()
+        prs = ProjectRequestSerializer(data={"status": "P", "project": ins.id})
+        if prs.is_valid():
+            prs.save()
+            for student in Student.objects.filter(team=team):
+                student.project = ins
+                student.save()
+            return Response(data="Project request sent", status=status.HTTP_201_CREATED)
+        else:
+            ins.delete()
+            return Response(prs.errors, status=status.HTTP_400_BAD_REQUEST)
+            # return Response(data="Error sending project request", status=status.HTTP_400_BAD_REQUEST)
+
+    # return Response(data="Error creating project", status=status.HTTP_400_BAD_REQUEST)
+    return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def getProject(request):
+    student = Student.objects.get(id=request.user.id)
+    try:
+        project = Project.objects.get(id=student.project.id)
+        pr = ProjectRequest.objects.get(project=project)
+        response = {
+            "registered": True,
+            "title": project.title,
+            "description": project.description,
+            "domain": dict(constants.DOMAIN)[project.domain],
+            "type": dict(constants.CATEGORY)[project.category],
+            "interDisciplinaryReason": project.explanatory_field
+        }
+        return Response(data=response, status=status.HTTP_200_OK)
+    except:
+        return Response(data={"registered": False, "message": "Not registered any project"}, status=status.HTTP_404_NOT_FOUND)
+
+
 # * ASSISTANT
 # * AUTHENTICATION AND MISCELLANEOUS
 """ change profile picture and password """

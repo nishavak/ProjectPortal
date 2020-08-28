@@ -180,7 +180,7 @@ class File(models.Model):
 
 class ProjectRequest(models.Model):
     created = models.DateTimeField(_("created"), auto_now=True)
-    description = models.TextField(_("description"))
+    # description = models.TextField(_("description"))
     last_modified = models.DateTimeField(
         _("last modified"), auto_now_add=True, blank=True, null=True)
     project = models.ForeignKey("api.Project", verbose_name=_(

@@ -44,6 +44,8 @@ urlpatterns = [
 
     # STUDENT
     path('studentPersonal/', views.studentPersonal),
+    path('createProject/', views.createProject),
+    path('getProject/', views.getProject),
     path('studentAssignments/', views.studentAssignments),
     path('amILeader/', views.amILeader),
     path('groupRegistered/', views.groupRegistered),
