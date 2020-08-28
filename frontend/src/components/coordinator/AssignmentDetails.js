@@ -181,7 +181,7 @@ class AssignmentDetails extends React.Component {
     e.preventDefault();
 
     axios
-      .delete("coordinatorRemoveAttachments/", this.deleteList)
+      .post("coordinatorRemoveAttachments/", { delete_list: this.deleteList })
       .then(({ data }) => console.log(data))
       .catch((err) => console.log(err));
 
@@ -300,9 +300,7 @@ class AssignmentDetails extends React.Component {
                         id="due"
                         name="due"
                         onChange={this.handleChange}
-                        value={
-                          this.ass.assignment_details ? this.state.due : ""
-                        }
+                        value={this.ass.assignment_details ? this.state.due : 0}
                       />
                     </div>
                     {/*<p>Due Date and Time</p><DateTimePicker onChange={onChange} value={value} />*/}
@@ -347,14 +345,16 @@ class AssignmentDetails extends React.Component {
                           key={file.id}
                           className="list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0"
                           style={{ cursor: "pointer" }}
-                          onClick={() => window.open(file.url)}
                         >
-                          <span>{file.name}</span>
+                          <span onClick={() => window.open(file.url)}>
+                            {file.name}
+                          </span>
                           <i
                             className="fa fa-close"
                             role="button"
                             onClick={(event) => {
                               this.deleteList.push(file.id);
+                              console.log(this.deleteList);
                               $(event.target).parent().remove();
                             }}
                           ></i>

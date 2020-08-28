@@ -376,10 +376,14 @@ def coordinatorAssignmentList(request):
     return Response(data=response)
 
 
-@api_view(["DELETE"])
+@api_view(["POST"])
 def coordinatorRemoveAttachments(request):
     l = request.data["delete_list"]
-    print(l)
+    for id in l:
+        try:
+            File.objects.get(id=id).delete()
+        except:
+            continue
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -456,11 +460,12 @@ def coordinatorAssignmentDetail(request, id):
             assignment = Assignment.objects.get(id=id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        print("Due Timestamp:\t", request.data["due"])
         data = {
             "title": request.data["title"],
             "description": request.data["description"],
             "weightage": request.data["weightage"],
-            "due": timezone.datetime.fromtimestamp(request.data["due"] / 1000),
+            "due": timezone.datetime.fromtimestamp(int(request.data.get('due'))),
             "coordinator": Coordinator.objects.get(id=request.user.id),
             "posted": assignment.posted
         }
