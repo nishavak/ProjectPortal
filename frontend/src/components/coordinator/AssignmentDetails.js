@@ -268,7 +268,7 @@ class AssignmentDetails extends React.Component {
                     className="form-control"
                     id="description"
                     name="description"
-                    rows="3"
+                    rows="4"
                     placeholder="Enter description here ..."
                     onChange={this.handleChange}
                     value={
@@ -305,11 +305,8 @@ class AssignmentDetails extends React.Component {
                     </div>
                     {/*<p>Due Date and Time</p><DateTimePicker onChange={onChange} value={value} />*/}
                   </div>
-                  <div className="col-md-6 p-1">
-                    <div className="form-group">{/* <Uploader /> */}</div>
-                  </div>
                 </div>
-                <div className="form-group d-flex justify-content-between buttons">
+                <div className="form-group d-flex justify-content-between">
                   <Button variant="outline-success" id="save" type="submit">
                     Save Changes
                   </Button>
