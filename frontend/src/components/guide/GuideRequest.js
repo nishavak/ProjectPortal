@@ -39,10 +39,7 @@ export default class GuideRequest extends React.Component {
           <br />
           {this.data ? (
             <div id="card" className="slide-in-bottom">
-              <div
-                className="card shadow-sm my-4"
-                style={{ width: "90%", float: "center" }}
-              >
+              <div className="card shadow-sm my-4">
                 <div className="card-header">
                   <b>Group Id :</b> {this.data.team_id}
                 </div>

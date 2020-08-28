@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./GradingStatistics.scss";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 class GradingStats extends Component {
   constructor(props) {
@@ -19,20 +20,20 @@ class GradingStats extends Component {
         });
       }
       this.gradeStats = data;
-      this.gradeStats.forEach((group_data) => {
-        if (group_data.grades.length) {
-          group_data.grades.forEach((grade) => {
+      this.gradeStats.forEach((data) => {
+        if (data.grade_list.length) {
+          data.grade_list.forEach((grade) => {
             this.downloadable.push({
-              team_id: group_data.team_id,
+              roll_number: data.roll_number,
               assignment_name: grade.assignment_name,
-              submission_status: grade.submission_status,
+              marks: grade.marks,
             });
           });
         } else {
           this.downloadable.push({
-            team_id: group_data.team_id,
+            roll_number: data.team_id,
             assignment_name: null,
-            submission_status: null,
+            marks: null,
           });
         }
       });
@@ -41,6 +42,7 @@ class GradingStats extends Component {
     });
   }
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="grading-stats mx-auto" style={{ width: "90%" }}>
         <br />

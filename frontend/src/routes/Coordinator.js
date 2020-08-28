@@ -144,7 +144,7 @@ class Coordinator extends React.Component {
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
               <i className="fa fa-wpforms mr-3" aria-hidden="true" />
-              Faculty Form
+              Guide Creation
             </Link>
           </div>
           <div
@@ -216,7 +216,7 @@ class Coordinator extends React.Component {
                   className="nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
                   <i className="fa fa-wpforms mr-3" aria-hidden="true" />
-                  Faculty Form
+                  Guide Creation
                 </Link>
                 <div
                   className="nav-item rounded p-2 w-100 text-decoration-none text-left"

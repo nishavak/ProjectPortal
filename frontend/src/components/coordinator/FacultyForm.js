@@ -99,7 +99,7 @@ class FacultyForm extends React.Component {
             backgroundColor: "rgba(231, 231, 231, 0.459)",
           }}
         >
-          Faculty Sign Up Form
+          Guide Sign Up Form
         </div>
         <br />
         <div
@@ -117,7 +117,7 @@ class FacultyForm extends React.Component {
             onSubmit={this.handleSubmit}
           >
             <div className="form-group">
-              <label htmlFor="name">Faculty Name</label>
+              <label htmlFor="name">Guide Name</label>
               <input
                 type="text"
                 name="name"
@@ -127,7 +127,7 @@ class FacultyForm extends React.Component {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="name">Faculty Initials</label>
+              <label htmlFor="name">Guide Initials</label>
               <input
                 type="text"
                 name="initials"

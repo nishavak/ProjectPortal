@@ -56,31 +56,30 @@ def coordinatorStudent(request):
     return Response(data=response, status=status.HTTP_200_OK)
 
 
-@api_view()
 def coordinatorStudentDetail(request, id):
     response = {}
     try:
-     student = St
+        student = Student.objects.get(id=id)
+    except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-  student_data = {
-      "student_branch": dict(constants.BRANCH)[student.branch],
-      "student_email": student.email,
-      "student_id": student.id,
-       "student_name":student.name,
-       "student_rollnumber": student.roll_number,
-       "student_photo" "/api" + student.photo.url or None,
-  }
+    student_data = {
+        "student_branch": student.branch,
+        "student_email": student.email,
+        "student_id": student.id,
+        "student_name": student.name,
+        "student_roll_number": student.roll_number,
+    }
     try:
-      project = Project.objects.get(student=student)
-        student_data.sdefault("project_id", project.id)
-       student_data.sedefault("project_name", project.title)
-   except:
-       student_data.sedefault("project_id", None)
-      student_data.setdefault("project_name", None)
+        project = Project.objects.get(student=student)
+        student_data.setdefault("project_id", project.id)
+        student_data.setdefault("project_name", project.title)
+    except:
+        student_data.setdefault("project_id", None)
+        student_data.setdefault("project_name", None)
     try:
-       team = Team.ojects.get(id=student.team.id)
-      student_data.setdefault("group_id", team.id)
+        team = Team.objects.get(id=student.team.id)
+        student_data.setdefault("group_id", team.id)
     except:
         student_data.setdefault("group_id", None)
     try:
@@ -391,9 +390,9 @@ def coordinatorAssignmentDetail(request, id):
         _files = []
         for file in files:
             _files.append({
-                "file_id": file.id,
-                "file_name": file.file.name,
-                "file_url": file.file.url,
+                "id": file.id,
+                "name": file.file.name.split("/")[-1],
+                "url": "/api" + file.file.url,
             })
         try:
             _assignment = {
