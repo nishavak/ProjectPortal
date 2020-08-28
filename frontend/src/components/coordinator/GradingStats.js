@@ -8,7 +8,7 @@ class GradingStats extends Component {
     super(props);
     this.assignment_list = [];
     this.gradeStats = [];
-    // this.downloadable = [];
+    this.downloadable = [];
   }
   componentDidMount() {
     axios.get("coordinatorGradingStatistics/").then(({ data }) => {
@@ -19,20 +19,25 @@ class GradingStats extends Component {
         });
       }
       this.gradeStats = data;
-      // this.downloadable.push(
-      //   this.students.map((student) => {
-      //     return {
-      //       student_roll_number: student.student_roll_number,
-      //       student_name: student.student_name,
-      //       group_id: student.group_id,
-      //       project_name: student.project_name,
-      //       student_branch: student.student_branch,
-      //       guide_name: student.guide_name,
-      //     };
-      //   }),
-      // );
-      // console.log(this.downloadable);
-      this.setState({});
+      this.gradeStats.forEach((group_data) => {
+        if (group_data.grades.length) {
+          group_data.grades.forEach((grade) => {
+            this.downloadable.push({
+              team_id: group_data.team_id,
+              assignment_name: grade.assignment_name,
+              submission_status: grade.submission_status,
+            });
+          });
+        } else {
+          this.downloadable.push({
+            team_id: group_data.team_id,
+            assignment_name: null,
+            submission_status: null,
+          });
+        }
+      });
+      console.log(this.downloadable);
+      this.setState({ loading: false });
     });
   }
   render() {
@@ -87,16 +92,17 @@ class GradingStats extends Component {
           </table>
         </div>
         <div className="w-100 d-flex justify-content-center">
-          {/* <div
-            className='btn btn-danger'
-            onClick={ () =>
-              saveCsv(this.downloadable[0], {
+          <div
+            className="btn btn-danger"
+            onClick={() =>
+              saveCsv(this.downloadable, {
                 filename: "grading-statistics.csv",
               })
-            }>
-            <i className='fa fa-arrow-down mr-2' />
+            }
+          >
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
-          </div> */}
+          </div>
         </div>
       </div>
     );

@@ -40,6 +40,7 @@ def coordinatorStudent(request):
             student_data.setdefault("project_id", None)
             student_data.setdefault("project_name", None)
         try:
+
             team = Team.objects.get(id=student.team.id)
             student_data.setdefault("group_id", team.id)
         except:
@@ -59,28 +60,27 @@ def coordinatorStudent(request):
 def coordinatorStudentDetail(request, id):
     response = {}
     try:
-        student = Student.objects.get(id=id)
-    except:
+     student = St
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    student_data = {
-        "student_branch": dict(constants.BRANCH)[student.branch],
-        "student_email": student.email,
-        "student_id": student.id,
-        "student_name": student.name,
-        "student_roll_number": student.roll_number,
-        "student_photo": "/api" + student.photo.url or None,
-    }
+  student_data = {
+      "student_branch": dict(constants.BRANCH)[student.branch],
+      "student_email": student.email,
+      "student_id": student.id,
+       "student_name":student.name,
+       "student_rollnumber": student.roll_number,
+       "student_photo" "/api" + student.photo.url or None,
+  }
     try:
-        project = Project.objects.get(student=student)
-        student_data.setdefault("project_id", project.id)
-        student_data.setdefault("project_name", project.title)
-    except:
-        student_data.setdefault("project_id", None)
-        student_data.setdefault("project_name", None)
+      project = Project.objects.get(student=student)
+        student_data.sdefault("project_id", project.id)
+       student_data.sedefault("project_name", project.title)
+   except:
+       student_data.sedefault("project_id", None)
+      student_data.setdefault("project_name", None)
     try:
-        team = Team.objects.get(id=student.team.id)
-        student_data.setdefault("group_id", team.id)
+       team = Team.ojects.get(id=student.team.id)
+      student_data.setdefault("group_id", team.id)
     except:
         student_data.setdefault("group_id", None)
     try:

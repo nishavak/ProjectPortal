@@ -2,13 +2,15 @@ import React from "react";
 import "./Statistics.scss";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 class Statistics extends React.Component {
   constructor(props) {
     super(props);
     this.assignment_list = [];
     this.subStats = [];
-    // this.downloadable = [];
+    this.downloadable = [];
+    this.state = { loading: true };
   }
   componentDidMount() {
     axios.get("coordinatorSubmissionStatistics/").then(({ data }) => {
@@ -19,28 +21,29 @@ class Statistics extends React.Component {
         });
       }
       this.subStats = data;
-      // this.subStats.forEach((element) => {
-      //   if (element.grades.length !== 0) {
-      //     element.grades.forEach((grade) => {
-      //       this.downloadable.push({
-      //         team_id: element.team_id,
-      //         assignment_name: grade.assignment_name,
-      //         submission_status: grade.submission_status,
-      //       });
-      //     });
-      //   } else {
-      //     this.downloadable.push({
-      //       team_id: element.team_id,
-      //       assignment_name: null,
-      //       submission_status: null,
-      //     });
-      //   }
-      // });
-      // console.log(this.downloadable);
-      this.setState({});
+      this.subStats.forEach((group_data) => {
+        if (group_data.grades.length) {
+          group_data.grades.forEach((grade) => {
+            this.downloadable.push({
+              team_id: group_data.team_id,
+              assignment_name: grade.assignment_name,
+              submission_status: grade.submission_status,
+            });
+          });
+        } else {
+          this.downloadable.push({
+            team_id: group_data.team_id,
+            assignment_name: null,
+            submission_status: null,
+          });
+        }
+      });
+      console.log(this.downloadable);
+      this.setState({ loading: false });
     });
   }
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="statistics mx-auto" style={{ width: "90%" }}>
         <br />
@@ -90,19 +93,19 @@ class Statistics extends React.Component {
             </tbody>
           </table>
         </div>
-        {/* <div className="w-100 d-flex justify-content-center">
+        <div className="w-100 d-flex justify-content-center">
           <div
             className="btn btn-danger"
             onClick={() =>
-              saveCsv(this.downloadable[0], {
+              saveCsv(this.downloadable, {
                 filename: "submission-statistics.csv",
               })
             }
           >
-            <i className="fa fa-arrow-down mr-2" />
+            {/* <i className="fa fa-arrow-down mr-2" /> */}
             Download
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }
