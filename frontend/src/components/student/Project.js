@@ -73,10 +73,16 @@ export default class Project extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("createProject/", this.state)
-      .then(({ data }) => NotificationManager.success(data))
-      .catch((err) => NotificationManager.error(err.reponse.data));
+    if (this.amILeader)
+      if (
+        this.state.title != "" &&
+        this.state.description != "" &&
+        domain.includes(this.state.domain)
+      )
+        axios
+          .post("createProject/", this.state)
+          .then(({ data }) => NotificationManager.success(data))
+          .catch((err) => NotificationManager.error(err.reponse.data));
   };
 
   render() {
@@ -86,12 +92,14 @@ export default class Project extends Component {
         className="d-flex flex-column justify-content-center slide-in-fwd-center"
         style={{ minHeight: "100%" }}
       >
+        {console.log(this.amILeader, this.applied, this.approved)}
+        {console.log(this.approved && !this.amILeader)}
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="title">Title</label>
             <input
               value={this.state.title}
-              disabled={this.approved && !this.amILeader}
+              disabled={this.approved ? true : !this.amILeader}
               onChange={this.handleChange}
               type="text"
               name="title"
@@ -103,7 +111,7 @@ export default class Project extends Component {
             <label htmlFor="description">Description</label>
             <textarea
               value={this.state.description}
-              disabled={this.approved && !this.amILeader}
+              disabled={this.approved ? true : !this.amILeader}
               onChange={this.handleChange}
               name="description"
               id="description"
@@ -114,7 +122,7 @@ export default class Project extends Component {
             <label htmlFor="type">Type of project</label>
             <select
               value={this.state.type}
-              disabled={this.approved && !this.amILeader}
+              disabled={this.approved ? true : !this.amILeader}
               onChange={this.handleChange}
               className="custom-select"
               name="type"
@@ -134,7 +142,7 @@ export default class Project extends Component {
               </label>
               <textarea
                 value={this.state.interDisciplinaryReason}
-                disabled={this.approved && !this.amILeader}
+                disabled={this.approved ? true : !this.amILeader}
                 onChange={this.handleChange}
                 name="interDisciplinaryReason"
                 id="interDisciplinaryReason"
@@ -149,7 +157,7 @@ export default class Project extends Component {
             <label htmlFor="domain">Domain</label>
             <select
               value={this.state.domain}
-              disabled={this.approved && !this.amILeader}
+              disabled={this.approved ? true : !this.amILeader}
               onChange={this.handleChange}
               className="custom-select"
               name="domain"
@@ -164,28 +172,19 @@ export default class Project extends Component {
             !this.approved ? (
               !this.applied ? (
                 <div className="form-group">
-                  <button
-                    hidden={this.approved}
-                    // disabled={this.applied}
-                    type="submit"
-                    className="btn btn-success"
-                  >
+                  <button type="submit" className="btn btn-success">
                     Submit
                   </button>
-                  {console.log(this.amILeader, this.applied, this.approved)}
                 </div>
               ) : (
                 <div className="form-group">
                   <button
-                    hidden={this.approved}
-                    // disabled={this.applied}
                     type="button"
                     className="btn btn-danger"
                     onClick={() => alert("Cancel request")}
                   >
                     Cancel request
                   </button>
-                  {console.log(this.amILeader, this.applied, this.approved)}
                 </div>
               )
             ) : (
