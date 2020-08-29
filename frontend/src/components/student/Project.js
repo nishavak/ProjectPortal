@@ -22,8 +22,9 @@ const domain = [
 export default class Project extends Component {
   constructor(props) {
     super(props);
-    this.registered = null;
+    this.applied = null;
     this.amILeader = false;
+    this.approved = null;
     this.state = {
       loading: true,
       title: "",
@@ -36,16 +37,20 @@ export default class Project extends Component {
 
   componentDidMount() {
     axios
+      .get("amILeader/")
+      .then(({ data }) => {
+        this.amILeader = data;
+        this.setState({ ...this.state });
+      })
+      .catch((err) => {
+        this.setState({ ...this.state });
+      });
+    axios
       .get("getProject/")
       .then(({ data }) => {
-        axios
-          .get("amILeader/")
-          .then(({ data }) => {
-            this.amILeader = data;
-          })
-          .catch((err) => {});
-        if (data.registered === true) {
-          this.registered = data.registered;
+        if (data.applied || data.approved) {
+          this.applied = data.applied;
+          this.approved = data.approved;
           this.setState({
             title: data.title || "",
             description: data.description || "",
@@ -86,7 +91,7 @@ export default class Project extends Component {
             <label htmlFor="title">Title</label>
             <input
               value={this.state.title}
-              disabled={this.registered}
+              disabled={this.approved && !this.amILeader}
               onChange={this.handleChange}
               type="text"
               name="title"
@@ -98,7 +103,7 @@ export default class Project extends Component {
             <label htmlFor="description">Description</label>
             <textarea
               value={this.state.description}
-              disabled={this.registered}
+              disabled={this.approved && !this.amILeader}
               onChange={this.handleChange}
               name="description"
               id="description"
@@ -109,7 +114,7 @@ export default class Project extends Component {
             <label htmlFor="type">Type of project</label>
             <select
               value={this.state.type}
-              disabled={this.registered}
+              disabled={this.approved && !this.amILeader}
               onChange={this.handleChange}
               className="custom-select"
               name="type"
@@ -129,7 +134,7 @@ export default class Project extends Component {
               </label>
               <textarea
                 value={this.state.interDisciplinaryReason}
-                disabled={this.registered}
+                disabled={this.approved && !this.amILeader}
                 onChange={this.handleChange}
                 name="interDisciplinaryReason"
                 id="interDisciplinaryReason"
@@ -144,7 +149,7 @@ export default class Project extends Component {
             <label htmlFor="domain">Domain</label>
             <select
               value={this.state.domain}
-              disabled={this.registered}
+              disabled={this.approved && !this.amILeader}
               onChange={this.handleChange}
               className="custom-select"
               name="domain"
@@ -155,29 +160,39 @@ export default class Project extends Component {
               ))}
             </select>
           </div>
-          {this.amILeader && !this.registered ? (
-            <div className="form-group">
-              <button
-                hidden={this.registered}
-                disabled={this.registered}
-                type="submit"
-                className="btn btn-success"
-              >
-                Submit
-              </button>
-            </div>
+          {this.amILeader ? (
+            !this.approved ? (
+              !this.applied ? (
+                <div className="form-group">
+                  <button
+                    hidden={this.approved}
+                    // disabled={this.applied}
+                    type="submit"
+                    className="btn btn-success"
+                  >
+                    Submit
+                  </button>
+                  {console.log(this.amILeader, this.applied, this.approved)}
+                </div>
+              ) : (
+                <div className="form-group">
+                  <button
+                    hidden={this.approved}
+                    // disabled={this.applied}
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => alert("Cancel request")}
+                  >
+                    Cancel request
+                  </button>
+                  {console.log(this.amILeader, this.applied, this.approved)}
+                </div>
+              )
+            ) : (
+              ""
+            )
           ) : (
-            <div className="form-group">
-              <button
-                hidden={this.registered}
-                disabled={this.registered}
-                type="button"
-                className="btn btn-danger"
-                onClick={() => alert("Cancel request")}
-              >
-                Cancel request
-              </button>
-            </div>
+            ""
           )}
         </form>
         <div className="">

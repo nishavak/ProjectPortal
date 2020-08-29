@@ -1317,17 +1317,30 @@ def getProject(request):
     try:
         project = Project.objects.get(id=student.project.id)
         pr = ProjectRequest.objects.get(project=project)
-        response = {
-            "registered": True,
-            "title": project.title,
-            "description": project.description,
-            "domain": dict(constants.DOMAIN)[project.domain],
-            "type": dict(constants.CATEGORY)[project.category],
-            "interDisciplinaryReason": project.explanatory_field
-        }
-        return Response(data=response, status=status.HTTP_200_OK)
+        if pr.status == "A":
+            response = {
+                "applied": True,
+                "approved": True,
+                "title": project.title,
+                "description": project.description,
+                "domain": dict(constants.DOMAIN)[project.domain],
+                "type": dict(constants.CATEGORY)[project.category],
+                "interDisciplinaryReason": project.explanatory_field
+            }
+            return Response(data=response, status=status.HTTP_200_OK)
+        if pr.status == "P":
+            response = {
+                "applied": True,
+                "approved": False,
+                "title": project.title,
+                "description": project.description,
+                "domain": dict(constants.DOMAIN)[project.domain],
+                "type": dict(constants.CATEGORY)[project.category],
+                "interDisciplinaryReason": project.explanatory_field
+            }
+            return Response(data=response, status=status.HTTP_200_OK)
     except:
-        return Response(data={"registered": False, "message": "Not registered any project"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(data={"applied": False, "approved": False, "message": "Not registered any project"}, status=status.HTTP_404_NOT_FOUND)
 
 
 # * ASSISTANT
