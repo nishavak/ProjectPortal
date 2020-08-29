@@ -21,7 +21,7 @@ class HandleRequests extends React.Component {
       .then(({ data }) => {
         this.group_requests = data.group_requests;
         console.log(this.group_requests);
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
 

@@ -1050,6 +1050,7 @@ def groupData(request):
     members = []
     for student in students:
         t = {
+            "id": student.id,
             "name": student.name,
             "roll_number": student.roll_number,
             "branch": dict(constants.BRANCH)[student.branch],
@@ -1180,6 +1181,17 @@ def removeStudent(request):
             return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def makeLeader(request):
+    student = Student.objects.get(id=request.user.id)
+    if student.team.leader == student:
+        new_leader = request.data["new_leader_id"]
+        print(new_leader)
+        return Response(data="Request sent", status=status.HTTP_201_CREATED)
+    else:
+        return Response(data="Insufficient permissions", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])

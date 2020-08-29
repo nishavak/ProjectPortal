@@ -33,7 +33,10 @@ export default class Profile extends Component {
           position: "relative",
         }}
       >
-        <div className="col-12 col-md-3 bg-light" style={{ minHeight: "100%" }}>
+        <div
+          className="col-12 col-md-3 bg-light rounded-left"
+          style={{ minHeight: "100%" }}
+        >
           <div className="p-md-3" style={{ height: "50%" }}>
             <img
               src={this.image || UserImage}

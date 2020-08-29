@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import $ from "jquery";
 import axios from "../../axios";
+import { NotificationManager } from "react-notifications";
 
 export default class Group extends Component {
   constructor(props) {
@@ -36,6 +37,15 @@ export default class Group extends Component {
       $("#remove_roll_number").focus();
     });
   }
+
+  makeLeader = (id) => {
+    axios
+      .post("makeLeader/", { new_leader: id })
+      .then(({ data }) => NotificationManager.success(data))
+      .catch((err) => {
+        NotificationManager.error(err.response.data);
+      });
+  };
 
   render() {
     return (
@@ -85,6 +95,12 @@ export default class Group extends Component {
                 <span className="d-block">{member.roll_number}</span>
                 <span className="d-block">{member.branch}</span>
                 <span className="d-block">{member.email}</span>
+                <span
+                  className="text-primary"
+                  onClick={() => this.makeLeader(member.id)}
+                >
+                  Make Leader
+                </span>
               </div>
             ))}
         </div>
