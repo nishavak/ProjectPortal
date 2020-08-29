@@ -55,6 +55,7 @@ urlpatterns = [
     path('addStudent/', views.addStudent),
     path('removeStudent/', views.removeStudent),
     path('makeLeader/', views.makeLeader),
+    path('requestGuide/', views.requestGuide),
     path('searchGuide/<str:q>', views.searchGuide),
     path('assignment/<int:id>', views.assignment),
     path('assignmentSubmit/<int:id>', views.assignmentSubmit),

@@ -1227,6 +1227,13 @@ def searchGuide(request, q):
 
 
 @api_view(["POST"])
+def requestGuide(request):
+    leader = Student.objects.get(id=request.user.id)
+    # GuideRequest
+    return Response()
+
+
+@api_view(["POST"])
 def createProject(request):
     student = Student.objects.get(id=request.user.id)
     team = Team.objects.get(id=student.team.id)
