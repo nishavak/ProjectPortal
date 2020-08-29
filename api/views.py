@@ -56,6 +56,7 @@ def coordinatorStudent(request):
     return Response(data=response, status=status.HTTP_200_OK)
 
 
+@api_view()
 def coordinatorStudentDetail(request, id):
     response = {}
     try:
@@ -66,6 +67,7 @@ def coordinatorStudentDetail(request, id):
     student_data = {
         "student_branch": student.branch,
         "student_email": student.email,
+        "student_photo": "/api" + student.photo.url,
         "student_id": student.id,
         "student_name": student.name,
         "student_roll_number": student.roll_number,

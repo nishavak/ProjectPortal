@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./GroupDetails.scss";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 class GroupDetails extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class GroupDetails extends React.Component {
 
     this.id = this.props.match.params.id;
     this.team = {};
+    this.state = { loading: true };
   }
 
   componentDidMount() {
@@ -16,11 +18,12 @@ class GroupDetails extends React.Component {
       .get(`coordinatorGroupDetail/${this.id}`)
       .then(({ data }) => {
         this.team = data;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
   }
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="group-details mx-auto" style={{ width: "90%" }}>
         <br />

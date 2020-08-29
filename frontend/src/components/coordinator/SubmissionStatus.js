@@ -5,11 +5,13 @@ import { Redirect } from "react-router-dom";
 // import AssignmentListGIF from "../student/AssignmentList.gif";
 import axios from "../../axios";
 import { Link } from "react-router-dom";
+import Loading from "../shared/Loading";
 class SubmissionStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
       category: "All",
+      loading: true,
     };
     this.status = [];
     this.ass_id = null;
@@ -21,11 +23,12 @@ class SubmissionStatus extends Component {
         console.log(this.state.category);
         this.status = data.submissionStatus;
         this.ass_id = data.assignment_details.assignment.assignment_id;
-        this.setState({});
+        this.setState({ loading: false });
       });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div>
         <div id="submission-status" className="container pt-3">
@@ -110,7 +113,9 @@ class SubmissionStatus extends Component {
                         <tr
                           class=""
                           onClick={() => {
-                            window.location.href = `/group-submission/${this.ass_id}/${element.team_id}`;
+                            this.props.history.push(
+                              `/group-submission/${this.ass_id}/${element.team_id}`
+                            );
                           }}
                         >
                           <td class="">{element.team_id}</td>
@@ -122,7 +127,9 @@ class SubmissionStatus extends Component {
                         <tr
                           class=""
                           onClick={() => {
-                            window.location.href = `/group-submission/${this.ass_id}/${element.team_id}`;
+                            this.props.history.push(
+                              `/group-submission/${this.ass_id}/${element.team_id}`
+                            );
                           }}
                         >
                           <td class="">{element.team_id}</td>

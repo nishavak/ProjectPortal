@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import "./AssignmentDetails.scss";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 // import Uploader from "../student/Uploader";
 import $ from "jquery";
 import SubmissionStatus from "./SubmissionStatus";
@@ -395,7 +395,9 @@ class AssignmentDetails extends React.Component {
           >
             Submission Status of Groups
           </div>
-          <SubmissionStatus id={this.id} />
+          <Route
+            render={(props) => <SubmissionStatus {...props} id={this.id} />}
+          />
         </div>
 
         <div className="w-100 d-flex justify-content-center">

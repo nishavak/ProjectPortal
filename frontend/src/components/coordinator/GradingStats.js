@@ -10,6 +10,7 @@ class GradingStats extends Component {
     this.assignment_list = [];
     this.gradeStats = [];
     this.downloadable = [];
+    this.state = { loading: true };
   }
   componentDidMount() {
     axios.get("coordinatorGradingStatistics/").then(({ data }) => {

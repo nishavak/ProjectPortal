@@ -2,10 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 class GroupSubmissionDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { loading: true };
     this.ass_id = this.props.match.params.assignment;
     this.team_id = this.props.match.params.team;
     this.file_list = [];
@@ -21,12 +22,13 @@ class GroupSubmissionDetails extends React.Component {
         this.file_list = data.file_list;
         this.students_data = data.students_data;
         this.weightage = data.weightage;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div
         className="group-submission-details mx-auto"

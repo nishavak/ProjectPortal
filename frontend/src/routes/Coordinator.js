@@ -40,7 +40,7 @@ class Coordinator extends React.Component {
           </div>
           <div className="col-6 text-right">
             <i
-              class="fa fa-bars"
+              class="fa fa-fw fa-bars"
               aria-hidden="true"
               onClick={() => {
                 this.toggleSidebar();
@@ -59,7 +59,7 @@ class Coordinator extends React.Component {
               to="/students"
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
-              <i className="fa fa-user mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
               Student
             </Link>
           </div>
@@ -73,7 +73,7 @@ class Coordinator extends React.Component {
               to="/groups"
               className="nav-item rounded p-2 w-100   text-decoration-none "
             >
-              <i className="fa fa-users mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-users mr-3" aria-hidden="true" />
               Groups
             </Link>
           </div>
@@ -87,7 +87,7 @@ class Coordinator extends React.Component {
               to="/guides"
               className="nav-item rounded p-2 w-100   text-decoration-none "
             >
-              <i className="fa fa-user mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
               Guide
             </Link>
           </div>
@@ -101,7 +101,7 @@ class Coordinator extends React.Component {
               to="/assignments"
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
-              <i className="fa fa-tasks mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-tasks mr-3" aria-hidden="true" />
               Assignments
             </Link>
           </div>
@@ -115,7 +115,7 @@ class Coordinator extends React.Component {
               to="/projects"
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
-              <i className="fa fa-folder mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-folder mr-3" aria-hidden="true" />
               Projects
             </Link>
           </div>
@@ -129,7 +129,7 @@ class Coordinator extends React.Component {
               to="/handle-requests"
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
-              <i className="fa fa-bolt mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-bolt mr-3" aria-hidden="true" />
               Handle Requests
             </Link>
           </div>
@@ -143,7 +143,7 @@ class Coordinator extends React.Component {
               to="/faculty-form"
               className="nav-item rounded p-2 w-100 text-decoration-none "
             >
-              <i className="fa fa-wpforms mr-3" aria-hidden="true" />
+              <i className="fa fa-fw fa-wpforms mr-3" aria-hidden="true" />
               Guide Creation
             </Link>
           </div>
@@ -153,7 +153,7 @@ class Coordinator extends React.Component {
               axios.get("signOut/").then(() => window.location.reload())
             }
           >
-            <i className="fa fa-sign-out mr-3" aria-hidden="true" />
+            <i className="fa fa-fw fa-sign-out mr-3" aria-hidden="true" />
             Sign out
           </div>
         </div>
@@ -173,49 +173,49 @@ class Coordinator extends React.Component {
                   to="/students"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
-                  <i className="fa fa-user mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
                   Student
                 </Link>
                 <Link
                   to="/groups"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
-                  <i className="fa fa-users mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-users mr-3" aria-hidden="true" />
                   Groups
                 </Link>
                 <Link
                   to="/guides"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
                 >
-                  <i className="fa fa-user mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
                   Guide
                 </Link>
                 <Link
                   to="/assignments"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
-                  <i className="fa fa-tasks mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-tasks mr-3" aria-hidden="true" />
                   Assignments
                 </Link>
                 <Link
                   to="/projects"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
-                  <i className="fa fa-folder mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-folder mr-3" aria-hidden="true" />
                   Projects
                 </Link>
                 <Link
                   to="/handle-requests"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
-                  <i className="fa fa-bolt mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-bolt mr-3" aria-hidden="true" />
                   Handle Requests
                 </Link>
                 <Link
                   to="/faculty-form"
                   className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                 >
-                  <i className="fa fa-wpforms mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-wpforms mr-3" aria-hidden="true" />
                   Guide Creation
                 </Link>
                 <div
@@ -224,7 +224,7 @@ class Coordinator extends React.Component {
                     axios.get("signOut/").then(() => window.location.reload())
                   }
                 >
-                  <i className="fa fa-sign-out mr-3" aria-hidden="true" />
+                  <i className="fa fa-fw fa-sign-out mr-3" aria-hidden="true" />
                   Sign out
                 </div>
               </div>
