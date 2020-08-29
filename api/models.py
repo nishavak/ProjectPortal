@@ -89,7 +89,7 @@ class GroupRequest(models.Model):
         _("action"), choices=constants.GROUP_ACTION, max_length=13)
     add_student = models.ForeignKey("api.Student", verbose_name=_(
         "add student"), on_delete=models.SET_NULL, blank=True, null=True, related_name="add_student")
-    description = models.TextField(_("description"))
+    description = models.TextField(_("description"), blank=True, null=True)
     generated = models.DateTimeField(_("generated on"), auto_now=True)
     new_leader = models.ForeignKey("api.Student", verbose_name=_(
         "new leader"), on_delete=models.SET_NULL, blank=True, null=True, related_name="new_leader")

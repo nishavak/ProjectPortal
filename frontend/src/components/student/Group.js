@@ -95,12 +95,14 @@ export default class Group extends Component {
                 <span className="d-block">{member.roll_number}</span>
                 <span className="d-block">{member.branch}</span>
                 <span className="d-block">{member.email}</span>
-                <span
-                  className="text-primary"
-                  onClick={() => this.makeLeader(member.id)}
-                >
-                  Make Leader
-                </span>
+                {this.leader && member.name !== this.data.leader_name && (
+                  <span
+                    className="text-primary"
+                    onClick={() => this.makeLeader(member.id)}
+                  >
+                    Make Leader
+                  </span>
+                )}
               </div>
             ))}
         </div>
