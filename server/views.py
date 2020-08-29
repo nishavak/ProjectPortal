@@ -7,4 +7,4 @@ def userInterface(request):
     try:
         return render(request, "index.html")
     except:
-        return HttpResponse(content="React building")
+        return HttpResponse(content="Creating an optimized production build...")

@@ -53,6 +53,8 @@ urlpatterns = [
     path('createTeam/', views.createTeam),
     path('groupData/', views.groupData),
     path('addStudent/', views.addStudent),
+    path('guideAssigned/', views.guideAssigned),
+    path('cancelRequest/', views.cancelRequest),
     path('removeStudent/', views.removeStudent),
     path('makeLeader/', views.makeLeader),
     path('requestGuide/', views.requestGuide),

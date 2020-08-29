@@ -13,8 +13,8 @@ import constants
 
 from . import forms
 from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
-                     GroupRequest, Guide, Preference, Project, ProjectRequest,
-                     Student, Team)
+                     GroupRequest, Guide, GuideRequest, Preference, Project,
+                     ProjectRequest, Student, Team)
 from .serializers import (AssignmentSerializer, AssistantSerializer,
                           CommentSerializer, CoordinatorSerializer,
                           FileSerializer, GradeSerializer,
@@ -1221,16 +1221,62 @@ def searchGuide(request, q):
             "name": guide.name,
             "id": guide.id,
             "email": guide.email,
-            "branch": guide.branch
+            "branch": dict(constants.BRANCH)[guide.branch]
         })
     return Response(data=response)
+
+
+@api_view()
+def guideAssigned(request):
+    student = Student.objects.get(id=request.user.id)
+    # print(student.team.guide)
+    if student.team.guide:
+        guide = Guide.objects.get(id=student.team.guide_id)
+        response = {
+            "approved": True,
+            "name": guide.name,
+            "email": guide.email,
+            "branch": dict(constants.BRANCH)[guide.branch]
+        }
+        return Response(data=response)
+    else:
+        gr = GuideRequest.objects.filter(team=student.team, status="P")
+        if len(gr) > 0:
+            # print(dir(gr.first()))
+            guide = Guide.objects.get(id=gr.first().guide_id)
+            response = {
+                "approved": False,
+                "name": guide.name,
+                "email": guide.email,
+                "branch": dict(constants.BRANCH)[guide.branch],
+                "ref": gr.first().id
+            }
+            return Response(data=response)
+    return Response(data=False)
+
+
+@api_view(["POST"])
+def cancelRequest(request):
+    try:
+        GuideRequest.objects.get(id=request.data["id"]).delete()
+        return Response(data="Request cancelled", status=status.HTTP_200_OK)
+    except:
+        return Response(data="Error cancelling request", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
 def requestGuide(request):
     leader = Student.objects.get(id=request.user.id)
-    # GuideRequest
-    return Response()
+
+    requested_guide = Guide.objects.get(id=request.data["id"])
+    if len(GuideRequest.objects.filter(team=leader.team, status="P")) > 0:
+        return Response(data="Earlier request pending", status=status.HTTP_400_BAD_REQUEST)
+    try:
+        GuideRequest.objects.create(
+            team=leader.team, guide=requested_guide, status="P")
+        return Response(data="Request sent", status=status.HTTP_201_CREATED)
+    except:
+        return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])

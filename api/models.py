@@ -125,6 +125,17 @@ class Guide(User):
 # OTHER MODELS
 
 
+class GuideRequest(models.Model):
+    team = models.ForeignKey(
+        "api.Team", verbose_name=_("team to be assigned"), on_delete=models.CASCADE)
+    guide = models.ForeignKey(
+        "api.Guide", verbose_name=_("guide requested"), on_delete=models.CASCADE)
+    timestamp_requested = models.DateTimeField(
+        _("requested on"), auto_now=True)
+    status = models.CharField(
+        _("status"), max_length=1, choices=constants.STATUS, default="P")
+
+
 class Assignment(models.Model):
     coordinator = models.ForeignKey("api.Coordinator", verbose_name=_(
         "coordinator"), on_delete=models.DO_NOTHING)

@@ -9,6 +9,7 @@ export default class Group extends Component {
 
     this.leader = false;
     this.data = {};
+    this.state = { loading: true };
   }
 
   componentDidMount() {
@@ -16,19 +17,21 @@ export default class Group extends Component {
       .get("amILeader/")
       .then(({ data }) => {
         this.leader = data;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => {
         console.log(err);
+        this.setState({ loading: false });
       });
     axios
       .get("groupData/")
       .then(({ data }) => {
         this.data = data;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => {
         console.log(err);
+        this.setState({ loading: false });
       });
     $("#addStudent").on("shown.bs.modal", function () {
       $("#add_roll_number").focus();
