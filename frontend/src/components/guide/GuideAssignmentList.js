@@ -5,6 +5,7 @@ import $ from "jquery";
 import GuideHeader from "./GuideHeader";
 import axios from "../../axios";
 import { Route } from "react-router-dom";
+import Loading from "../shared/Loading";
 
 class GuideAssignmentList extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class GuideAssignmentList extends Component {
     this.list = [];
     this.state = {
       tab: "All",
+      loading: true,
     };
   }
 
@@ -24,9 +26,11 @@ class GuideAssignmentList extends Component {
         //this.setState({tab: this.list.grading_status});
       })
       .catch((err) => this.props.history.goBack());
+    this.setState({ loading: false });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div>
         <Route component={GuideHeader} />

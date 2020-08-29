@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Link } from "react-router-dom";
 import GuideHeader from "./GuideHeader";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 
 export default class GuideRequest extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ export default class GuideRequest extends React.Component {
     this.data = {};
     this.state = {
       status: "",
+      loading: true,
     };
   }
   componentDidMount() {
@@ -18,9 +20,11 @@ export default class GuideRequest extends React.Component {
         this.data = data;
       })
       .catch((err) => this.props.history.goBack());
+    this.setState({ loading: false });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <>
         <Route component={GuideHeader} />

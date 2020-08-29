@@ -2,12 +2,15 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
 from django.shortcuts import HttpResponse, render
 from django.utils import timezone
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+
 import constants
+
 from . import forms
 from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
                      GroupRequest, Guide, Preference, Project, ProjectRequest,
@@ -18,6 +21,7 @@ from .serializers import (AssignmentSerializer, AssistantSerializer,
                           GroupRequestSerializer, GuideSerializer,
                           PreferenceSerializer, ProjectRequestSerializer,
                           ProjectSerializer, StudentSerializer, TeamSerializer)
+
 # * COORDINATOR
 
 
@@ -1206,6 +1210,20 @@ def makeLeader(request):
             return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(data="Insufficient permissions", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view()
+def searchGuide(request, q):
+    response = []
+    guides = Guide.objects.filter(Q(name__icontains=q) | Q(email__icontains=q))
+    for guide in guides:
+        response.append({
+            "name": guide.name,
+            "id": guide.id,
+            "email": guide.email,
+            "branch": guide.branch
+        })
+    return Response(data=response)
 
 
 @api_view(["POST"])

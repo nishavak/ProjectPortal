@@ -6,12 +6,14 @@ import $ from "jquery";
 import { NotificationManager } from "react-notifications";
 import GuideHeader from "./GuideHeader";
 import { Route } from "react-router-dom";
+import Loading from "../shared/Loading";
 
 export class GuideAssignmentDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isTurnedIn: false,
+      loading: true,
     };
     this.assignmentId = this.props.match.params.assignmentId;
     this.groupId = this.props.match.params.groupId;
@@ -25,11 +27,12 @@ export class GuideAssignmentDetails extends Component {
         this.ass_details = data;
       })
       .catch((err) => this.props.history.goBack());
+    this.setState({ loading: false });
   }
 
   handleChange = (e) => {
-    this.setState({[e.target.name]: e.target.value});
-  }
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -47,6 +50,7 @@ export class GuideAssignmentDetails extends Component {
   };
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div>
         <Route component={GuideHeader} />
@@ -147,30 +151,31 @@ export class GuideAssignmentDetails extends Component {
                   </p>
 
                   <form onSubmit={this.handleSubmit}>
-                    {this.grade && this.grade.map((grade) => (
-                    <div className="d-flex py-1">
-                      <div className="col-3 p-0  my-auto">
-                      <span className="" style={{ fontSize: "0.9em" }}>
-                          Student Roll Number: {grade.student_roll_number}
-                        </span>
-                        <span className="" style={{ fontSize: "0.9em" }}>
-                          Grade :
-                        </span>
-                      </div>
-                      <div className="col-9 p-0 ">
-                        <input
-                          type="number"
-                          id="grade"
-                          className="form-control w-50 shadow-sm "
-                          name="grade"
-                          onChange = {this.handleChange}
-                          value={this.ass_details.student_data.grade}
-                          placeholder="enter marks here"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    ))}
+                    {this.grade &&
+                      this.grade.map((grade) => (
+                        <div className="d-flex py-1">
+                          <div className="col-3 p-0  my-auto">
+                            <span className="" style={{ fontSize: "0.9em" }}>
+                              Student Roll Number: {grade.student_roll_number}
+                            </span>
+                            <span className="" style={{ fontSize: "0.9em" }}>
+                              Grade :
+                            </span>
+                          </div>
+                          <div className="col-9 p-0 ">
+                            <input
+                              type="number"
+                              id="grade"
+                              className="form-control w-50 shadow-sm "
+                              name="grade"
+                              onChange={this.handleChange}
+                              value={this.ass_details.student_data.grade}
+                              placeholder="enter marks here"
+                              disabled
+                            />
+                          </div>
+                        </div>
+                      ))}
                     <div />
                     <div className="d-flex justify-content-start pt-3">
                       <div className="col-md-3 p-0">

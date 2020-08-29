@@ -10,8 +10,11 @@ import { Route } from "react-router-dom";
 
 class PersonalSection extends React.Component {
   constructor(props) {
-    super(props);    
+    super(props);
     this.personal_data = {};
+    this.state = {
+      loading: true,
+    };
   }
 
   updateProfilePicture = (event) => {
@@ -35,7 +38,7 @@ class PersonalSection extends React.Component {
     }
   };
 
-  componentDidMount(){
+  componentDidMount() {
     $("#change-password").on("shown.bs.modal", function () {
       $("#newPassword").focus();
     });
@@ -43,22 +46,23 @@ class PersonalSection extends React.Component {
       .get(`guidePersonal/`)
       .then(({ data }) => {
         this.personal_data = data;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <>
-        <Route component={GuideHeader}/>
+        <Route component={GuideHeader} />
         <div className="d-flex align-items-center rounded my-3 noselect">
           <div
             className="col-11 row mx-auto p-0 rounded shadow"
             style={{ minHeight: "75vh" }}
           >
             <div className="col-md-3 col-sm-12 d-md-block rounded m-0 p-0">
-              <Route component={Sidebar}/>
+              <Route component={Sidebar} />
             </div>
             <div className="col-md-9 col-sm-12 m-0 p-3">
               <div className="" id="personal-details">
@@ -79,7 +83,9 @@ class PersonalSection extends React.Component {
                     >
                       Name{" "}
                     </p>
-                    <p style={{ fontSize: "1.1em" }}>{this.personal_data && this.personal_data.name}</p>
+                    <p style={{ fontSize: "1.1em" }}>
+                      {this.personal_data && this.personal_data.name}
+                    </p>
                   </div>
                   <hr />
                   <div style={{}}>
@@ -89,7 +95,9 @@ class PersonalSection extends React.Component {
                     >
                       Initials{" "}
                     </p>
-                    <p style={{ fontSize: "1.1em" }}>{this.personal_data && this.personal_data.initials}</p>
+                    <p style={{ fontSize: "1.1em" }}>
+                      {this.personal_data && this.personal_data.initials}
+                    </p>
                   </div>
                   <hr />
                   <div style={{}}>
@@ -99,69 +107,73 @@ class PersonalSection extends React.Component {
                     >
                       Email{" "}
                     </p>
-                    <p style={{ fontSize: "1.1em" }}>{this.personal_data && this.personal_data.email}</p>
+                    <p style={{ fontSize: "1.1em" }}>
+                      {this.personal_data && this.personal_data.email}
+                    </p>
                   </div>
                   <hr />
                   {this.personal_data && this.personal_data.preferences && (
-                  <>                  
-                  <div style={{}}>
-                    <p
-                      className='text-muted mb-1'
-                      style={{ fontSize: "1.3em", fontWeight: "550" }}>
-                      Area of Interests{" "}
-                    </p>
-                    {this.personal_data.preferences
-                      .map((p) => (
-                    <p style={{ fontSize: "1.1em" }}>{p.area_of_interest}</p>
-                    ))}                    
-                  </div>
-                  <hr />
-                  <div style={{}}>
-                    <p
-                      className='text-muted mb-1'
-                      style={{ fontSize: "1.3em", fontWeight: "550" }}>
-                      Thrust Areas{" "}
-                    </p>
-                    {this.personal_data.preferences
-                      .map((p) => (
-                    <p style={{ fontSize: "1.1em" }}>{p.thrust_area}</p>
-                    ))}
-                  </div>
-                  <hr />
-                  </>
+                    <>
+                      <div style={{}}>
+                        <p
+                          className="text-muted mb-1"
+                          style={{ fontSize: "1.3em", fontWeight: "550" }}
+                        >
+                          Area of Interests{" "}
+                        </p>
+                        {this.personal_data.preferences.map((p) => (
+                          <p style={{ fontSize: "1.1em" }}>
+                            {p.area_of_interest}
+                          </p>
+                        ))}
+                      </div>
+                      <hr />
+                      <div style={{}}>
+                        <p
+                          className="text-muted mb-1"
+                          style={{ fontSize: "1.3em", fontWeight: "550" }}
+                        >
+                          Thrust Areas{" "}
+                        </p>
+                        {this.personal_data.preferences.map((p) => (
+                          <p style={{ fontSize: "1.1em" }}>{p.thrust_area}</p>
+                        ))}
+                      </div>
+                      <hr />
+                    </>
                   )}
-                 <div className="">
-                  <span
-                    className="text-primary"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => $("#new_picture").click()}
-                  >
-                    Update Profile Picture
-                  </span>
-                  <form hidden>
-                    <input
-                      onChange={this.updateProfilePicture}
-                      type="file"
-                      name="new_picture"
-                      id="new_picture"
-                      accept="image/*"
-                    />
-                  </form>
+                  <div className="">
+                    <span
+                      className="text-primary"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => $("#new_picture").click()}
+                    >
+                      Update Profile Picture
+                    </span>
+                    <form hidden>
+                      <input
+                        onChange={this.updateProfilePicture}
+                        type="file"
+                        name="new_picture"
+                        id="new_picture"
+                        accept="image/*"
+                      />
+                    </form>
+                  </div>
+                  <div className="">
+                    <span
+                      className="text-primary"
+                      data-toggle="modal"
+                      data-target="#change-password"
+                      style={{ cursor: "pointer" }}
+                    >
+                      Change password
+                    </span>
+                  </div>
                 </div>
-                <div className="">
-                  <span
-                    className="text-primary"
-                    data-toggle="modal"
-                    data-target="#change-password"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Change password
-                  </span>
-                </div>
+              </div>
             </div>
           </div>
-        </div>
-        </div>
         </div>
       </>
     );

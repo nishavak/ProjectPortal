@@ -3,22 +3,27 @@ import "./GuideHeader.scss";
 import { Link } from "react-router-dom";
 import SomaiyaLogo from "../../assets/images/Somaiya.svg";
 import axios from "../../axios";
+import Loading from "../shared/Loading";
 import UserImage from "../../assets/images/User.png";
 
 class GuideHeader extends Component {
   constructor(props) {
     super(props);
     this.image = null;
+    this.state = {
+      loading: true,
+    };
   }
 
   componentDidMount() {
     axios.get("getImage/").then(({ data }) => {
       this.image = data;
-      this.setState({});
+      this.setState({ loading: false });
     });
   }
 
   render() {
+    if (this.state.loading) return <Loading />;
     return (
       <div className="sticky-top">
         <div id="guide-header" className="navbar bg-light shadow-sm noselect">
