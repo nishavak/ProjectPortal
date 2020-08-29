@@ -1173,14 +1173,19 @@ def removeStudent(request):
     try:
         student_to_remove = Student.objects.get(
             roll_number=int(request.data["roll"]))
-        try:
-            GroupRequest.objects.create(status="P", action="Removal", remove_student=student_to_remove,
-                                        description=request.data["reason"], team=Student.objects.get(id=request.user.id).team)
-            return Response(data="Removal Request has been sent", status=status.HTTP_201_CREATED)
-        except:
-            return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+        if student_to_remove.team == Student.objects.get(id=request.user.id).team:
+            if len(GroupRequest.objects.filter(action="Removal", status="P", remove_student=student_to_remove, team=Student.objects.get(id=request.user.id).team)) > 0:
+                return Response(data="Removal request for the student has already been sent", status=status.HTTP_400_BAD_REQUEST)
+            try:
+                GroupRequest.objects.create(status="P", action="Removal", remove_student=student_to_remove,
+                                            description=request.data["reason"], team=Student.objects.get(id=request.user.id).team)
+                return Response(data="Removal Request has been sent", status=status.HTTP_201_CREATED)
+            except:
+                return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
+        return Response(data="Student not in the group or has not registered", status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
