@@ -98,6 +98,7 @@ export default class Group extends Component {
                 {this.leader && member.name !== this.data.leader_name && (
                   <span
                     className="text-primary"
+                    style={{ cursor: "pointer" }}
                     onClick={() => this.makeLeader(member.id)}
                   >
                     Make Leader

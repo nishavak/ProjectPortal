@@ -1186,11 +1186,13 @@ def removeStudent(request):
 @api_view(["POST"])
 def makeLeader(request):
     student = Student.objects.get(id=request.user.id)
+    if len(GroupRequest.objects.filter(action="Change Leader", team=student.team)) > 0:
+        return Response(data="Previous change leader request pending", status=status.HTTP_400_BAD_REQUEST)
     if student.team.leader == student:
         new_leader = request.data["new_leader"]
         try:
-            GroupRequest.objects.create(action="Change Leader", new_leader=new_leader,
-                                        old_leader=student.id, status="P", team=student.team)
+            GroupRequest.objects.create(action="Change Leader", new_leader=Student.objects.get(id=new_leader),
+                                        old_leader=student, status="P", team=student.team)
             return Response(data="Request sent", status=status.HTTP_201_CREATED)
         except:
             return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
