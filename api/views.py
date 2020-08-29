@@ -1173,7 +1173,10 @@ def removeStudent(request):
     try:
         student_to_remove = Student.objects.get(
             roll_number=int(request.data["roll"]))
-        if student_to_remove.team == Student.objects.get(id=request.user.id).team:
+        leader = Student.objects.get(id=request.user.id)
+        if student_to_remove.team == leader.team:
+            if leader == student_to_remove:
+                return Response("Transfer leadership to someone else in the team before removing yourself", status=status.HTTP_400_BAD_REQUEST)
             if len(GroupRequest.objects.filter(action="Removal", status="P", remove_student=student_to_remove, team=Student.objects.get(id=request.user.id).team)) > 0:
                 return Response(data="Removal request for the student has already been sent", status=status.HTTP_400_BAD_REQUEST)
             try:
