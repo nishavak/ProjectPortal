@@ -754,13 +754,13 @@ def guideAssignmentDetails(request, pk, groupId):
         "due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
         "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
     }
-    fileAttachements = File.objects.filter(team=None)
+    fileAttachements = File.objects.filter(team=None, assignment=assignment)
     _attachments = []
     for file in fileAttachements:
         _file = {
             "id": file.id,
-            "file_name": file.file.name,
-            "file_url": file.file.url
+            "file_name": file.file.name.split("/")[-1],
+            "file_url": '/api'+file.file.url
         }
         _attachments.append(_file)
     assignmentDetails.setdefault("attachments", _attachments)
@@ -769,8 +769,8 @@ def guideAssignmentDetails(request, pk, groupId):
     for file in teamFileUploads:
         _file = {
             "id": file.id,
-            "file_name": file.file.name,
-            "file_url": file.file.url
+            "file_name": file.file.name.split("/")[-1],
+            "file_url": '/api'+file.file.url
         }
         teamSubmissions.append(_file)
     response.setdefault("student_list", studentList)
@@ -851,10 +851,10 @@ def guideDetailsForm(request):
     # if len(data["preferences"]) > 4:
     #    return Response(status=status.HTTP_400_BAD_REQUEST)
     for preference in data["preferences"]:
-        if not preference["area_of_interest"] in [i[0] for i in constants.DOMAIN]:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if not preference["thrust_area"] in [i[0] for i in constants.THRUST_AREA]:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not preference["area_of_interest"] in [i[1] for i in constants.DOMAIN]:
+            return Response(data="Invalid Input", status=status.HTTP_400_BAD_REQUEST)
+        if not preference["thrust_area"] in [i[1] for i in constants.THRUST_AREA]:
+            return Response(data="Invalid Input 1", status=status.HTTP_400_BAD_REQUEST)
     guide.initials = data["initials"]
     guide.preferences.clear()
     guide.save()

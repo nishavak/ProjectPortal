@@ -6,7 +6,7 @@ import Loading from "../shared/Loading";
 import { Route } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 
-const area_of_interest = [
+const area_of_interest1 = [
   "Artifical Intelligence (Machine Learning, Natural Language Processing, Robotics)",
   "Augmented Reality and Virtual Reality",
   "Big Data Processing",
@@ -23,28 +23,28 @@ const area_of_interest = [
 ];
 
 class GuideDetailsForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.data = {};
     this.state = {
       loading: true,
       initials: "",
-      interest1 : "",
-      interest2 : "",
-      interest3 : "",
-      interest4 : "",
-      thrust1 : "",
-      thrust2 : "",
-      thrust3 : "",
-      thrust4 : "",
-      preferences : [],
+      interest1: "",
+      interest2: "",
+      interest3: "",
+      interest4: "",
+      thrust1: "",
+      thrust2: "",
+      thrust3: "",
+      thrust4: "",
+      preferences: [],
     };
   }
 
   componentDidMount() {
-      this.setState({ loading: false });
+    this.setState({ loading: false });
   }
-  
+
   handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -52,42 +52,46 @@ class GuideDetailsForm extends React.Component {
   };
 
   handleSubmit = (e) => {
-      e.preventDefault();
-      let p1 = {
-        "area_of_interest" : this.state.interest1,
-          "thrust_area" : this.state.thrust1,
-      }
-      let p2 = {
-        "area_of_interest" : this.state.interest2,
-          "thrust_area" : this.state.thrust2,
-      }
-      let p3 = {
-        "area_of_interest" : this.state.interest3,
-          "thrust_area" : this.state.thrust3,
-      }
-      let p4 = {
-        "area_of_interest" : this.state.interest4,
-          "thrust_area" : this.state.thrust4,
-      }
-      let data = {
-        initials : this.state.initials,
-        preferences : [p1,p2,p3,p4],
-      };
-      axios
-        .put("guideDetailsForm/", data)
-        .then(() => {
-          window.location.href = "/";
-        })
-        .catch((err) => {
-          NotificationManager.error(err.response.data);
-        });
+    e.preventDefault();
+    let p1 = {
+      area_of_interest: this.state.interest1,
+      thrust_area: this.state.thrust1,
     };
+    let p2 = {
+      area_of_interest: this.state.interest2,
+      thrust_area: this.state.thrust2,
+    };
+    let p3 = {
+      area_of_interest: this.state.interest3,
+      thrust_area: this.state.thrust3,
+    };
+    let p4 = {
+      area_of_interest: this.state.interest4,
+      thrust_area: this.state.thrust4,
+    };
+    this.state.preferences.push(p1);
+    this.state.preferences.push(p2);
+    this.state.preferences.push(p3);
+    this.state.preferences.push(p4);
+    let data = {
+      initials: this.state.initials,
+      preferences: this.state.preferences,
+    };
+    axios
+      .put("guideDetailsForm/", data)
+      .then(() => {
+        window.location.href = "/";
+      })
+      .catch((err) => {
+        NotificationManager.error(err.response.data);
+      });
+  };
 
   render() {
     if (this.state.loading) return <Loading />;
     return (
       <div className='details-form'>
-        <Route component={GuideHeader}/>
+        <Route component={GuideHeader} />
         <br />
         <div className='mx-auto' style={{ width: "90%" }}>
           <div
@@ -109,7 +113,7 @@ class GuideDetailsForm extends React.Component {
               backgroundColor: "rgba(231, 231, 231, 0.459)",
             }}>
             <br />
-            <form autoComplete="off" onSubmit={this.handleSubmit}>
+            <form autoComplete='off' onSubmit={this.handleSubmit}>
               <div className='form-group'>
                 <label htmlFor='initials'>Faculty Initials</label>
                 <input
@@ -118,7 +122,8 @@ class GuideDetailsForm extends React.Component {
                   id='initials'
                   onChange={this.handleChange}
                   value={this.state.initials}
-                  className='form-control border-0 text-center'
+                  className='form-control border-0'
+                  required={true}
                 />
               </div>
               <div className='form-group'>
@@ -129,9 +134,9 @@ class GuideDetailsForm extends React.Component {
                   id='interest1'
                   onChange={this.handleChange}
                   value={this.state.interest1}
+                  required={true}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
-                  {area_of_interest.map((d) => (
+                  {area_of_interest1.map((d) => (
                     <option value={d}>{d}</option>
                   ))}
                 </select>
@@ -145,9 +150,9 @@ class GuideDetailsForm extends React.Component {
                   name='thrust1'
                   id='thrust1'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.thrust1}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
                   <option>Network and Security</option>
                   <option>Application Development</option>
                   <option>Information Management</option>
@@ -161,10 +166,10 @@ class GuideDetailsForm extends React.Component {
                   name='interest2'
                   id='interest2'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.interest2}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
-                  {area_of_interest.map((d) => (
+                  {area_of_interest1.map((d) => (
                     <option value={d}>{d}</option>
                   ))}
                 </select>
@@ -178,9 +183,9 @@ class GuideDetailsForm extends React.Component {
                   name='thrust2'
                   id='thrust2'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.thrust2}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
                   <option>Network and Security</option>
                   <option>Application Development</option>
                   <option>Information Management</option>
@@ -194,10 +199,10 @@ class GuideDetailsForm extends React.Component {
                   name='interest3'
                   id='interest3'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.interest3}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
-                  {area_of_interest.map((d) => (
+                  {area_of_interest1.map((d) => (
                     <option value={d}>{d}</option>
                   ))}
                 </select>
@@ -212,8 +217,8 @@ class GuideDetailsForm extends React.Component {
                   id='thrust3'
                   onChange={this.handleChange}
                   value={this.state.thrust3}
+                  required={true}
                   className='form-control border-0'>
-                  <option selected>--Select--</option>
                   <option>Network and Security</option>
                   <option>Application Development</option>
                   <option>Information Management</option>
@@ -227,10 +232,10 @@ class GuideDetailsForm extends React.Component {
                   name='interest4'
                   id='interest4'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.interest4}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
-                  {area_of_interest.map((d) => (
+                  {area_of_interest1.map((d) => (
                     <option value={d}>{d}</option>
                   ))}
                 </select>
@@ -244,9 +249,9 @@ class GuideDetailsForm extends React.Component {
                   name='thrust4'
                   id='thrust4'
                   onChange={this.handleChange}
+                  required={true}
                   value={this.state.thrust4}
                   className='form-control border-0 text-center'>
-                  <option selected>--Select--</option>
                   <option>Network and Security</option>
                   <option>Application Development</option>
                   <option>Information Management</option>
@@ -259,8 +264,8 @@ class GuideDetailsForm extends React.Component {
                 </button>
               </div>
             </form>
-          </div> 
-          <br/>        
+          </div>
+          <br />
         </div>
       </div>
     );

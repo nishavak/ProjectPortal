@@ -17,7 +17,7 @@ class GuideDashboard extends React.Component {
     this.guide_data = [];
   }
 
-  componentDidMount(){
+  componentDidMount() {
     axios
       .get(`guideDashboard/`)
       .then(({ data }) => {
@@ -33,20 +33,30 @@ class GuideDashboard extends React.Component {
     return (
       <div>
         <Route component={GuideHeader} />
-        <div className="row container-fluid m-0 justify-content-center">
-        {this.guide_data.length && this.guide_data.map((team) => (
-          <Route render={(props) =>
-          <GuideGroupCard {...props}
-            groupId={team.id}
-            groupLeader={team.leader_name}
-            numOfMembers={team.member_count}
-            domain={team.domain}
-          />
-          }
-          />
-          ))}
-
-        </div>
+        {this.guide_data.length ? (
+          <div className='d-flex flex-md-row flex-column justify-text-center'>
+            {this.guide_data.map((team) => (
+              <Route
+                render={(props) => (
+                  <GuideGroupCard
+                    {...props}
+                    groupId={team.id}
+                    groupLeader={team.leader_name}
+                    numOfMembers={team.member_count}
+                    domain={team.domain}
+                  />
+                )}
+              />
+            ))}
+          </div>
+        ) : (
+          <div
+            className='container-fluid d-flex flex-column justify-content-center text-center'
+            style={{ height: "80vh" }}>
+            <h4>Not in any groups yet</h4>
+            <p className='text-muted'>Look out for incoming group requests</p>
+          </div>
+        )}
       </div>
     );
   }

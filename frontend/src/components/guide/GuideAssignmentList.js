@@ -23,10 +23,9 @@ class GuideAssignmentList extends Component {
       .get(`guideAssignmentList/${this.groupId}/`)
       .then(({ data }) => {
         this.list = data;
-        //this.setState({tab: this.list.grading_status});
+        this.setState({ loading: false, tab: "All" });
       })
       .catch((err) => this.props.history.goBack());
-    this.setState({ loading: false });
   }
 
   render() {
@@ -34,69 +33,68 @@ class GuideAssignmentList extends Component {
     return (
       <div>
         <Route component={GuideHeader} />
-        <div id="AssignmentList">
-          <div className="container">
+        <div id='AssignmentList'>
+          <div className='container'>
             <nav
-              className="nav nav-fill nav-justified btn-group btn-group-toggle my-2"
-              data-toggle="buttons"
-            >
-              <label className="nav-item btn btn-light border-0 active">
+              className='nav nav-fill nav-justified btn-group btn-group-toggle my-2'
+              data-toggle='buttons'>
+              <label className='nav-item btn btn-light border-0 active'>
                 <input
                   onClick={(event) =>
                     this.setState({
                       tab: event.target.id,
                     })
                   }
-                  type="radio"
-                  name="options"
-                  id="All"
+                  type='radio'
+                  name='options'
+                  id='All'
                   checked
                 />
                 All
               </label>
-              <label className="nav-item btn btn-light border-0">
+              <label className='nav-item btn btn-light border-0'>
                 <input
                   onClick={(event) =>
                     this.setState({
                       tab: event.target.id,
                     })
                   }
-                  type="radio"
-                  name="options"
-                  id="Submitted"
+                  type='radio'
+                  name='options'
+                  id='Submitted'
                 />
                 Submitted
               </label>
-              <label className="nav-item btn btn-light border-0">
+              <label className='nav-item btn btn-light border-0'>
                 <input
                   onClick={(event) =>
                     this.setState({
                       tab: event.target.id,
                     })
                   }
-                  type="radio"
-                  name="options"
-                  id="Not Submitted"
+                  type='radio'
+                  name='options'
+                  id='Not Submitted'
                 />
                 Not submitted
               </label>
-              <label className="nav-item btn btn-light border-0">
+              <label className='nav-item btn btn-light border-0'>
                 <input
                   onClick={(event) =>
                     this.setState({
                       tab: event.target.id,
                     })
                   }
-                  type="radio"
-                  name="options"
-                  id="Graded"
+                  type='radio'
+                  name='options'
+                  id='Graded'
                 />
                 Graded
               </label>
             </nav>
             {this.list &&
               this.list.map((assignment) => {
-                if (this.state.tab === "All") {
+                if (this.state.tab === assignment.grading_status) {
                   return (
                     <Route
                       render={(props) => (
@@ -104,15 +102,15 @@ class GuideAssignmentList extends Component {
                           {...props}
                           id={assignment.assignment_id}
                           groupId={this.groupId}
-                          posted={assignment.assignment_posted}
                           title={assignment.assignment_title}
+                          posted={assignment.assignment_posted}
                           due={assignment.assignment_due}
                           weightage={assignment.assignment_weightage}
                         />
                       )}
                     />
                   );
-                } else if (this.state.tab === assignment.grading_status) {
+                } else if (this.state.tab === "All") {
                   return (
                     <Route
                       render={(props) => (
@@ -120,8 +118,8 @@ class GuideAssignmentList extends Component {
                           {...props}
                           id={assignment.assignment_id}
                           groupId={this.groupId}
-                          title={assignment.assignment_title}
                           posted={assignment.assignment_posted}
+                          title={assignment.assignment_title}
                           due={assignment.assignment_due}
                           weightage={assignment.assignment_weightage}
                         />
