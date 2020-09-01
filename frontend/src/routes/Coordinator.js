@@ -48,7 +48,7 @@ class Coordinator extends React.Component {
             />
           </div>
         </div>
-        <div className='mobile-sidebar col d-md-none d-none bg-light px-0 text-left'>
+        <div className='mobile-sidebar col d-lg-none d-none bg-light px-0 text-left'>
           <Link
             to='/students'
             className='text-decoration-none mobile-nav-item py-2 border-bottom'>
@@ -58,83 +58,85 @@ class Coordinator extends React.Component {
               }}
               className='nav-item p-2 w-100 '>
               <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
-              Student
+              Students
+            </div>
+          </Link>
+          <Link
+            to='/groups'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-users mr-3' aria-hidden='true' />
+              Groups
+            </div>
+          </Link>
+          <Link
+            to='/guides'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
+              Guides
+            </div>
+          </Link>
+          <Link
+            to='/assignments'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-tasks mr-3' aria-hidden='true' />
+              Assignments
+            </div>
+          </Link>
+          <Link
+            to='/projects'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-folder mr-3' aria-hidden='true' />
+              Projects
+            </div>
+          </Link>
+          <Link
+            to='/handle-requests'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-bolt mr-3' aria-hidden='true' />
+              Handle Requests
+            </div>
+          </Link>
+
+          <Link
+            to='/faculty-form'
+            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className='nav-item p-2 w-100 '>
+              <i className='fa fa-fw fa-wpforms mr-3' aria-hidden='true' />
+              Guide Creation
             </div>
           </Link>
           <div
-            className='mobile-nav-item py-2 border-bottom'
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/groups'
-              className='nav-item rounded p-2 w-100   text-decoration-none '>
-              <i className='fa fa-fw fa-users mr-3' aria-hidden='true' />
-              Groups
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item py-2 border-bottom'
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/guides'
-              className='nav-item rounded p-2 w-100   text-decoration-none '>
-              <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
-              Guide
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item py-2 border-bottom'
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/assignments'
-              className='nav-item rounded p-2 w-100 text-decoration-none '>
-              <i className='fa fa-fw fa-tasks mr-3' aria-hidden='true' />
-              Assignments
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item py-2 border-bottom '
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/projects'
-              className='nav-item rounded p-2 w-100 text-decoration-none '>
-              <i className='fa fa-fw fa-folder mr-3' aria-hidden='true' />
-              Projects
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item py-2 border-bottom'
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/handle-requests'
-              className='nav-item rounded p-2 w-100 text-decoration-none '>
-              <i className='fa fa-fw fa-bolt mr-3' aria-hidden='true' />
-              Handle Requests
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item py-2 border-bottom'
-            onClick={() => {
-              this.toggleSidebar();
-            }}>
-            <Link
-              to='/faculty-form'
-              className='nav-item rounded p-2 w-100 text-decoration-none '>
-              <i className='fa fa-fw fa-wpforms mr-3' aria-hidden='true' />
-              Guide Creation
-            </Link>
-          </div>
-          <div
-            className='mobile-nav-item rounded p-2 w-100 text-decoration-none '
+            className='mobile-nav-item p-2 w-100 text-decoration-none '
+            style={{ cursor: "pointer" }}
             onClick={() =>
               axios.get("signOut/").then(() => window.location.reload())
             }>
