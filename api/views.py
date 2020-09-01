@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.template.loader import render_to_string
-from django.contrib.sites import get_current_site
+# from django.contrib.sites import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
@@ -1456,6 +1457,7 @@ def signIn(request):
         email = request.data.get("email")
         password = request.data.get("password")
         user = authenticate(request, email=email, password=password)
+        print(user)
         if user is not None:
             login(request, user)
             return HttpResponse()
@@ -1506,7 +1508,8 @@ def signUp(request):
                 'token': account_activation_token.make_token(student),
             })
             to_email = email
-            send_mail(mail_subject, message, 'youremail', [to_email])
+            send_mail(mail_subject, message,
+                      settings.EMAIL_HOST_USER, [to_email])
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
