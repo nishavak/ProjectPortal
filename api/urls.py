@@ -74,8 +74,8 @@ urlpatterns = [
     path('guideSignUp/', views.guideSignUp),
     path('signOut/', views.signOut),
     path('changePassword/', views.changePassword),
+    path('coordinatorSignup/', views.coordinatorSignup),
     path('changePhoto/', views.changePhoto),
     path('getImage/', views.getImage),
-    #     path('activate/', views.activate, name="activate"),
     path('activate/<uidb64>/<token>/', views.activate, name="activate"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

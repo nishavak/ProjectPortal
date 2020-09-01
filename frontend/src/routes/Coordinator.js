@@ -21,6 +21,7 @@ import ProjectList from "../components/coordinator/ProjectList";
 import Statistics from "../components/coordinator/Statistics";
 import StudentDetails from "../components/coordinator/StudentDetails";
 import StudentList from "../components/coordinator/StudentList";
+import CoordinatorForm from "../components/coordinator/CoordinatorForm";
 
 class Coordinator extends React.Component {
   toggleSidebar = () => {
@@ -28,228 +29,280 @@ class Coordinator extends React.Component {
   };
   render() {
     return (
-      <div className='dashboard-admin min-vh-100 user-select-none '>
-        <div className='mobile-header  d-lg-none d-flex p-1 align-items-center py-3 shadow-sm '>
-          <div className='col-6 text-left'>
+      <div className="dashboard-admin min-vh-100 user-select-none ">
+        <div className="mobile-header  d-lg-none d-flex p-1 align-items-center py-3 shadow-sm ">
+          <div className="col-6 text-left">
             <img
               src={SomaiyaLogo}
-              alt='Somaiya logo'
-              className=''
+              alt="Somaiya logo"
+              className=""
               style={{ width: "11em" }}
             />
           </div>
-          <div className='col-6 text-right'>
+          <div className="col-6 text-right">
             <i
-              class='fa fa-fw fa-bars'
-              aria-hidden='true'
+              class="fa fa-fw fa-bars"
+              aria-hidden="true"
               onClick={() => {
                 this.toggleSidebar();
               }}
             />
           </div>
         </div>
-        <div className='mobile-sidebar col d-lg-none d-none bg-light px-0 text-left'>
+        <div className="mobile-sidebar col d-lg-none d-none bg-light px-0 text-left">
           <Link
-            to='/students'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/students"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
               Students
             </div>
           </Link>
           <Link
-            to='/groups'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/groups"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-users mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-users mr-3" aria-hidden="true" />
               Groups
             </div>
           </Link>
           <Link
-            to='/guides'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/guides"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
               Guides
             </div>
           </Link>
           <Link
-            to='/assignments'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/assignments"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-tasks mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-tasks mr-3" aria-hidden="true" />
               Assignments
             </div>
           </Link>
           <Link
-            to='/projects'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/projects"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-folder mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-folder mr-3" aria-hidden="true" />
               Projects
             </div>
           </Link>
           <Link
-            to='/handle-requests'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/handle-requests"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-bolt mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-bolt mr-3" aria-hidden="true" />
               Handle Requests
             </div>
           </Link>
 
           <Link
-            to='/faculty-form'
-            className='text-decoration-none mobile-nav-item py-2 border-bottom'>
+            to="/faculty-form"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
             <div
               onClick={() => {
                 this.toggleSidebar();
               }}
-              className='nav-item p-2 w-100 '>
-              <i className='fa fa-fw fa-wpforms mr-3' aria-hidden='true' />
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-wpforms mr-3" aria-hidden="true" />
               Guide Creation
             </div>
           </Link>
+          <Link
+            to="/coordinator-form"
+            className="text-decoration-none mobile-nav-item py-2 border-bottom"
+          >
+            <div
+              onClick={() => {
+                this.toggleSidebar();
+              }}
+              className="nav-item p-2 w-100 "
+            >
+              <i className="fa fa-fw fa-user-circle mr-3" aria-hidden="true" />
+              Coordinator Creation
+            </div>
+          </Link>
           <div
-            className='mobile-nav-item p-2 w-100 text-decoration-none '
+            className="mobile-nav-item p-2 w-100 text-decoration-none "
             style={{ cursor: "pointer" }}
             onClick={() =>
               axios.get("signOut/").then(() => window.location.reload())
-            }>
-            <i className='fa fa-fw fa-sign-out mr-3' aria-hidden='true' />
+            }
+          >
+            <i className="fa fa-fw fa-sign-out mr-3" aria-hidden="true" />
             Sign out
           </div>
         </div>
-        <div className='row mx-auto'>
-          <div className='sidebar col-lg-2 col-12  d-lg-block d-none shadow m-0'>
+        <div className="row mx-auto">
+          <div className="sidebar col-lg-2 col-12  d-lg-block d-none shadow m-0">
             <div>
               <img
                 src={SomaiyaLogo}
-                alt='Somaiya logo'
-                className='mt-3 mb-4'
+                alt="Somaiya logo"
+                className="mt-3 mb-4"
                 style={{ width: "9.5em" }}
               />
             </div>
-            <div className='d-flex justify-content-center m-auto'>
-              <div className='nav align-top '>
+            <div className="d-flex justify-content-center m-auto">
+              <div className="nav align-top ">
                 <Link
-                  to='/students'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none '>
-                  <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
+                  to="/students"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                >
+                  <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
                   Student
                 </Link>
                 <Link
-                  to='/groups'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none '>
-                  <i className='fa fa-fw fa-users mr-3' aria-hidden='true' />
+                  to="/groups"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                >
+                  <i className="fa fa-fw fa-users mr-3" aria-hidden="true" />
                   Groups
                 </Link>
                 <Link
-                  to='/guides'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none '>
-                  <i className='fa fa-fw fa-user mr-3' aria-hidden='true' />
+                  to="/guides"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-left  text-decoration-none "
+                >
+                  <i className="fa fa-fw fa-user mr-3" aria-hidden="true" />
                   Guide
                 </Link>
                 <Link
-                  to='/assignments'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left'>
-                  <i className='fa fa-fw fa-tasks mr-3' aria-hidden='true' />
+                  to="/assignments"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                >
+                  <i className="fa fa-fw fa-tasks mr-3" aria-hidden="true" />
                   Assignments
                 </Link>
                 <Link
-                  to='/projects'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left'>
-                  <i className='fa fa-fw fa-folder mr-3' aria-hidden='true' />
+                  to="/projects"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                >
+                  <i className="fa fa-fw fa-folder mr-3" aria-hidden="true" />
                   Projects
                 </Link>
                 <Link
-                  to='/handle-requests'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left'>
-                  <i className='fa fa-fw fa-bolt mr-3' aria-hidden='true' />
+                  to="/handle-requests"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                >
+                  <i className="fa fa-fw fa-bolt mr-3" aria-hidden="true" />
                   Handle Requests
                 </Link>
                 <Link
-                  to='/faculty-form'
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left'>
-                  <i className='fa fa-fw fa-wpforms mr-3' aria-hidden='true' />
+                  to="/faculty-form"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                >
+                  <i className="fa fa-fw fa-wpforms mr-3" aria-hidden="true" />
                   Guide Creation
                 </Link>
+                <Link
+                  to="/coordinator-form"
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                >
+                  <i
+                    className="fa fa-fw fa-user-circle mr-3"
+                    aria-hidden="true"
+                  />
+                  Coordinator Creation
+                </Link>
                 <div
-                  className='nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left'
+                  className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                   onClick={() =>
                     axios.get("signOut/").then(() => window.location.reload())
-                  }>
-                  <i className='fa fa-fw fa-sign-out mr-3' aria-hidden='true' />
+                  }
+                >
+                  <i className="fa fa-fw fa-sign-out mr-3" aria-hidden="true" />
                   Sign out
                 </div>
               </div>
             </div>
           </div>
-          <div className='col-lg-10 offset-lg-2 p-0 mb-5'>
+          <div className="col-lg-10 offset-lg-2 p-0 mb-5">
             <Switch>
               <Route
                 path={["/signin", "/signup", "/forgot-password"]}
-                render={() => <Redirect to='/' />}
+                render={() => <Redirect to="/" />}
               />
-              <Route exact path='/students' component={StudentList} />
-              <Route exact path='/student/:id' component={StudentDetails} />
-              <Route exact path='/guides' component={GuideList} />
+              <Route exact path="/students" component={StudentList} />
+              <Route exact path="/student/:id" component={StudentDetails} />
+              <Route exact path="/guides" component={GuideList} />
               <Route
                 exact
-                path='/guide-detailed'
+                path="/guide-detailed"
                 component={GuideDetailedList}
               />
-              <Route exact path='/guide/:id' component={GuideDetails} />
-              <Route exact path='/groups' component={GroupList} />
-              <Route exact path='/group/:id' component={GroupDetails} />
-              <Route exact path='/assignments' component={AssignmentList} />
+              <Route exact path="/guide/:id" component={GuideDetails} />
+              <Route exact path="/groups" component={GroupList} />
+              <Route exact path="/group/:id" component={GroupDetails} />
+              <Route exact path="/assignments" component={AssignmentList} />
               <Route
                 exact
-                path='/assignment/:id'
+                path="/assignment/:id"
                 component={AssignmentDetails}
               />
               <Route
                 exact
-                path='/submission-statistics'
+                path="/submission-statistics"
                 component={Statistics}
               />
-              <Route exact path='/grade-statistics' component={GradingStats} />
-              <Route exact path='/projects' component={ProjectList} />
-              <Route exact path='/project/:id' component={ProjectDetails} />
+              <Route exact path="/grade-statistics" component={GradingStats} />
+              <Route exact path="/projects" component={ProjectList} />
+              <Route exact path="/project/:id" component={ProjectDetails} />
               <Route
                 exact
-                path='/create-assignments'
+                path="/create-assignments"
                 component={AssignmentCreation}
               />
-              <Route exact path='/handle-requests' component={HandleRequests} />
-              <Route exact path='/faculty-form' component={FacultyForm} />
+              <Route exact path="/handle-requests" component={HandleRequests} />
+              <Route exact path="/faculty-form" component={FacultyForm} />
               <Route
                 exact
-                path='/group-submission/:assignment/:team'
+                path="/coordinator-form"
+                component={CoordinatorForm}
+              />
+              <Route
+                exact
+                path="/group-submission/:assignment/:team"
                 component={GroupSubmissionDetails}
               />
             </Switch>

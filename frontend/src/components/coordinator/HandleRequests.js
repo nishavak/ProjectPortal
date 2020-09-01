@@ -38,7 +38,7 @@ class HandleRequests extends React.Component {
   render() {
     if (this.state.loading) return <Loading />;
     return (
-      <div className="handle-requests mx-auto" style={{ width: "85%" }}>
+      <div className="handle-requests mx-auto" style={{ width: "90%" }}>
         <br />
         <div
           className="p-2 px-3 text-center shadow-sm rounded font-weight-bold"
@@ -52,6 +52,7 @@ class HandleRequests extends React.Component {
         </div>
         <br />
 
+        {console.log("Group reqs", this.group_requests)}
         <div class="form-group">
           <label for="sel1">Select type of requests</label>
           <select
@@ -66,13 +67,12 @@ class HandleRequests extends React.Component {
             <option>Project</option>
           </select>
         </div>
-
         {this.group_requests &&
           (this.state.view === "Group" || this.state.view === "All") &&
           this.group_requests.map((req) => {
-            if (req.status === "P") {
+            if (req.status === "Pending") {
               return (
-                <div className="col-12  shadow-sm p-0">
+                <div className="col-12 my-2 shadow-sm p-0">
                   <div
                     className="bg-light font-weight-bold p-2"
                     style={{ color: "rgb(183, 32, 46)", fontSize: "1em" }}
@@ -108,12 +108,14 @@ class HandleRequests extends React.Component {
                       New Leader : {req.new_leader}
                     </div>
                   )}
-                  <div
-                    className="px-2 text-muted py-1"
-                    style={{ fontSize: "0.9em" }}
-                  >
-                    Description : {req.description}
-                  </div>
+                  {req.action !== "Change Leader" && (
+                    <div
+                      className="px-2 text-muted py-1"
+                      style={{ fontSize: "0.9em" }}
+                    >
+                      Description : {req.description}
+                    </div>
+                  )}
                   <div className="d-flex flex-md-row flex-column py-1">
                     <div className="d-flex flex-row px-2 col-md-6 col-12">
                       <div className="pr-1">
@@ -122,6 +124,7 @@ class HandleRequests extends React.Component {
                           onClick={() => {
                             axios
                               .put(`coordinatorGroupRequestManage/${req.id}/A`)
+                              .then(() => window.location.reload())
                               .catch((err) => console.log(err));
                             this.setState({ status: "A" });
                           }}
@@ -135,6 +138,7 @@ class HandleRequests extends React.Component {
                           onClick={() => {
                             axios
                               .put(`coordinatorGroupRequestManage/${req.id}/R`)
+                              .then(() => window.location.reload())
                               .catch((err) => console.log(err));
                             this.setState({ status: "R" });
                           }}
@@ -161,7 +165,7 @@ class HandleRequests extends React.Component {
           this.project_requests.map((req) => {
             if (req.status === "P") {
               return (
-                <div className="col-12  shadow-sm p-0">
+                <div className="col-12 my-2 shadow-sm p-0">
                   <div
                     className="bg-light font-weight-bold p-2"
                     style={{ color: "rgb(183, 32, 46)", fontSize: "1em" }}
@@ -175,7 +179,7 @@ class HandleRequests extends React.Component {
                   >
                     <div className="col-md-6 col-12  p-0">
                       {" "}
-                      Project id: {req.project}
+                      Project Id: {req.project}
                     </div>
                     <div className="col-md-6 col-12 p-0 pt-1">
                       Request Id :{req.id}
@@ -183,15 +187,16 @@ class HandleRequests extends React.Component {
                   </div>
 
                   <div
+                    hidden
                     className="px-2 text-muted py-1 text-wrap"
                     style={{ fontSize: "0.9em", wordBreak: "break-word" }}
                   >
                     Request Description : {req.description}
                   </div>
                   <div className="d-flex flex-md-row  flex-column py-1">
-                    <div className="col-md-6 col-12">
+                    <div className="col-md-6 col-12 bg- m-0 p-2">
                       {/* <form onSubmit = {this.handleSubmit}  method = "PUT"> */}
-                      <div className="d-flex flex-row px-2">
+                      <div className="d-flex flex-row ">
                         <div className="pr-1">
                           <button
                             className="btn btn-outline-success"
@@ -200,6 +205,7 @@ class HandleRequests extends React.Component {
                                 .put(
                                   `coordinatorProjectRequestManage/${req.id}/A`
                                 )
+                                .then(() => window.location.reload())
                                 .catch((err) => console.log(err));
                               this.setState({ status: "A" });
                             }}
@@ -215,6 +221,7 @@ class HandleRequests extends React.Component {
                                 .put(
                                   `coordinatorProjectRequestManage/${req.id}/R`
                                 )
+                                .then(() => window.location.reload())
                                 .catch((err) => console.log(err));
                               this.setState({ status: "R" });
                             }}

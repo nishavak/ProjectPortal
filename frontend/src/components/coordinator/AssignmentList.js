@@ -81,14 +81,15 @@ class AssignmentList extends React.Component {
         </div>
 
         <div className="p-2">
-          {this.assignments.length &&
-            this.assignments.map((assignment) => (
-              <Route
-                render={(props) => (
-                  <AssignmentCard {...props} info={assignment} />
-                )}
-              />
-            ))}
+          {this.assignments.length
+            ? this.assignments.map((assignment) => (
+                <Route
+                  render={(props) => (
+                    <AssignmentCard {...props} info={assignment} />
+                  )}
+                />
+              ))
+            : "No Assignments"}
         </div>
       </div>
     );

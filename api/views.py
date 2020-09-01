@@ -630,7 +630,7 @@ def coordinatorGroupRequest(request):
     response = {}
     # GET
     group_requests = []
-    for group_request in GroupRequest.objects.all().order_by("generated"):
+    for group_request in GroupRequest.objects.filter(status="P").order_by("generated"):
 
         print(group_request)
 
@@ -638,10 +638,10 @@ def coordinatorGroupRequest(request):
             "id": group_request.id,
             "action": dict(constants.GROUP_ACTION)[group_request.action],
             "status": dict(constants.STATUS)[group_request.status],
-            "new_leader": group_request.new_leader.id if (type(group_request.new_leader) is not type(None)) else None,
-            "old_leader": group_request.old_leader.id if (type(group_request.old_leader) is not type(None)) else None,
-            "add_student":  group_request.add_student.id if (type(group_request.add_student) is not type(None)) else None,
-            "remove_student": group_request.remove_student.id if (type(group_request.remove_student) is not type(None)) else None,
+            "new_leader": group_request.new_leader.roll_number if (type(group_request.new_leader) is not type(None)) else None,
+            "old_leader": group_request.old_leader.roll_number if (type(group_request.old_leader) is not type(None)) else None,
+            "add_student":  group_request.add_student.roll_number if (type(group_request.add_student) is not type(None)) else None,
+            "remove_student": group_request.remove_student.roll_number if (type(group_request.remove_student) is not type(None)) else None,
             "team": group_request.team.id,
             "description": group_request.description,
             "generated": group_request.generated.strftime("%d/%m/%Y, %H:%M:%S"),
@@ -659,7 +659,8 @@ def coordinatorGroupRequestManage(request, id, what):
     if action == "Change Leader":
         if what == "A":
             team = Team.objects.get(id=group_request.team.id)
-            team.leader = group_request.new_leader
+            student = Student.objects.get(roll_number=group_request.new_leader)
+            team.leader = student
             team.save()
             group_request.status = "A"
             group_request.save()
@@ -668,7 +669,9 @@ def coordinatorGroupRequestManage(request, id, what):
             group_request.save()
     else:
         if what == "A":
-            student = Student.objects.get(id=group_request.remove_student)
+
+            student = Student.objects.get(
+                roll_number=group_request.remove_student)
             student.team = None
             student.save()
             group_request.status = "A"
@@ -687,7 +690,7 @@ def coordinatorProjectRequest(request):
     for project_request in project_requests:
         _t = {
             "project": project_request.project.id,
-            # "description": project_request.description,
+            # "description": project_request.project.description,
             "status": project_request.status,
             "id": project_request.id,
             "created": project_request.created.strftime("%d/%m/%Y, %H:%M:%S"),
@@ -796,7 +799,7 @@ def guideAssignGrades(request):
     guide = Guide.objects.get(id=request.user.id)
     for roll, grade in request.data.get("grade").items():
         r = int(roll)
-        marks = int(grade)
+        marks = int(grade or 0)
         as_id = int(request.data.get("id"))
 
         a = Assignment.objects.get(id=as_id)
@@ -1283,7 +1286,7 @@ def removeStudent(request):
 @api_view(["POST"])
 def makeLeader(request):
     student = Student.objects.get(id=request.user.id)
-    if len(GroupRequest.objects.filter(action="Change Leader", team=student.team)) > 0:
+    if GroupRequest.objects.filter(status="P", action="Change Leader", team=student.team).count() > 0:
         return Response(data="Previous change leader request pending", status=status.HTTP_400_BAD_REQUEST)
     if student.team.leader == student:
         new_leader = request.data["new_leader"]
@@ -1598,3 +1601,25 @@ def getImage(request):
     except:
         url = None
         return Response(data=url, status=status.HTTP_404_NOT_FOUND)
+
+
+# Create Coordinator
+@api_view(["POST"])
+def coordinatorSignup(request):
+    name = request.data.get("name")
+    email = request.data.get("email")
+    password = request.data.get("password")
+    data = {
+        "name": " ".join(name.split()).title(),
+                "email": email,
+                "password": password,
+                "is_staff": False,
+                "is_active": True
+    }
+
+    serializer = CoordinatorSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

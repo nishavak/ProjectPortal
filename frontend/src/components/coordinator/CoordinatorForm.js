@@ -3,24 +3,14 @@ import axios from "../../axios";
 import $ from "jquery";
 import { NotificationManager } from "react-notifications";
 
-const branch = [
-  "Information Technology",
-  "Computer Science",
-  "Electrical",
-  "Electronics and Telecommunication",
-  "Mechanical",
-];
-
-class FacultyForm extends React.Component {
+class CoordinatorForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      initials: "",
       email: "",
       password: "",
       confirmPassword: "",
       name: "",
-      branch: branch[0],
     };
   }
   somaiyaEmail = () =>
@@ -70,18 +60,16 @@ class FacultyForm extends React.Component {
     return this.somaiyaEmail() &&
       this.securePassword() &&
       this.state.password === this.state.confirmPassword &&
-      this.state.name !== "" &&
-      this.state.initials !== "" &&
-      branch.includes(this.state.branch)
+      this.state.name !== ""
       ? true
       : false;
   };
   handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("guideSignUp/", this.state)
+      .post("coordinatorSignup/", this.state)
       .then(() => {
-        alert("Faculty created");
+        alert("Coordinator created");
         window.location.reload();
       })
       .catch((err) => console.log(err));
@@ -99,11 +87,11 @@ class FacultyForm extends React.Component {
             backgroundColor: "rgba(231, 231, 231, 0.459)",
           }}
         >
-          Guide Sign Up Form
+          Coordinator Sign Up Form
         </div>
         <br />
         <div
-          className="col-12 col-xl-12 d-flex p-3 flex-column rounded justify-content-center overflow-auto "
+          className="col-12 col-xl-12 d-flex flex-column rounded p-3 justify-content-center overflow-auto "
           style={{
             fontSize: "1.1em",
             width: "auto",
@@ -117,7 +105,7 @@ class FacultyForm extends React.Component {
             onSubmit={this.handleSubmit}
           >
             <div className="form-group">
-              <label htmlFor="name">Guide Name</label>
+              <label htmlFor="name">Coordinator Name</label>
               <input
                 type="text"
                 name="name"
@@ -125,32 +113,6 @@ class FacultyForm extends React.Component {
                 className="form-control border-0"
                 onChange={this.handleChange}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="name">Guide Initials</label>
-              <input
-                type="text"
-                name="initials"
-                id="initials"
-                className="form-control border-0"
-                onChange={this.handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="branch">Branch</label>
-              <select
-                name="branch"
-                id="branch"
-                className="custom-select border-0"
-                onChange={this.handleChange}
-                value={this.state.branch}
-              >
-                {branch.map((branchItem) => (
-                  <option value={branchItem} key={branch.indexOf(branchItem)}>
-                    {branchItem}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -230,7 +192,7 @@ class FacultyForm extends React.Component {
                 type="submit"
                 disabled={!this.isFormValid()}
               >
-                Create faculty
+                Create coordinator
               </button>
             </div>
             <div className="form-group" id="signup-feedback" />
@@ -242,4 +204,4 @@ class FacultyForm extends React.Component {
   }
 }
 
-export default FacultyForm;
+export default CoordinatorForm;

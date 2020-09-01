@@ -69,6 +69,7 @@ class ProjectDetails extends React.Component {
             </div>
             {this.project.project_explanatory_field && (
               <>
+                <hr />
                 <div className="">
                   <p className="text-muted">
                     Explanation for Interdisciplinary project
@@ -77,7 +78,6 @@ class ProjectDetails extends React.Component {
                     {this.project && this.project.project_explanatory_field}
                   </p>
                 </div>
-                <hr />
               </>
             )}
           </div>
