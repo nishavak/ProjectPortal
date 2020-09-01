@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/static/css/main.737a5cfe.chunk.css",
+    "main.js": "/static/js/main.dfe107b1.chunk.js",
+    "main.js.map": "/static/js/main.dfe107b1.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.c8a21426.js",
+    "runtime-main.js.map": "/static/js/runtime-main.c8a21426.js.map",
+    "static/css/2.62936d61.chunk.css": "/static/css/2.62936d61.chunk.css",
+    "static/js/2.5dad4037.chunk.js": "/static/js/2.5dad4037.chunk.js",
+    "static/js/2.5dad4037.chunk.js.map": "/static/js/2.5dad4037.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.dff98787567d9aef9c0e0f7525ebcf93.js": "/precache-manifest.dff98787567d9aef9c0e0f7525ebcf93.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.62936d61.chunk.css.map": "/static/css/2.62936d61.chunk.css.map",
+    "static/css/main.737a5cfe.chunk.css.map": "/static/css/main.737a5cfe.chunk.css.map",
+    "static/js/2.5dad4037.chunk.js.LICENSE.txt": "/static/js/2.5dad4037.chunk.js.LICENSE.txt",
+    "static/media/FiraCode.css": "/static/media/FiraCode-SemiBold.d98c7b35.ttf",
+    "static/media/Group.gif": "/static/media/Group.876f9c58.gif",
+    "static/media/Inter.css": "/static/media/Inter.var.4b976905.woff2",
+    "static/media/SignIn.gif": "/static/media/SignIn.e11f8529.gif",
+    "static/media/SignUp.gif": "/static/media/SignUp.2c41f9b5.gif",
+    "static/media/Somaiya.svg": "/static/media/Somaiya.1c07a1a2.svg",
+    "static/media/User.png": "/static/media/User.cd40c797.png",
+    "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/notifications.css": "/static/media/notification.c0d3c94c.eot"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c8a21426.js",
+    "static/css/2.62936d61.chunk.css",
+    "static/js/2.5dad4037.chunk.js",
+    "static/css/main.737a5cfe.chunk.css",
+    "static/js/main.dfe107b1.chunk.js"
+  ]
+}

@@ -9,7 +9,7 @@ frontend/.pnp
 frontend/coverage
 
 # production
-frontend/build
+# frontend/build
 
 # misc
 .DS_Store
@@ -49,7 +49,7 @@ media
 
 # Distribution / packaging
 .Python
-build/
+# build/
 develop-eggs/
 dist/
 downloads/
