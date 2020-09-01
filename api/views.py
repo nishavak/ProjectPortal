@@ -1435,7 +1435,7 @@ def getProject(request):
 """ change profile picture and password """
 
 
-@ api_view()
+@api_view()
 def whoAmI(request):
     try:
         userType = request.user.groups.all()[0].name.lower()
@@ -1444,14 +1444,14 @@ def whoAmI(request):
         return Response(data=None, status=status.HTTP_200_OK)
 
 
-@ api_view()
+@api_view()
 def signOut(request):
     logout(request)
     return Response(status=status.HTTP_200_OK)
 
 
-@ api_view(['POST'])
-@ permission_classes([permissions.AllowAny])
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def signIn(request):
     if request.method == 'POST':
         email = request.data.get("email")
@@ -1467,8 +1467,8 @@ def signIn(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@ api_view(['POST'])
-@ permission_classes([permissions.AllowAny])
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def signUp(request):
     if request.method == 'POST':
         email = request.data.get("email")
