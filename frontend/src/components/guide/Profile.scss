@@ -1,0 +1,27 @@
+.profile {
+  .link {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  #Sidebar {
+    .profile-pic {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .link {
+      text-decoration: none;
+      color: #575859;
+    }
+    a div:hover {
+      color: black;
+
+      // background-color: #fff;
+      cursor: pointer;
+      // border-bottom: 1px solid transparent;
+      transition: 200ms ease;
+      // border-bottom-color: transparent;
+    }
+  }
+}

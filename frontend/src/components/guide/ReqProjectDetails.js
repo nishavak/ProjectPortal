@@ -1,12 +1,12 @@
 import React from "react";
 import $ from "jquery";
-import "./ProjectSection.scss";
-import GuideHeader from "./GuideHeader";
+import "./ReqProjectDetails.scss";
 import axios from "../../axios";
-import { Route } from "react-router-dom";
 import Loading from "../shared/Loading";
+import GuideHeader from "./GuideHeader";
+import { Route } from "react-router-dom";
 
-class ProjectSection extends React.Component {
+class ReqProjectDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,10 @@ class ProjectSection extends React.Component {
     if (this.state.loading) return <Loading />;
     return (
       <>
-        <div className='' id='project-section'>
+        <Route component={GuideHeader} />
+        <br></br>
+
+        <div className='container' id='project-details'>
           <div id='project-registration-link'>
             <div
               className='bg-light font-weight-bold m-0 p-0 shadow-sm rounded'
@@ -107,4 +110,4 @@ class ProjectSection extends React.Component {
     );
   }
 }
-export default ProjectSection;
+export default ReqProjectDetails;

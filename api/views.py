@@ -741,8 +741,10 @@ def guideAssignmentDetails(request, pk, groupId):
         try:
             grade = Grade.objects.get(
                 student=student, assignment=Assignment.objects.get(pk=pk))
+            studentData.setdefault("turned_in", grade.turned_in)
             studentData.setdefault("grade", grade.marks_obtained)
         except:
+            studentData.setdefault("turned_in", None)
             studentData.setdefault("grade", None)
         studentList.append(studentData)
     assignment = Assignment.objects.get(pk=pk)
@@ -754,13 +756,13 @@ def guideAssignmentDetails(request, pk, groupId):
         "due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
         "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
     }
-    fileAttachements = File.objects.filter(team=None)
+    fileAttachements = File.objects.filter(team=None, assignment=assignment)
     _attachments = []
     for file in fileAttachements:
         _file = {
             "id": file.id,
-            "file_name": file.file.name,
-            "file_url": file.file.url
+            "file_name": file.file.name.split("/")[-1],
+            "file_url": '/api'+file.file.url
         }
         _attachments.append(_file)
     assignmentDetails.setdefault("attachments", _attachments)
@@ -769,8 +771,8 @@ def guideAssignmentDetails(request, pk, groupId):
     for file in teamFileUploads:
         _file = {
             "id": file.id,
-            "file_name": file.file.name,
-            "file_url": file.file.url
+            "file_name": file.file.name.split("/")[-1],
+            "file_url": '/api'+file.file.url
         }
         teamSubmissions.append(_file)
     response.setdefault("student_list", studentList)
@@ -782,19 +784,43 @@ def guideAssignmentDetails(request, pk, groupId):
 
 @api_view(["PUT"])
 def guideAssignGrades(request):
+    print(request.data)
     guide = Guide.objects.get(id=request.user.id)
-    student_grade = request.data.get("student_grade")
-    # print(request.data, type(request.data))
-    for i in student_grade:
-        _g = Grade.objects.filter(student=i.get("student_id")).filter(
-            assignment=request.data.get("assignment_id"))[0]
-        if (_g.assignment.weightage >= i.get("marks_obtained")) and (i.get("marks_obtained") >= 0):
-            _g.marks_obtained = i.get("marks_obtained")
-            _g.save()
+    for roll, grade in request.data.get("grade").items():
+        r = int(roll)
+        marks = int(grade)
+        as_id = int(request.data.get("id"))
+
+        a = Assignment.objects.get(id=as_id)
+        s = Student.objects.get(roll_number=r)
+        g = Grade.objects.get(student=s, assignment=a)
+
+        print(g)
+        if marks == None:
+            g.marks_obtained = None
+            g.guide = guide
+            g.save()
+        if (a.weightage >= marks) and (marks >= 0):
+            g.marks_obtained = marks
+            g.guide = guide
+            g.save()
             # print(_g.marks_obtained)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data="Marks out of range", status=status.HTTP_400_BAD_REQUEST)
     return Response()
+    # guide = Guide.objects.get(id=request.user.id)
+    # student_grade = request.data.get("student_grade")
+    # # print(request.data, type(request.data))
+    # for i in student_grade:
+    #     _g = Grade.objects.filter(student=i.get("student_id")).filter(
+    #         assignment=request.data.get("assignment_id"))[0]
+    #     if (_g.assignment.weightage >= i.get("marks_obtained")) and (i.get("marks_obtained") >= 0):
+    #         _g.marks_obtained = i.get("marks_obtained")
+    #         _g.save()
+    #         # print(_g.marks_obtained)
+    #     else:
+    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+    # return Response()
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -833,15 +859,66 @@ def guideAssignmentList(request, groupId):
 
 
 @api_view()
-def guideRequest(request, groupId):
+def guideRequest(request):
     guide = Guide.objects.get(id=request.user.id)
-    response = {}
-    team = Team.objects.get(id=groupId)
-    project = Project.objects.get(team=team)
-    response.setdefault("team_id", team.id)
-    response.setdefault("team_leader", team.leader)
-    response.setdefault("project_id", project.id)
-    return Response(data=response)
+    print(guide)
+    requests = GuideRequest.objects.filter(
+        guide=guide, status="P").order_by("timestamp_requested")
+    print(request)
+    guide_req_list = []
+    for guide_request in requests:
+        _g = {
+            "team": guide_request.team.id,
+            "status": guide_request.status,
+            "id": guide_request.id,
+            "timestamp_requested": guide_request.timestamp_requested.strftime("%d/%m/%Y, %H:%M:%S"),
+        }
+        print(_g)
+        guide_req_list.append(_g)
+    print(guide_req_list)
+    return Response(data=guide_req_list, status=status.HTTP_200_OK)
+
+
+@api_view()
+def guideHeader(request):
+    guide = Guide.objects.get(id=request.user.id)
+
+    alloted_teams_count = Team.objects.filter(guide=guide).count()
+
+    return Response(data=alloted_teams_count)
+
+
+@api_view(["POST"])
+def acceptRequest(request):
+    guide = Guide.objects.get(id=request.user.id)
+    team = Team.objects.get(id=request.data.get("team_id"))
+
+    alloted_teams_count = Team.objects.filter(guide=guide).count()
+
+    if alloted_teams_count < 2:
+        gr = GuideRequest.objects.get(status="P", guide=guide, team=team)
+        gr.status = "A"
+        gr.save()
+        team.guide = guide
+        team.save()
+        return Response(data="Group request accepted")
+    else:
+        gr = GuideRequest.objects.get(status="P", guide=guide, team=team)
+        gr.status = "R"
+        gr.save()
+        return Response(data="Cannot assign more than 2 groups", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def rejectRequest(request):
+    guide = Guide.objects.get(id=request.user.id)
+    team = Team.objects.get(id=request.data.get("team_id"))
+
+    gr = GuideRequest.objects.get(status="P", guide=guide, team=team)
+    gr.status = "R"
+    gr.save()
+
+    return Response(data="Request rejected")
 
 
 @api_view(['PUT'])
@@ -851,10 +928,10 @@ def guideDetailsForm(request):
     # if len(data["preferences"]) > 4:
     #    return Response(status=status.HTTP_400_BAD_REQUEST)
     for preference in data["preferences"]:
-        if not preference["area_of_interest"] in [i[0] for i in constants.DOMAIN]:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if not preference["thrust_area"] in [i[0] for i in constants.THRUST_AREA]:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        if not preference["area_of_interest"] in [i[1] for i in constants.DOMAIN]:
+            return Response(data="Invalid Input", status=status.HTTP_400_BAD_REQUEST)
+        if not preference["thrust_area"] in [i[1] for i in constants.THRUST_AREA]:
+            return Response(data="Invalid Input 1", status=status.HTTP_400_BAD_REQUEST)
     guide.initials = data["initials"]
     guide.preferences.clear()
     guide.save()
@@ -1217,12 +1294,14 @@ def searchGuide(request, q):
     response = []
     guides = Guide.objects.filter(Q(name__icontains=q) | Q(email__icontains=q))
     for guide in guides:
-        response.append({
-            "name": guide.name,
-            "id": guide.id,
-            "email": guide.email,
-            "branch": dict(constants.BRANCH)[guide.branch]
-        })
+        team_count = Team.objects.filter(guide=guide).count()
+        if team_count < 2:
+            response.append({
+                "name": guide.name,
+                "id": guide.id,
+                "email": guide.email,
+                "branch": dict(constants.BRANCH)[guide.branch]
+            })
     return Response(data=response)
 
 
