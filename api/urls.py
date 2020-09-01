@@ -39,8 +39,11 @@ urlpatterns = [
     path("guideAssignGrades/", views.guideAssignGrades),
     path("guideDetailsForm/", views.guideDetailsForm),
     path("guideGroup/<int:groupId>/", views.guideGroup),
+    path("guideHeader/", views.guideHeader),
     path("guidePersonal/", views.guidePersonal),
-    path("guideRequest/<int:groupId>/", views.guideRequest),
+    path("acceptRequest/", views.acceptRequest),
+    path("rejectRequest/", views.rejectRequest),
+    path("guideRequest/", views.guideRequest),
 
     # STUDENT
     path('studentPersonal/', views.studentPersonal),
