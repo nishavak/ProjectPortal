@@ -219,7 +219,7 @@ class Uploader extends Component {
   render() {
     return (
       <div className="">
-        <p className="text-center pt-4">
+        <p className="text-center pt-4 font-weight-bold">
           {this.turned_in ? "Team Submissions" : "Upload Files"}
         </p>
         <hr />

@@ -40,7 +40,7 @@ export default class Header extends React.Component {
             <img
               src={this.state.loading ? UserImage : this.image}
               className="rounded-circle shadow-sm"
-              alt="1814040"
+              alt=""
               data-toggle="dropdown"
               style={{ cursor: "pointer", width: "3em", height: "3em" }}
             />
