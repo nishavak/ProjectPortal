@@ -32,10 +32,8 @@ export class GuideAssignmentDetails extends Component {
             (this.grade = {
               ...this.grade,
               [student.student_roll_number]: student.grade,
-            }),
+            })
         );
-        // console.log(this.grade.values());
-        console.log(this.grade);
         this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
@@ -81,29 +79,33 @@ export class GuideAssignmentDetails extends Component {
       <div>
         <Route component={GuideHeader} />
         <div
-          id='guide-assignment-details'
-          className='container-fluid m-auto p-3'
-          style={{ width: "90%" }}>
-          <div className='shadow-sm p-3'>
-            <div className='py-1'>
+          id="guide-assignment-details"
+          className="container-fluid m-auto p-3"
+          style={{ width: "90%" }}
+        >
+          <div className="shadow-sm p-3">
+            <div className="py-1">
               <span
-                className='lead'
-                style={{ fontSize: "1.3em", fontWeight: "500" }}>
+                className="lead"
+                style={{ fontSize: "1.3em", fontWeight: "500" }}
+              >
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.title}
               </span>
             </div>
-            <div className='row'>
+            <div className="row">
               <div
-                className='col-md-4 col-12 text-muted'
-                style={{ fontSize: "0.9em" }}>
+                className="col-md-4 col-12 text-muted"
+                style={{ fontSize: "0.9em" }}
+              >
                 Due date :
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.due}
               </div>
               <div
-                className='col-md-4 col-12 text-muted'
-                style={{ fontSize: "0.9em" }}>
+                className="col-md-4 col-12 text-muted"
+                style={{ fontSize: "0.9em" }}
+              >
                 Posted on:{" "}
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.posted}
@@ -111,12 +113,12 @@ export class GuideAssignmentDetails extends Component {
             </div>
             <hr />
             <div>
-              <div className='description'>
+              <div className="description">
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.description}
               </div>
-              <div className='attachments d-md-flex'>
-                <ul className='list-group'>
+              <div className="attachments d-md-flex">
+                <ul className="list-group">
                   {!$.isEmptyObject(this.ass_details)
                     ? this.ass_details.assignment_details
                       ? !this.ass_details.assignment_details.attachments.length
@@ -124,16 +126,17 @@ export class GuideAssignmentDetails extends Component {
                         : this.ass_details.assignment_details.attachments.map(
                             (attachment) => (
                               <li
-                                className='attachment text-primary list-group-item border-0'
+                                className="attachment text-primary list-group-item border-0"
                                 style={{ cursor: "pointer" }}
                                 key={attachment.id}
                                 onClick={() =>
                                   // (window.location.href = `${attachment.file_url}`)
                                   window.open(attachment.file_url, "_blank")
-                                }>
+                                }
+                              >
                                 {attachment.file_name}
                               </li>
-                            ),
+                            )
                           )
                       : ""
                     : ""}
@@ -142,23 +145,22 @@ export class GuideAssignmentDetails extends Component {
             </div>
           </div>
 
-          <div className='row mx-0  mt-3 '>
-            <div className='col-md-5 p-0'>
-              <div className='container shadow-sm p-3'>
-                <p className='lead'>Team Submissions</p>
+          <div className="row mx-0  mt-3 ">
+            <div className="col-md-5 p-0">
+              <div className="container shadow-sm p-3">
+                <p className="lead">Team Submissions</p>
                 <hr />
-                <ul className='list-group'>
+                <ul className="list-group">
                   {!$.isEmptyObject(this.ass_details)
                     ? !this.ass_details.team_submissions.length
                       ? "No team submissions"
                       : this.ass_details.team_submissions.map((file) => (
                           <li
-                            className='attachment text-primary list-group-item border-0'
+                            className="attachment text-primary list-group-item border-0"
                             style={{ cursor: "pointer" }}
                             key={file.id}
-                            onClick={() =>
-                              window.open(file.file_url, "_blank")
-                            }>
+                            onClick={() => window.open(file.file_url, "_blank")}
+                          >
                             {file.file_name}
                           </li>
                         ))
@@ -166,15 +168,15 @@ export class GuideAssignmentDetails extends Component {
                 </ul>
               </div>
             </div>
-            <span className='col-md-1 p-0'></span>
-            <div className='col-md-6 p-0'>
-              <div className='shadow-sm p-3 '>
-                <p className='lead'>Grades</p>
+            <span className="col-md-1 p-0"></span>
+            <div className="col-md-6 p-0">
+              <div className="shadow-sm p-3 ">
+                <p className="lead">Grades</p>
                 <hr />
-                <div className=''>
-                  <p className='d-flex ' style={{ fontSize: "0.9em" }}>
-                    <div className='col-3 p-0 '>Weightage :</div>
-                    <div className='col-9 p-0'>
+                <div className="">
+                  <p className="d-flex " style={{ fontSize: "0.9em" }}>
+                    <div className="col-3 p-0 ">Weightage :</div>
+                    <div className="col-9 p-0">
                       {this.ass_details.assignment_details &&
                         this.ass_details.assignment_details.weightage}
                     </div>
@@ -183,33 +185,33 @@ export class GuideAssignmentDetails extends Component {
                   <form onSubmit={this.handleSubmit}>
                     {this.ass_details.student_list &&
                       this.ass_details.student_list.map((grade) => (
-                        <div className='container py-1'>
-                          <div className='row mb-2'>
-                            <div className='col-3 p-0 my-auto'>
-                              <span className='' style={{ fontSize: "0.9em" }}>
+                        <div className="container py-1">
+                          <div className="row mb-2">
+                            <div className="col-3 p-0 my-auto">
+                              <span className="" style={{ fontSize: "0.9em" }}>
                                 Student Roll Number:
                               </span>
                             </div>
-                            <div className='col-9 p-0'>
-                              <span className='' style={{ fontSize: "0.9em" }}>
+                            <div className="col-9 p-0">
+                              <span className="" style={{ fontSize: "0.9em" }}>
                                 {grade.student_roll_number}
                               </span>
                             </div>
                           </div>
-                          <div className='row'>
-                            <div className='col-3 p-0 my-auto'>
-                              <span className='' style={{ fontSize: "0.9em" }}>
+                          <div className="row">
+                            <div className="col-3 p-0 my-auto">
+                              <span className="" style={{ fontSize: "0.9em" }}>
                                 Grade :
                               </span>
                             </div>
-                            <div className='col-9 p-0'>
+                            <div className="col-9 p-0">
                               <input
-                                type='number'
-                                className='grade form-control w-50 shadow-sm '
+                                type="number"
+                                className="grade form-control w-50 shadow-sm "
                                 name={grade.student_roll_number}
                                 onChange={this.handleChange}
                                 value={this.grade[grade.student_roll_number]}
-                                placeholder='enter marks here'
+                                placeholder="enter marks here"
                                 disabled
                               />
                             </div>
@@ -218,14 +220,14 @@ export class GuideAssignmentDetails extends Component {
                         </div>
                       ))}
                     <div />
-                    <div className='d-flex justify-content-start pt-3'>
-                      <div className='col-md-3 p-0'>
+                    <div className="d-flex justify-content-start pt-3">
+                      <div className="col-md-3 p-0">
                         <button
-                          type='button'
-                          className='btn btn-light shadow-sm'
-                          data-toggle='tooltip'
-                          data-placement='bottom'
-                          title='Buttons in grade section will be disabled if there are no submissions'
+                          type="button"
+                          className="btn btn-light shadow-sm"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Buttons in grade section will be disabled if there are no submissions"
                           onClick={() => {
                             $(".grade").attr("disabled", false);
                           }}
@@ -234,18 +236,20 @@ export class GuideAssignmentDetails extends Component {
                               $('[data-toggle="tooltip"]').tooltip();
                             }
                           }}
-                          disabled={this.isTurnedIn ? false : true}>
+                          disabled={this.isTurnedIn ? false : true}
+                        >
                           Edit
                         </button>
                       </div>
-                      <div className='col-md-3 p-0'>
+                      <div className="col-md-3 p-0">
                         <button
-                          type='submit'
-                          className='btn btn-light shadow-sm'
+                          type="submit"
+                          className="btn btn-light shadow-sm"
                           onClick={() => {
                             $(".grade").attr("disabled", true);
                           }}
-                          disabled={this.isTurnedIn ? false : true}>
+                          disabled={this.isTurnedIn ? false : true}
+                        >
                           Save
                         </button>
                       </div>

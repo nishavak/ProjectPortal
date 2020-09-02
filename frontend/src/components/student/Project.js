@@ -81,7 +81,10 @@ export default class Project extends Component {
       )
         axios
           .post("createProject/", this.state)
-          .then(({ data }) => NotificationManager.success(data))
+          .then(({ data }) => {
+            NotificationManager.success(data);
+            this.componentDidMount();
+          })
           .catch((err) => NotificationManager.error(err.reponse.data));
   };
 

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.template.loader import render_to_string
+
 # from django.contrib.sites import get_current_site
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
@@ -20,15 +21,37 @@ from rest_framework.response import Response
 import constants
 
 from . import forms
-from .models import (Assignment, Assistant, Comment, Coordinator, File, Grade,
-                     GroupRequest, Guide, GuideRequest, Preference, Project,
-                     ProjectRequest, Student, Team)
-from .serializers import (AssignmentSerializer, AssistantSerializer,
-                          CommentSerializer, CoordinatorSerializer,
-                          FileSerializer, GradeSerializer,
-                          GroupRequestSerializer, GuideSerializer,
-                          PreferenceSerializer, ProjectRequestSerializer,
-                          ProjectSerializer, StudentSerializer, TeamSerializer)
+from .models import (
+    Assignment,
+    Assistant,
+    Comment,
+    Coordinator,
+    File,
+    Grade,
+    GroupRequest,
+    Guide,
+    GuideRequest,
+    Preference,
+    Project,
+    ProjectRequest,
+    Student,
+    Team,
+)
+from .serializers import (
+    AssignmentSerializer,
+    AssistantSerializer,
+    CommentSerializer,
+    CoordinatorSerializer,
+    FileSerializer,
+    GradeSerializer,
+    GroupRequestSerializer,
+    GuideSerializer,
+    PreferenceSerializer,
+    ProjectRequestSerializer,
+    ProjectSerializer,
+    StudentSerializer,
+    TeamSerializer,
+)
 
 # * COORDINATOR
 
@@ -36,7 +59,7 @@ from .serializers import (AssignmentSerializer, AssistantSerializer,
 @api_view()
 def coordinatorStudent(request):
     response = []
-    for student in Student.objects.all().order_by('roll_number'):
+    for student in Student.objects.all().order_by("roll_number"):
         student_data = {
             "student_branch": dict(constants.BRANCH)[student.branch],
             "student_email": student.email,
@@ -110,7 +133,7 @@ def coordinatorStudentDetail(request, id):
 @api_view()
 def coordinatorGroup(request):
     response = []
-    for team in Team.objects.all().order_by('id'):
+    for team in Team.objects.all().order_by("id"):
         team_data = {
             "team_id": team.id,
         }
@@ -135,7 +158,8 @@ def coordinatorGroup(request):
                 student_data.setdefault("student_id", student.id)
                 student_data.setdefault("student_name", student.name)
                 student_data.setdefault(
-                    "student_photo", ("/api" + student.photo.url) or None)
+                    "student_photo", ("/api" + student.photo.url) or None
+                )
                 students_data_array.append(student_data)
             team_data.setdefault("leader_name", leader.name)
             team_data.setdefault("student_data", students_data_array)
@@ -146,8 +170,7 @@ def coordinatorGroup(request):
         try:
             guide = Guide.objects.get(id=team.guide_id)
             guide_data.setdefault("guide_id", guide.id)
-            guide_data.setdefault("guide_photo", ("/api" +
-                                                  guide.photo.url) or None)
+            guide_data.setdefault("guide_photo", ("/api" + guide.photo.url) or None)
             guide_data.setdefault("guide_name", guide.name)
         except:
             guide_data.setdefault("guide_id", None)
@@ -192,8 +215,7 @@ def coordinatorGroupDetail(request, id):
             student_data = {}
             student_data.setdefault("student_id", student.id)
             student_data.setdefault("student_name", student.name)
-            student_data.setdefault(
-                "student_photo", ("/api" + student.photo.url) or "")
+            student_data.setdefault("student_photo", ("/api" + student.photo.url) or "")
             print(student_data)
             students_data_array.append(student_data)
         print("Student data array:\t", students_data_array)
@@ -207,8 +229,7 @@ def coordinatorGroupDetail(request, id):
         guide = Guide.objects.get(id=team.guide.id)
         guide_data.setdefault("guide_id", guide.id)
         guide_data.setdefault("guide_name", guide.name)
-        guide_data.setdefault(
-            "guide_photo", ("/api" + guide.photo.url) or None)
+        guide_data.setdefault("guide_photo", ("/api" + guide.photo.url) or None)
     except:
         guide_data.setdefault("guide_id", None)
         guide_data.setdefault("guide_name", None)
@@ -226,15 +247,13 @@ def coordinatorGuide(request):
         guide_data = {
             "guide_branch": dict(constants.BRANCH)[guide.branch],
             "guide_id": guide.id,
-            "guide_name": guide.name
+            "guide_name": guide.name,
         }
         try:
             teams = Team.objects.filter(guide=guide).order_by("id")
             team_data = []
             for team in teams:
-                temp_team_data = {
-                    "team_id": team.id
-                }
+                temp_team_data = {"team_id": team.id}
                 try:
                     project = Project.objects.get(team=team)
                     temp_team_data.setdefault("project_id", project.id)
@@ -263,7 +282,8 @@ def coordinatorGuideDetail(request, id):
     for preference in guide.preferences.all():
         p = Preference.objects.get(id=preference.id)
         preferences.append(
-            {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area})
+            {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area}
+        )
     guide_data = {
         "guide_branch": dict(constants.BRANCH)[guide.branch],
         "guide_id": guide.id,
@@ -276,9 +296,7 @@ def coordinatorGuideDetail(request, id):
         teams = Team.objects.filter(guide=guide)
         team_data = []
         for team in teams:
-            temp_team_data = {
-                "team_id": team.id
-            }
+            temp_team_data = {"team_id": team.id}
             try:
                 project = Project.objects.get(team=team)
                 temp_team_data.setdefault("project_id", project.id)
@@ -302,9 +320,7 @@ def coordinatorProject(request):
     # todo: if submitted link should be disabled
     response = []
     for team in Team.objects.all().order_by("id"):
-        project_data = {
-            "team_id": team.id
-        }
+        project_data = {"team_id": team.id}
         try:
             project = Project.objects.get(team=team)
             project_data.setdefault("project_exists", True)
@@ -314,7 +330,8 @@ def coordinatorProject(request):
             project_data.setdefault("project_domain", project.domain)
             project_data.setdefault("project_description", project.description)
             project_data.setdefault(
-                "project_explanatory_field", project.explanatory_field or None)
+                "project_explanatory_field", project.explanatory_field or None
+            )
         except:
             project_data.setdefault("project_exists", False)
         try:
@@ -337,9 +354,7 @@ def coordinatorProjectDetail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     team = Team.objects.get(id=project.team.id)
-    project_data = {
-        "team_id": team.id
-    }
+    project_data = {"team_id": team.id}
     try:
         project_data.setdefault("project_exists", True)
         project_data.setdefault("project_id", project.id)
@@ -348,7 +363,8 @@ def coordinatorProjectDetail(request, id):
         project_data.setdefault("project_domain", project.domain)
         project_data.setdefault("project_description", project.description)
         project_data.setdefault(
-            "project_explanatory_field", project.explanatory_field or None)
+            "project_explanatory_field", project.explanatory_field or None
+        )
     except:
         project_data.setdefault("project_exists", False)
     try:
@@ -375,7 +391,7 @@ def coordinatorAssignmentList(request):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
+                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
             }
         except:
             _assignment = {
@@ -384,7 +400,7 @@ def coordinatorAssignmentList(request):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": None,
-                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
+                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
             }
         response.append(_assignment)
     return Response(data=response)
@@ -401,7 +417,7 @@ def coordinatorRemoveAttachments(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(["GET", "PUT", "DELETE"])
 def coordinatorAssignmentDetail(request, id):
     if request.method == "GET":
         try:
@@ -414,11 +430,13 @@ def coordinatorAssignmentDetail(request, id):
         files = File.objects.filter(assignment=assignment).filter(team=None)
         _files = []
         for file in files:
-            _files.append({
-                "id": file.id,
-                "name": file.file.name.split("/")[-1],
-                "url": "/api" + file.file.url,
-            })
+            _files.append(
+                {
+                    "id": file.id,
+                    "name": file.file.name.split("/")[-1],
+                    "url": "/api" + file.file.url,
+                }
+            )
         try:
             _assignment = {
                 "assignment_id": assignment.id,
@@ -426,7 +444,7 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": assignment.due.strftime("%Y-%m-%dT%H:%M"),
-                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M")
+                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M"),
             }
         except:
             _assignment = {
@@ -435,7 +453,7 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": None,
-                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M")
+                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M"),
             }
         assignment_details.setdefault("assignment", _assignment)
         assignment_details.setdefault("files", _files)
@@ -443,12 +461,11 @@ def coordinatorAssignmentDetail(request, id):
         # submission status
         submission_status = []
         for team in Team.objects.all():
-            _submission_status = {
-                "team_id": team.id
-            }
+            _submission_status = {"team_id": team.id}
             try:
-                grade = Grade.objects.filter(
-                    assignment=assignment).get(student=team.leader)
+                grade = Grade.objects.filter(assignment=assignment).get(
+                    student=team.leader
+                )
                 print(grade.marks_obtained)
                 if grade.turned_in:
                     _submission_status.setdefault("status", "Submitted")
@@ -479,19 +496,23 @@ def coordinatorAssignmentDetail(request, id):
             "title": request.data["title"],
             "description": request.data["description"],
             "weightage": request.data["weightage"],
-            "due": timezone.datetime.fromtimestamp(int(request.data.get('due'))),
+            "due": timezone.datetime.fromtimestamp(int(request.data.get("due"))),
             "coordinator": Coordinator.objects.get(id=request.user.id),
-            "posted": assignment.posted
+            "posted": assignment.posted,
         }
         print(data)
         serializer = AssignmentSerializer(assignment, data=data)
         if serializer.is_valid():
             serializer.save()
             count = request.data["attachment_count"]
-            filekeylist = ["file["+str(i)+"]" for i in range(int(count))]
+            filekeylist = ["file[" + str(i) + "]" for i in range(int(count))]
             for i in range(int(count)):
-                File.objects.create(assignment=assignment, team=None,
-                                    submitted_by=Coordinator.objects.get(id=request.user.id).email, file=request.FILES[filekeylist[i]])
+                File.objects.create(
+                    assignment=assignment,
+                    team=None,
+                    submitted_by=Coordinator.objects.get(id=request.user.id).email,
+                    file=request.FILES[filekeylist[i]],
+                )
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -507,27 +528,27 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
     for student in students:
         _student_data = {
             "student_id": student.id,
-            "student_roll_number": student.roll_number
+            "student_roll_number": student.roll_number,
         }
         try:
-            grade = Grade.objects.filter(student=student).filter(
-                assignment=assignment).first()
-            _student_data.setdefault(
-                "student_marks", grade.marks_obtained)
+            grade = (
+                Grade.objects.filter(student=student)
+                .filter(assignment=assignment)
+                .first()
+            )
+            _student_data.setdefault("student_marks", grade.marks_obtained)
         except:
-            _student_data.setdefault(
-                "student_marks", None)
+            _student_data.setdefault("student_marks", None)
         student_data.append(_student_data)
     leader = Student.objects.get(id=team.leader.id)
     try:
-        files = File.objects.filter(assignment_id=assignmentId).filter(
-            team=team)
+        files = File.objects.filter(assignment_id=assignmentId).filter(team=team)
         file_list = []
         for file in files:
             _file = {
                 "id": file.id,
                 "file_name": file.file.name.split("/")[-1],
-                "file_url": "/api" + file.file.url
+                "file_url": "/api" + file.file.url,
             }
             file_list.append(_file)
     except:
@@ -538,14 +559,14 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
     return Response(data=response)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def coordinatorCreateAssignment(request):
     # print(request.data, request.POST, request.FILES)
-    title = request.data.get('title')
-    description = request.data.get('description')
-    weightage = int(request.data.get('weightage'))
+    title = request.data.get("title")
+    description = request.data.get("description")
+    weightage = int(request.data.get("weightage"))
     posted = timezone.datetime.now()
-    due = timezone.datetime.fromtimestamp(int(request.data.get('due')))
+    due = timezone.datetime.fromtimestamp(int(request.data.get("due")))
     coordinator = Coordinator.objects.get(id=request.user.id)
 
     data = {
@@ -554,28 +575,30 @@ def coordinatorCreateAssignment(request):
         "due": due,
         "posted": posted,
         "weightage": weightage,
-        "coordinator": coordinator
+        "coordinator": coordinator,
     }
     serializer = AssignmentSerializer(data=data)
     if serializer.is_valid():
         assignment = serializer.save()
         count = request.data["attachment_count"]
-        filekeylist = ["file["+str(i)+"]" for i in range(int(count))]
+        filekeylist = ["file[" + str(i) + "]" for i in range(int(count))]
         for i in range(int(count)):
-            File.objects.create(assignment=assignment, team=None,
-                                submitted_by=coordinator.email, file=request.FILES[filekeylist[i]])
+            File.objects.create(
+                assignment=assignment,
+                team=None,
+                submitted_by=coordinator.email,
+                file=request.FILES[filekeylist[i]],
+            )
         return Response(status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def coordinatorSubmissionStatistics(request):
     response = []
     for team in Team.objects.all():
-        _team_data_item = {
-            "team_id": team.id
-        }
+        _team_data_item = {"team_id": team.id}
         grade_list = []
         try:
             grades = Grade.objects.filter(student=team.leader)
@@ -588,7 +611,9 @@ def coordinatorSubmissionStatistics(request):
                         submission_status = "Graded"
                 _t_grade.setdefault("submission_status", submission_status)
                 _t_grade.setdefault(
-                    "assignment_name", Assignment.objects.get(id=grade.assignment.id).title)
+                    "assignment_name",
+                    Assignment.objects.get(id=grade.assignment.id).title,
+                )
                 grade_list.append(_t_grade)
         except:
             pass
@@ -597,19 +622,19 @@ def coordinatorSubmissionStatistics(request):
     return Response(data=response, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def coordinatorGradingStatistics(request):
     response = []
     for student in Student.objects.all():
-        student_data = {
-            "roll_number": student.roll_number
-        }
+        student_data = {"roll_number": student.roll_number}
         grade_list = []
         try:
             grades = Grade.objects.filter(student=student)
             for grade in grades:
                 _grade = {
-                    "assignment_name": Assignment.objects.get(id=grade.assignment.id).title
+                    "assignment_name": Assignment.objects.get(
+                        id=grade.assignment.id
+                    ).title
                 }
                 submission_status = "Not Submitted"
                 if grade.turned_in:
@@ -638,10 +663,18 @@ def coordinatorGroupRequest(request):
             "id": group_request.id,
             "action": dict(constants.GROUP_ACTION)[group_request.action],
             "status": dict(constants.STATUS)[group_request.status],
-            "new_leader": group_request.new_leader.roll_number if (type(group_request.new_leader) is not type(None)) else None,
-            "old_leader": group_request.old_leader.roll_number if (type(group_request.old_leader) is not type(None)) else None,
-            "add_student":  group_request.add_student.roll_number if (type(group_request.add_student) is not type(None)) else None,
-            "remove_student": group_request.remove_student.roll_number if (type(group_request.remove_student) is not type(None)) else None,
+            "new_leader": group_request.new_leader.roll_number
+            if (type(group_request.new_leader) is not type(None))
+            else None,
+            "old_leader": group_request.old_leader.roll_number
+            if (type(group_request.old_leader) is not type(None))
+            else None,
+            "add_student": group_request.add_student.roll_number
+            if (type(group_request.add_student) is not type(None))
+            else None,
+            "remove_student": group_request.remove_student.roll_number
+            if (type(group_request.remove_student) is not type(None))
+            else None,
             "team": group_request.team.id,
             "description": group_request.description,
             "generated": group_request.generated.strftime("%d/%m/%Y, %H:%M:%S"),
@@ -668,10 +701,9 @@ def coordinatorGroupRequestManage(request, id, what):
             group_request.status = "R"
             group_request.save()
     else:
+        # Remove a student
         if what == "A":
-
-            student = Student.objects.get(
-                roll_number=group_request.remove_student)
+            student = Student.objects.get(id=group_request.remove_student.id)
             student.team = None
             student.save()
             group_request.status = "A"
@@ -694,7 +726,9 @@ def coordinatorProjectRequest(request):
             "status": project_request.status,
             "id": project_request.id,
             "created": project_request.created.strftime("%d/%m/%Y, %H:%M:%S"),
-            "last_modified": project_request.last_modified.strftime("%d/%m/%Y, %H:%M:%S"),
+            "last_modified": project_request.last_modified.strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
         }
         project_req_list.append(_t)
     res.setdefault("project_requests", project_req_list)
@@ -714,6 +748,8 @@ def coordinatorProjectRequestManage(request, id, what):
         # student notify?
 
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # * GUIDE
 
 
@@ -746,12 +782,11 @@ def guideAssignmentDetails(request, pk, groupId):
     response = {}
     studentList = []
     for student in Student.objects.filter(team_id=groupId):
-        studentData = {
-            "student_roll_number": student.roll_number
-        }
+        studentData = {"student_roll_number": student.roll_number}
         try:
             grade = Grade.objects.get(
-                student=student, assignment=Assignment.objects.get(pk=pk))
+                student=student, assignment=Assignment.objects.get(pk=pk)
+            )
             studentData.setdefault("turned_in", grade.turned_in)
             studentData.setdefault("grade", grade.marks_obtained)
         except:
@@ -765,7 +800,7 @@ def guideAssignmentDetails(request, pk, groupId):
         "description": assignment.description,
         "weightage": assignment.weightage,
         "due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-        "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S")
+        "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
     }
     fileAttachements = File.objects.filter(team=None, assignment=assignment)
     _attachments = []
@@ -773,7 +808,7 @@ def guideAssignmentDetails(request, pk, groupId):
         _file = {
             "id": file.id,
             "file_name": file.file.name.split("/")[-1],
-            "file_url": '/api'+file.file.url
+            "file_url": "/api" + file.file.url,
         }
         _attachments.append(_file)
     assignmentDetails.setdefault("attachments", _attachments)
@@ -783,7 +818,7 @@ def guideAssignmentDetails(request, pk, groupId):
         _file = {
             "id": file.id,
             "file_name": file.file.name.split("/")[-1],
-            "file_url": '/api'+file.file.url
+            "file_url": "/api" + file.file.url,
         }
         teamSubmissions.append(_file)
     response.setdefault("student_list", studentList)
@@ -817,7 +852,9 @@ def guideAssignGrades(request):
             g.save()
             # print(_g.marks_obtained)
         else:
-            return Response(data="Marks out of range", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data="Marks out of range", status=status.HTTP_400_BAD_REQUEST
+            )
     return Response()
     # guide = Guide.objects.get(id=request.user.id)
     # student_grade = request.data.get("student_grade")
@@ -834,7 +871,7 @@ def guideAssignGrades(request):
     # return Response()
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(["GET", "PUT", "DELETE"])
 def guideAssignmentList(request, groupId):
     guide = Guide.objects.get(id=request.user.id)
     team = Team.objects.get(id=groupId)
@@ -873,8 +910,9 @@ def guideAssignmentList(request, groupId):
 def guideRequest(request):
     guide = Guide.objects.get(id=request.user.id)
     print(guide)
-    requests = GuideRequest.objects.filter(
-        guide=guide, status="P").order_by("timestamp_requested")
+    requests = GuideRequest.objects.filter(guide=guide, status="P").order_by(
+        "timestamp_requested"
+    )
     print(request)
     guide_req_list = []
     for guide_request in requests:
@@ -882,7 +920,9 @@ def guideRequest(request):
             "team": guide_request.team.id,
             "status": guide_request.status,
             "id": guide_request.id,
-            "timestamp_requested": guide_request.timestamp_requested.strftime("%d/%m/%Y, %H:%M:%S"),
+            "timestamp_requested": guide_request.timestamp_requested.strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
         }
         print(_g)
         guide_req_list.append(_g)
@@ -917,7 +957,9 @@ def acceptRequest(request):
         gr = GuideRequest.objects.get(status="P", guide=guide, team=team)
         gr.status = "R"
         gr.save()
-        return Response(data="Cannot assign more than 2 groups", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Cannot assign more than 2 groups", status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(["POST"])
@@ -932,7 +974,7 @@ def rejectRequest(request):
     return Response(data="Request rejected")
 
 
-@api_view(['PUT'])
+@api_view(["PUT"])
 def guideDetailsForm(request):
     guide = Guide.objects.get(id=request.user.id)
     data = request.data
@@ -947,11 +989,16 @@ def guideDetailsForm(request):
     guide.preferences.clear()
     guide.save()
     for preference in data["preferences"]:
-        _p = Preference.objects.filter(area_of_interest=preference["area_of_interest"]).filter(
-            thrust_area=preference["thrust_area"]).first()
+        _p = (
+            Preference.objects.filter(area_of_interest=preference["area_of_interest"])
+            .filter(thrust_area=preference["thrust_area"])
+            .first()
+        )
         if _p == None:
             _p = Preference.objects.create(
-                area_of_interest=preference["area_of_interest"], thrust_area=preference["thrust_area"])
+                area_of_interest=preference["area_of_interest"],
+                thrust_area=preference["thrust_area"],
+            )
         guide.preferences.add(_p)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -967,20 +1014,19 @@ def guidePersonal(request):
         "email": guide.email,
     }
     preferences = []
-    if(guide.preferences.all()):
+    if guide.preferences.all():
         for preference in guide.preferences.all():
             p = Preference.objects.get(id=preference.id)
             preferences.append(
-                {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area})
+                {"area_of_interest": p.area_of_interest, "thrust_area": p.thrust_area}
+            )
     else:
         preferences = None
     try:
         teams = Team.objects.filter(guide=guide)
         team_data = []
         for team in teams:
-            temp_team_data = {
-                "team_id": team.id
-            }
+            temp_team_data = {"team_id": team.id}
             team_data.append(temp_team_data)
         guide_data.setdefault("teams", team_data)
     except:
@@ -989,23 +1035,20 @@ def guidePersonal(request):
     return Response(data=guide_data)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def guideGroup(request, groupId):
     guide = Guide.objects.get(id=request.user.id)
     team = Team.objects.get(id=groupId)
     leader = Student.objects.get(id=team.leader.id)
     students = Student.objects.filter(team=team.id)
-    response = {
-        "team_id": team.id,
-        "leader": leader.name
-    }
+    response = {"team_id": team.id, "leader": leader.name}
     member_list = []
     for student in students:
         _s = {
             "student_name": student.name,
             "student_email": student.email,
             "student_roll_number": student.roll_number,
-            "student_branch": student.branch
+            "student_branch": student.branch,
         }
         member_list.append(_s)
     project = Project.objects.filter(team=team).first()
@@ -1023,6 +1066,7 @@ def guideGroup(request, groupId):
     response.setdefault("students", member_list)
     response.setdefault("project", project_details)
     return Response(data=response)
+
 
 # * STUDENT
 
@@ -1077,17 +1121,25 @@ def createTeam(request):
     try:
         roll_list = [int(roll) for roll in roll_list if roll != ""]
     except:
-        return Response(data="Roll number is badly formatted", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Roll number is badly formatted", status=status.HTTP_400_BAD_REQUEST
+        )
 
     student_list = []
     for roll_number in set(roll_list):
         try:
             student = Student.objects.get(roll_number=roll_number)
         except:
-            return Response(data=f"{roll_number} has not signed up", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data=f"{roll_number} has not signed up",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if student.team != None:
             del student_list
-            return Response(data=f"{roll_number} is already in a group", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data=f"{roll_number} is already in a group",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         else:
             student_list.append(student)
 
@@ -1125,7 +1177,7 @@ def studentAssignments(request):
             "due": due,
             "weightage": assignment.weightage,
             "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "status": submission_status
+            "status": submission_status,
         }
         response.append(t)
     # print(response)
@@ -1150,11 +1202,7 @@ def groupData(request):
         }
         members.append(t)
 
-    response = {
-        "group_id": team.id,
-        "leader_name": leader.name,
-        "members": members
-    }
+    response = {"group_id": team.id, "leader_name": leader.name, "members": members}
     return Response(data=response)
 
 
@@ -1168,7 +1216,7 @@ def assignment(request, id):
             t = {
                 "id": attachment.id,
                 "name": attachment.file.name.split("/")[-1],
-                "url": ("/api" + attachment.file.url)
+                "url": ("/api" + attachment.file.url),
             }
             attachments.append(t)
         try:
@@ -1181,7 +1229,7 @@ def assignment(request, id):
             "due": due,
             "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
             "weightage": assignment.weightage,
-            "attachments": attachments
+            "attachments": attachments,
         }
         return Response(data=response)
     except:
@@ -1196,13 +1244,15 @@ def assignmentSubmit(request, id):
     for file in request.FILES.values():
         try:
             form = File.objects.create(
-                submitted_by=user.email, assignment=assignment, team=team, file=file)
+                submitted_by=user.email, assignment=assignment, team=team, file=file
+            )
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     for student in Student.objects.filter(team=team):
-        grade = Grade.objects.get(assignment=Assignment.objects.get(
-            id=id), student=student)
+        grade = Grade.objects.get(
+            assignment=Assignment.objects.get(id=id), student=student
+        )
         grade.turned_in = True
         grade.save()
     return Response(status=status.HTTP_201_CREATED)
@@ -1217,9 +1267,14 @@ def studentAssignmentDetails(request, id):
     files = File.objects.filter(team=student.team)
     response = {
         "grade": grade.data,
-        "my_submissions": [{"id": _file.id,
-                            "name": _file.file.name.split("/")[-1],
-                            "url": ("/api" + _file.file.url)} for _file in files]
+        "my_submissions": [
+            {
+                "id": _file.id,
+                "name": _file.file.name.split("/")[-1],
+                "url": ("/api" + _file.file.url),
+            }
+            for _file in files
+        ],
     }
     return Response(data=response)
 
@@ -1244,60 +1299,115 @@ def studentUnsubmitAssignment(request, id):
 @api_view(["POST"])
 def addStudent(request):
     try:
-        student_to_add = Student.objects.get(
-            roll_number=int(request.data["roll"]))
+        student_to_add = Student.objects.get(roll_number=int(request.data["roll"]))
         if student_to_add.team == None:
             me = Student.objects.get(id=request.user.id)
             if len(Student.objects.filter(team=me.team)) <= 3:
                 student_to_add.team = me.team
                 student_to_add.save()
-                return Response(data="Added student to the group", status=status.HTTP_201_CREATED)
+                return Response(
+                    data="Added student to the group", status=status.HTTP_201_CREATED
+                )
             else:
-                return Response(data="Maximum four students can be in a group", status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    data="Maximum four students can be in a group",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         else:
-            return Response(data="Student is already in some group", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data="Student is already in some group",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
     except:
-        return Response(data="Student has not registered", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Student has not registered", status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(["POST"])
 def removeStudent(request):
     try:
-        student_to_remove = Student.objects.get(
-            roll_number=int(request.data["roll"]))
+        student_to_remove = Student.objects.get(roll_number=int(request.data["roll"]))
         leader = Student.objects.get(id=request.user.id)
         if student_to_remove.team == leader.team:
             if leader == student_to_remove:
-                return Response("Transfer leadership to someone else in the team before removing yourself", status=status.HTTP_400_BAD_REQUEST)
-            if len(GroupRequest.objects.filter(action="Removal", status="P", remove_student=student_to_remove, team=Student.objects.get(id=request.user.id).team)) > 0:
-                return Response(data="Removal request for the student has already been sent", status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    "Transfer leadership to someone else in the team before removing yourself",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if (
+                len(
+                    GroupRequest.objects.filter(
+                        action="Removal",
+                        status="P",
+                        remove_student=student_to_remove,
+                        team=Student.objects.get(id=request.user.id).team,
+                    )
+                )
+                > 0
+            ):
+                return Response(
+                    data="Removal request for the student has already been sent",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             try:
-                GroupRequest.objects.create(status="P", action="Removal", remove_student=student_to_remove,
-                                            description=request.data["reason"], team=Student.objects.get(id=request.user.id).team)
-                return Response(data="Removal Request has been sent", status=status.HTTP_201_CREATED)
+                GroupRequest.objects.create(
+                    status="P",
+                    action="Removal",
+                    remove_student=student_to_remove,
+                    description=request.data["reason"],
+                    team=Student.objects.get(id=request.user.id).team,
+                )
+                return Response(
+                    data="Removal Request has been sent", status=status.HTTP_201_CREATED
+                )
             except:
-                return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    data="Error sending request", status=status.HTTP_400_BAD_REQUEST
+                )
         else:
-            return Response(data="Student not in the group", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data="Student not in the group", status=status.HTTP_400_BAD_REQUEST
+            )
     except:
-        return Response(data="Student not in the group or has not registered", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Student not in the group or has not registered",
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 @api_view(["POST"])
 def makeLeader(request):
     student = Student.objects.get(id=request.user.id)
-    if GroupRequest.objects.filter(status="P", action="Change Leader", team=student.team).count() > 0:
-        return Response(data="Previous change leader request pending", status=status.HTTP_400_BAD_REQUEST)
+    if (
+        GroupRequest.objects.filter(
+            status="P", action="Change Leader", team=student.team
+        ).count()
+        > 0
+    ):
+        return Response(
+            data="Previous change leader request pending",
+            status=status.HTTP_400_BAD_REQUEST,
+        )
     if student.team.leader == student:
         new_leader = request.data["new_leader"]
         try:
-            GroupRequest.objects.create(action="Change Leader", new_leader=Student.objects.get(id=new_leader),
-                                        old_leader=student, status="P", team=student.team)
+            GroupRequest.objects.create(
+                action="Change Leader",
+                new_leader=Student.objects.get(id=new_leader),
+                old_leader=student,
+                status="P",
+                team=student.team,
+            )
             return Response(data="Request sent", status=status.HTTP_201_CREATED)
         except:
-            return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data="Error sending request", status=status.HTTP_400_BAD_REQUEST
+            )
     else:
-        return Response(data="Insufficient permissions", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Insufficient permissions", status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view()
@@ -1307,12 +1417,14 @@ def searchGuide(request, q):
     for guide in guides:
         team_count = Team.objects.filter(guide=guide).count()
         if team_count < 2:
-            response.append({
-                "name": guide.name,
-                "id": guide.id,
-                "email": guide.email,
-                "branch": dict(constants.BRANCH)[guide.branch]
-            })
+            response.append(
+                {
+                    "name": guide.name,
+                    "id": guide.id,
+                    "email": guide.email,
+                    "branch": dict(constants.BRANCH)[guide.branch],
+                }
+            )
     return Response(data=response)
 
 
@@ -1326,7 +1438,7 @@ def guideAssigned(request):
             "approved": True,
             "name": guide.name,
             "email": guide.email,
-            "branch": dict(constants.BRANCH)[guide.branch]
+            "branch": dict(constants.BRANCH)[guide.branch],
         }
         return Response(data=response)
     else:
@@ -1339,7 +1451,7 @@ def guideAssigned(request):
                 "name": guide.name,
                 "email": guide.email,
                 "branch": dict(constants.BRANCH)[guide.branch],
-                "ref": gr.first().id
+                "ref": gr.first().id,
             }
             return Response(data=response)
     return Response(data=False)
@@ -1351,7 +1463,9 @@ def cancelRequest(request):
         GuideRequest.objects.get(id=request.data["id"]).delete()
         return Response(data="Request cancelled", status=status.HTTP_200_OK)
     except:
-        return Response(data="Error cancelling request", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Error cancelling request", status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(["POST"])
@@ -1360,13 +1474,16 @@ def requestGuide(request):
 
     requested_guide = Guide.objects.get(id=request.data["id"])
     if len(GuideRequest.objects.filter(team=leader.team, status="P")) > 0:
-        return Response(data="Earlier request pending", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Earlier request pending", status=status.HTTP_400_BAD_REQUEST
+        )
     try:
-        GuideRequest.objects.create(
-            team=leader.team, guide=requested_guide, status="P")
+        GuideRequest.objects.create(team=leader.team, guide=requested_guide, status="P")
         return Response(data="Request sent", status=status.HTTP_201_CREATED)
     except:
-        return Response(data="Error sending request", status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            data="Error sending request", status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(["POST"])
@@ -1377,9 +1494,13 @@ def createProject(request):
         "title": request.data["title"],
         "description": request.data["description"],
         "explanatory_field": request.data["interDisciplinaryReason"],
-        "domain": dict([(t[1], t[0]) for t in constants.DOMAIN])[request.data["domain"]],
-        "category": dict([(t[1], t[0]) for t in constants.CATEGORY])[request.data["type"]],
-        "team": team.id
+        "domain": dict([(t[1], t[0]) for t in constants.DOMAIN])[
+            request.data["domain"]
+        ],
+        "category": dict([(t[1], t[0]) for t in constants.CATEGORY])[
+            request.data["type"]
+        ],
+        "team": team.id,
     }
     s = ProjectSerializer(data=data)
     print(data)
@@ -1415,7 +1536,7 @@ def getProject(request):
                 "description": project.description,
                 "domain": dict(constants.DOMAIN)[project.domain],
                 "type": dict(constants.CATEGORY)[project.category],
-                "interDisciplinaryReason": project.explanatory_field
+                "interDisciplinaryReason": project.explanatory_field,
             }
             return Response(data=response, status=status.HTTP_200_OK)
         if pr.status == "P":
@@ -1426,11 +1547,18 @@ def getProject(request):
                 "description": project.description,
                 "domain": dict(constants.DOMAIN)[project.domain],
                 "type": dict(constants.CATEGORY)[project.category],
-                "interDisciplinaryReason": project.explanatory_field
+                "interDisciplinaryReason": project.explanatory_field,
             }
             return Response(data=response, status=status.HTTP_200_OK)
     except:
-        return Response(data={"applied": False, "approved": False, "message": "Not registered any project"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            data={
+                "applied": False,
+                "approved": False,
+                "message": "Not registered any project",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
 
 # * ASSISTANT
@@ -1453,10 +1581,10 @@ def signOut(request):
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def signIn(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         email = request.data.get("email")
         password = request.data.get("password")
         user = authenticate(request, email=email, password=password)
@@ -1470,10 +1598,10 @@ def signIn(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def signUp(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         email = request.data.get("email")
         password = request.data.get("password")
         name = request.data.get("name")
@@ -1497,22 +1625,24 @@ def signUp(request):
             "roll_number": roll_number,
             # "photo": None,
             "is_staff": False,
-            "is_active": False
+            "is_active": False,
         }
         serializer = StudentSerializer(data=data)
         if serializer.is_valid():
             student = serializer.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your account.'
-            message = render_to_string('email_template.html', {
-                'user': student,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(student.pk)),
-                'token': account_activation_token.make_token(student),
-            })
+            mail_subject = "Activate your account."
+            message = render_to_string(
+                "email_template.html",
+                {
+                    "user": student,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(student.pk)),
+                    "token": account_activation_token.make_token(student),
+                },
+            )
             to_email = email
-            send_mail(mail_subject, message,
-                      settings.EMAIL_HOST_USER, [to_email])
+            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1521,20 +1651,22 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         student = Student.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, Student.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, Student.DoesNotExist):
         student = None
     if student is not None and account_activation_token.check_token(student, token):
         student.is_active = True
         student.save()
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return HttpResponse(
+            "Thank you for your email confirmation. Now you can login your account."
+        )
     else:
-        return HttpResponse('Activation link is invalid!')
+        return HttpResponse("Activation link is invalid!")
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def guideSignUp(request):
-    if request.method == 'POST':
-        if request.user.has_perm('api.add_guide'):
+    if request.method == "POST":
+        if request.user.has_perm("api.add_guide"):
             email = request.data.get("email")
             password = request.data.get("password")
             name = request.data.get("name")
@@ -1559,7 +1691,7 @@ def guideSignUp(request):
                 "initials": initials,
                 # "photo": None,
                 "is_staff": False,
-                "is_active": True
+                "is_active": True,
             }
 
             serializer = GuideSerializer(data=data)
@@ -1596,7 +1728,7 @@ def changePhoto(request):
 @api_view()
 def getImage(request):
     try:
-        url = ("/api" + request.user.photo.url)
+        url = "/api" + request.user.photo.url
         return Response(data=url, status=status.HTTP_200_OK)
     except:
         url = None
@@ -1611,10 +1743,10 @@ def coordinatorSignup(request):
     password = request.data.get("password")
     data = {
         "name": " ".join(name.split()).title(),
-                "email": email,
-                "password": password,
-                "is_staff": False,
-                "is_active": True
+        "email": email,
+        "password": password,
+        "is_staff": False,
+        "is_active": True,
     }
 
     serializer = CoordinatorSerializer(data=data)
@@ -1623,3 +1755,15 @@ def coordinatorSignup(request):
         return Response(status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+""" @api_view()
+def previousYearProjects(request):
+    url = "/api/media/pyp.xlsx"
+    return Response(data=url)
+
+
+@api_view()
+def generatePrevYearProjectList(request):
+    # with open(os.path.join(settings.BASE_DIR)) as f:
+    return Response() """
