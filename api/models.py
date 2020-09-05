@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+
 import constants
 
 
@@ -177,13 +178,6 @@ class Coordinator(User):
     pass
 
 
-# ASSISTANT
-
-
-class Assistant(User):
-    pass
-
-
 # GUIDE
 
 
@@ -191,7 +185,7 @@ class Guide(User):
     branch = models.CharField(
         _("branch"), max_length=4, choices=constants.BRANCH, default="IT"
     )
-    initials = models.CharField(_("initials"), max_length=10)
+    initials = models.CharField(_("initials"), max_length=3)
     preferences = models.ManyToManyField(
         "api.Preference", verbose_name=_("preferences"), blank=True
     )
@@ -220,7 +214,7 @@ class Assignment(models.Model):
     description = models.TextField(_("description"), blank=True, null=True)
     due = models.DateTimeField(_("due"), blank=True, null=True, default=None)
     posted = models.DateTimeField(_("posted"), auto_now=True)
-    title = models.CharField(_("title"), max_length=500)
+    title = models.CharField(_("title"), max_length=300)
     weightage = models.IntegerField(_("weightage"), blank=True, null=True, default=None)
 
 
@@ -257,7 +251,7 @@ class Project(models.Model):
     team = models.OneToOneField(
         "api.Team", verbose_name=_("team"), on_delete=models.CASCADE
     )
-    title = models.CharField(_("title"), max_length=500)
+    title = models.CharField(_("title"), max_length=300)
 
 
 class Preference(models.Model):
@@ -286,7 +280,6 @@ class File(models.Model):
 
 class ProjectRequest(models.Model):
     created = models.DateTimeField(_("created"), auto_now=True)
-    # description = models.TextField(_("description"))
     last_modified = models.DateTimeField(
         _("last modified"), auto_now_add=True, blank=True, null=True
     )
@@ -296,12 +289,6 @@ class ProjectRequest(models.Model):
     status = models.CharField(
         _("status"), max_length=1, choices=constants.STATUS, default="P"
     )
-
-
-class Comment(models.Model):
-    by = models.EmailField(_("by"), max_length=320)
-    posted = models.DateTimeField(_("posted"), auto_now=True)
-    content = models.TextField(_("content"))
 
 
 @receiver(post_save, sender=Assignment)
