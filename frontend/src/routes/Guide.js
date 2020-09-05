@@ -17,29 +17,33 @@ export default function Guide() {
   return (
     <div>
       <Route component={ChangePassword} />
+      <Route
+        path={["/signin", "/signup", "/forgot-password"]}
+        render={() => <Redirect to="/" />}
+      />
       <Switch>
         <Route exact path={["/", "/dashboard"]} component={GuideDashboard} />
-        <Route exact path='/guide-details' component={GuideDetailsForm} />
+        <Route exact path="/guide-details" component={GuideDetailsForm} />
         <Route
           exact
-          path='/assignment-list/:groupId/'
+          path="/assignment-list/:groupId/"
           component={GuideAssignmentList}
         />
         <Route
           exact
-          path='/assignment/:groupId/:assignmentId/'
+          path="/assignment/:groupId/:assignmentId/"
           component={GuideAssignmentDetails}
         />
-        <Route exact path='/guide-request/' component={GuideRequest} />
-        <Route path='/profile/' component={Profile} />
-        <Route path='/profile/personal-section' component={PersonalSection} />
-        <Route path='/profile/group-section/:id/' component={GroupSection} />
+        <Route exact path="/guide-request/" component={GuideRequest} />
+        <Route path="/profile/" component={Profile} />
+        <Route path="/profile/personal-section" component={PersonalSection} />
+        <Route path="/profile/group-section/:id/" component={GroupSection} />
         <Route
-          path='/profile/project-section/:id/'
+          path="/profile/project-section/:id/"
           component={ProjectSection}
         />
-        <Route path='/group/:id/' component={ReqGroupDetails} />
-        <Route path='/project/:id/' component={ReqProjectDetails} />
+        <Route path="/group/:id/" component={ReqGroupDetails} />
+        <Route path="/project/:id/" component={ReqProjectDetails} />
       </Switch>
     </div>
   );

@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import SomaiyaLogo from "../assets/images/Somaiya.svg";
 import SignIn from "../components/authentication/SignIn";
 import SignUp from "../components/authentication/SignUp";
+import ForgotPassword from "../components/authentication/ForgotPassword";
 
 export default function Authentication() {
   return (
@@ -23,6 +24,7 @@ export default function Authentication() {
       <Switch>
         <Route path="/signin" component={SignIn} />
         <Route path="/signup" component={SignUp} />
+        <Route path="/forgot-password" component={ForgotPassword} />
         <Redirect to="/signin" />
       </Switch>
     </>

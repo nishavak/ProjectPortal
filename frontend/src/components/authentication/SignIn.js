@@ -65,7 +65,12 @@ export class SignIn extends Component {
                 />
               </div>
               <div className="form-group">
-                <a href="/">Forgot password</a>
+                <button
+                  className="btn text-primary m-0 p-0"
+                  onClick={() => this.props.history.push("/forgot-password")}
+                >
+                  Forgot password
+                </button>
               </div>
               <div className="form-group d-flex justify-content-between">
                 <button

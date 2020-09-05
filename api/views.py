@@ -1731,3 +1731,9 @@ def previousYearProjects(request):
 def generatePrevYearProjectList(request):
     # with open(os.path.join(settings.BASE_DIR)) as f:
     return Response() """
+
+
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def forgotPassword(request):
+    return Response(data="Sent password reset email")
