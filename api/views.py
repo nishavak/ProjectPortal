@@ -19,6 +19,7 @@ import constants
 from . import forms
 from .models import (
     Assignment,
+    Assistant,
     Coordinator,
     File,
     Grade,
@@ -33,6 +34,7 @@ from .models import (
 )
 from .serializers import (
     AssignmentSerializer,
+    AssistantSerializer,
     CoordinatorSerializer,
     FileSerializer,
     GradeSerializer,
@@ -368,30 +370,21 @@ def coordinatorAssignmentList(request):
     assignments = Assignment.objects.all()
     response = []
     for assignment in assignments:
-        try:
-            _assignment = {
-                "assignment_id": assignment.id,
-                "assignment_title": assignment.title,
-                "assignment_weightage": assignment.weightage,
-                "assignment_description": assignment.description,
-                "assignment_due": timezone.localtime(assignment.due).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-                "assignment_posted": timezone.localtime(assignment.posted).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-            }
-        except:
-            _assignment = {
-                "assignment_id": assignment.id,
-                "assignment_title": assignment.title,
-                "assignment_weightage": assignment.weightage,
-                "assignment_description": assignment.description,
-                "assignment_due": None,
-                "assignment_posted": timezone.localtime(assignment.posted).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-            }
+        if assignment.due not in [None, "", "null"]:
+            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
+        else:
+            due = None
+
+        _assignment = {
+            "assignment_id": assignment.id,
+            "assignment_title": assignment.title,
+            "assignment_weightage": assignment.weightage,
+            "assignment_description": assignment.description,
+            "assignment_due": due,
+            "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
+        }
         response.append(_assignment)
     return Response(data=response)
 
@@ -427,30 +420,20 @@ def coordinatorAssignmentDetail(request, id):
                     "url": "/api" + file.file.url,
                 }
             )
-        try:
-            _assignment = {
-                "assignment_id": assignment.id,
-                "assignment_title": assignment.title,
-                "assignment_weightage": assignment.weightage,
-                "assignment_description": assignment.description,
-                "assignment_due": timezone.localtime(assignment.due).strftime(
-                    "%Y-%m-%dT%H:%M"
-                ),
-                "assignment_posted": timezone.localtime(assignment.posted).strftime(
-                    "%Y-%m-%dT%H:%M"
-                ),
-            }
-        except:
-            _assignment = {
-                "assignment_id": assignment.id,
-                "assignment_title": assignment.title,
-                "assignment_weightage": assignment.weightage,
-                "assignment_description": assignment.description,
-                "assignment_due": None,
-                "assignment_posted": timezone.localtime(assignment.posted).strftime(
-                    "%Y-%m-%dT%H:%M"
-                ),
-            }
+        if assignment.due not in [None, "", "null"]:
+            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
+        else:
+            due = None
+        _assignment = {
+            "assignment_id": assignment.id,
+            "assignment_title": assignment.title,
+            "assignment_weightage": assignment.weightage,
+            "assignment_description": assignment.description,
+            "assignment_due": due,
+            "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                "%Y-%m-%dT%H:%M"
+            ),
+        }
         assignment_details.setdefault("assignment", _assignment)
         assignment_details.setdefault("files", _files)
         response.setdefault("assignment_details", assignment_details)
@@ -565,16 +548,7 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
 def coordinatorCreateAssignment(request):
     title = request.data.get("title")
     description = request.data.get("description")
-    print(
-        "Weightage:\t",
-        request.data.get("weightage"),
-        type(request.data.get("weightage")),
-    )
-    print(
-        "due:\t",
-        request.data.get("due"),
-        type(request.data.get("due")),
-    )
+
     if request.data.get("weightage") != "null":
         weightage = int(request.data.get("weightage"))
     else:
@@ -835,11 +809,15 @@ def guideAssignmentDetails(request, pk, groupId):
             studentData.setdefault("grade", None)
         studentList.append(studentData)
     assignment = Assignment.objects.get(pk=pk)
+    if assignment.due not in [None, "", "null"]:
+        due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
+    else:
+        due = None
     assignmentDetails = {
         "title": assignment.title,
         "description": assignment.description,
         "weightage": assignment.weightage,
-        "due": timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S"),
+        "due": due,
         "posted": timezone.localtime(assignment.posted).strftime("%d/%m/%Y, %H:%M:%S"),
     }
     fileAttachements = File.objects.filter(team=None, assignment=assignment)
@@ -902,28 +880,19 @@ def guideAssignmentList(request, groupId):
     response = []
     for grade in grades:
         _assignment = Assignment.objects.get(grade=grade)
-        try:
-            _t = {
-                "assignment_id": _assignment.id,
-                "assignment_title": _assignment.title,
-                "assignment_due": timezone.localtime(_assignment.due).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-                "assignment_posted": timezone.localtime(_assignment.posted).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-                "assignment_weightage": _assignment.weightage,
-            }
-        except:
-            _t = {
-                "assignment_id": _assignment.id,
-                "assignment_title": _assignment.title,
-                "assignment_due": None,
-                "assignment_posted": timezone.localtime(_assignment.posted).strftime(
-                    "%d/%m/%Y, %H:%M:%S"
-                ),
-                "assignment_weightage": _assignment.weightage,
-            }
+        if assignment.due not in [None, "", "null"]:
+            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
+        else:
+            due = None
+        _t = {
+            "assignment_id": _assignment.id,
+            "assignment_title": _assignment.title,
+            "assignment_due": due,
+            "assignment_posted": timezone.localtime(_assignment.posted).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
+            "assignment_weightage": _assignment.weightage,
+        }
         if grade.turned_in:
             _t.setdefault("grading_status", "Submitted")
             if grade.marks_obtained != None:
@@ -1189,9 +1158,9 @@ def studentAssignments(request):
                 submission_status = "graded"
         else:
             submission_status = "not-submitted"
-        try:
+        if assignment.due not in [None, "", "null"]:
             due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
-        except:
+        else:
             due = None
         t = {
             "id": assignment.id,
@@ -1242,9 +1211,9 @@ def assignment(request, id):
                 "url": ("/api" + attachment.file.url),
             }
             attachments.append(t)
-        try:
+        if assignment.due not in [None, "", "null"]:
             due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
-        except:
+        else:
             due = None
         response = {
             "title": assignment.title,
@@ -1289,7 +1258,7 @@ def studentAssignmentDetails(request, id):
     assignment = Assignment.objects.get(id=id)
     grade = Grade.objects.get(assignment=assignment, student=student)
     grade = GradeSerializer(instance=grade)
-    files = File.objects.filter(team=student.team)
+    files = File.objects.filter(team=student.team, assignment=assignment)
     response = {
         "grade": grade.data,
         "my_submissions": [
@@ -1800,3 +1769,27 @@ def generatePrevYearProjectList(request):
 @permission_classes([permissions.AllowAny])
 def forgotPassword(request):
     return Response(data="Sent password reset email")
+
+
+# ASSISTANT
+
+
+@api_view(["POST"])
+def assistantSignup(request):
+    name = request.data.get("name")
+    email = request.data.get("email")
+    password = request.data.get("password")
+    data = {
+        "name": " ".join(name.split()).title(),
+        "email": email,
+        "password": password,
+        "is_staff": False,
+        "is_active": True,
+    }
+
+    serializer = AssistantSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

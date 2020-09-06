@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from . import models
 
-
 admin.site.register(models.Assignment)
+admin.site.register(models.Assistant)
 admin.site.register(models.Coordinator)
 admin.site.register(models.File)
 admin.site.register(models.Grade)

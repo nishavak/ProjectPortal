@@ -23,6 +23,7 @@ import StudentDetails from "../components/coordinator/StudentDetails";
 import StudentList from "../components/coordinator/StudentList";
 import CoordinatorForm from "../components/coordinator/CoordinatorForm";
 import ChangePassword from "../components/shared/ChangePassword";
+import AssistantCreation from "../components/coordinator/AssistantCreation";
 
 class Coordinator extends React.Component {
   toggleSidebar = () => {
@@ -169,6 +170,20 @@ class Coordinator extends React.Component {
                 Coordinator Creation
               </div>
             </Link>
+            <Link
+              to="/assistant-form"
+              className="text-decoration-none mobile-nav-item py-2 border-bottom"
+            >
+              <div
+                onClick={() => {
+                  this.toggleSidebar();
+                }}
+                className="nav-item p-2 w-100 "
+              >
+                <i class="fa fa-user-circle-o mr-3" aria-hidden="true"></i>
+                Assistant Creation
+              </div>
+            </Link>
             <div
               className="mobile-nav-item p-2 w-100 text-decoration-none "
               style={{ cursor: "pointer" }}
@@ -263,6 +278,13 @@ class Coordinator extends React.Component {
                     />
                     Coordinator Creation
                   </Link>
+                  <Link
+                    to="/assistant-form"
+                    className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
+                  >
+                    <i class="fa fa-user-circle-o mr-3" aria-hidden="true"></i>
+                    Assistant Creation
+                  </Link>
                   <div
                     className="nav-item coordinator-sidebar-nav-item rounded p-2 w-100 text-decoration-none text-left"
                     style={{ cursor: "pointer" }}
@@ -338,6 +360,11 @@ class Coordinator extends React.Component {
                   exact
                   path="/coordinator-form"
                   component={CoordinatorForm}
+                />
+                <Route
+                  exact
+                  path="/assistant-form"
+                  component={AssistantCreation}
                 />
                 <Route
                   exact

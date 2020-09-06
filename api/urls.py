@@ -69,6 +69,7 @@ urlpatterns = [
     path("assignmentSubmit/<int:id>", views.assignmentSubmit),
     path("studentAssignmentDetails/<int:id>", views.studentAssignmentDetails),
     path("studentUnsubmitAssignment/<int:id>", views.studentUnsubmitAssignment),
+    # ASSISTANT
     # AUTHENTICATION & MISCELLANEOUS
     path("whoAmI/", views.whoAmI),
     path("signIn/", views.signIn),
@@ -77,6 +78,7 @@ urlpatterns = [
     path("signOut/", views.signOut),
     path("changePassword/", views.changePassword),
     path("coordinatorSignup/", views.coordinatorSignup),
+    path("assistantSignup/", views.assistantSignup),
     path("changePhoto/", views.changePhoto),
     path("getImage/", views.getImage),
     path("forgot-password/", views.forgotPassword),

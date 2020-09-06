@@ -70,25 +70,24 @@ class ProjectList extends React.Component {
               </tr>
             </thead>
             <tbody class="text-center">
-              {this.projects.length
-                ? this.projects
-                    .filter((project) => project.project_exists === true)
-                    .map((project) => (
-                      <tr
-                        class=""
-                        onClick={() =>
-                          this.props.history.push(
-                            `/project/${project.project_id}`
-                          )
-                        }
-                      >
-                        <td class="">{project.project_title}</td>
-                        <td class="">{project.guide_name}</td>
-                        <td class="">{project.team_id}</td>
-                        <td class="">{project.project_domain}</td>
-                      </tr>
-                    ))
-                : ""}
+              {this.projects.length &&
+                this.projects
+                  .filter((project) => project.project_exists === true)
+                  .map((project) => (
+                    <tr
+                      class=""
+                      onClick={() =>
+                        this.props.history.push(
+                          `/project/${project.project_id}`
+                        )
+                      }
+                    >
+                      <td class="">{project.project_title}</td>
+                      <td class="">{project.guide_name}</td>
+                      <td class="">{project.team_id}</td>
+                      <td class="">{project.project_domain}</td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>

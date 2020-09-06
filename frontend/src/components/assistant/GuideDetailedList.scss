@@ -1,0 +1,28 @@
+.detailed-list {
+  a:hover {
+    text-decoration: none;
+  }
+  table tbody tr {
+    color: #63605f;
+    &:hover {
+      color: rgb(183, 32, 46);
+      background: rgba(231, 231, 231, 0.459);
+      cursor: pointer;
+      // transform: scale(1.02);
+    }
+  }
+
+  .back-button {
+    width: 30vh;
+    background-color: rgb(183, 32, 46);
+    color: white;
+  }
+
+  @media only screen and (max-width: 750px) {
+    .back-button {
+      width: 40vh;
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+  }
+}

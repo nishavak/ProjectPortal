@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from .models import (
     Assignment,
+    Assistant,
     Coordinator,
     File,
     Grade,
@@ -56,6 +57,27 @@ class CoordinatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Coordinator
+        fields = "__all__"
+
+
+class AssistantSerializer(serializers.ModelSerializer):
+    def create(self, *args, **kwargs):
+        assistant = super().create(*args, **kwargs)
+        p = assistant.password
+        assistant.set_password(p)
+        assistant.save()
+        assistant.groups.add(Group.objects.get(name=u"Assistant"))
+        return assistant
+
+    def update(self, *args, **kwargs):
+        assistant = super().update(*args, **kwargs)
+        p = assistant.password
+        assistant.set_password(p)
+        assistant.save()
+        return assistant
+
+    class Meta:
+        model = Assistant
         fields = "__all__"
 
 

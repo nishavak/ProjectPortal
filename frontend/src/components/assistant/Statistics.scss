@@ -1,0 +1,21 @@
+.statistics {
+  a:hover {
+    text-decoration: none;
+  }
+  tr:hover {
+    cursor: auto;
+  }
+  .back-button {
+    width: 30vh;
+    background-color: rgb(183, 32, 46);
+    color: white;
+  }
+
+  @media only screen and (max-width: 750px) {
+    .back-button {
+      width: 40vh;
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+  }
+}

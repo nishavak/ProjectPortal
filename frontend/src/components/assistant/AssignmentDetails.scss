@@ -1,0 +1,11 @@
+.assignment-details {
+  .buttons Button {
+    margin-left: 1em;
+  }
+  a {
+    color: white;
+    &:hover {
+      color: white;
+    }
+  }
+}

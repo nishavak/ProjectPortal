@@ -178,6 +178,13 @@ class Coordinator(User):
     pass
 
 
+# ASSISTANT
+
+
+class Assistant(User):
+    pass
+
+
 # GUIDE
 
 

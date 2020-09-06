@@ -1,0 +1,45 @@
+.dashboard-admin {
+  .dropdown-item {
+    &:active {
+      background-color: rgb(183, 32, 46);
+      color: white;
+    }
+  }
+  .sidebar {
+    background-color: rgba(231, 231, 231, 0.459);
+    position: fixed;
+    height: 100vh;
+  }
+  .mobile-nav-item {
+    width: 100%;
+    &:hover {
+      background-color: rgb(183, 32, 46);
+      color: white;
+      a {
+        color: white;
+      }
+    }
+  }
+  .fa-bars {
+    font-size: 2em;
+    color: rgb(183, 32, 46);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .nav-item {
+    margin: 0.15em 0;
+    cursor: pointer;
+    transition: transform 400ms ease;
+    color: #63605f;
+    &:hover {
+      color: white;
+      background: rgb(183, 32, 46);
+    }
+  }
+  .dropdown-item {
+    cursor: pointer;
+    transition: transform 400ms ease;
+    color: #63605f;
+  }
+}
