@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import "./SubmissionStatus.scss";
 import $ from "jquery";
-import { Redirect } from "react-router-dom";
+import React, { Component } from "react";
 // import AssignmentListGIF from "../student/AssignmentList.gif";
 import axios from "../../axios";
-import { Link } from "react-router-dom";
 import Loading from "../shared/Loading";
+import "./SubmissionStatus.scss";
 class SubmissionStatus extends Component {
   constructor(props) {
     super(props);

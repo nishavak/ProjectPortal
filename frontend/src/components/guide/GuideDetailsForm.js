@@ -1,10 +1,9 @@
 import React from "react";
-import GuideHeader from "./GuideHeader";
-import $ from "jquery";
+import { NotificationManager } from "react-notifications";
+import { Route } from "react-router-dom";
 import axios from "../../axios";
 import Loading from "../shared/Loading";
-import { Route } from "react-router-dom";
-import { NotificationManager } from "react-notifications";
+import GuideHeader from "./GuideHeader";
 
 const area_of_interest1 = [
   "Artifical Intelligence (Machine Learning, Natural Language Processing, Robotics)",
@@ -79,7 +78,7 @@ class GuideDetailsForm extends React.Component {
     preferences.push(p3);
     preferences.push(p4);
     // this.setState({ preferences: preferences });
-    if (this.state.initials.length != 3) {
+    if (this.state.initials.length !== 3) {
       NotificationManager.error("Initials length should be 3!");
     } else {
       let data = {

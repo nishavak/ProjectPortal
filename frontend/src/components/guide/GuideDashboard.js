@@ -1,10 +1,9 @@
 import React from "react";
-import GuideGroupCard from "./GuideGroupCard";
-import Loading from "../shared/Loading";
-import GuideHeader from "./GuideHeader";
-import axios from "../../axios";
-import $ from "jquery";
 import { Route } from "react-router-dom";
+import axios from "../../axios";
+import Loading from "../shared/Loading";
+import GuideGroupCard from "./GuideGroupCard";
+import GuideHeader from "./GuideHeader";
 
 class GuideDashboard extends React.Component {
   constructor(props) {
@@ -22,8 +21,7 @@ class GuideDashboard extends React.Component {
       .get(`guideDashboard/`)
       .then(({ data }) => {
         this.guide_data = data.group_info;
-        this.state.loading = false;
-        this.setState({});
+        this.setState({ loading: false });
       })
       .catch((err) => this.props.history.goBack());
   }
@@ -34,7 +32,7 @@ class GuideDashboard extends React.Component {
       <div>
         <Route component={GuideHeader} />
         {this.guide_data.length ? (
-          <div className='d-flex flex-md-row flex-column justify-text-center'>
+          <div className="d-flex flex-md-row flex-column justify-text-center">
             {this.guide_data.map((team) => (
               <Route
                 render={(props) => (
@@ -51,10 +49,11 @@ class GuideDashboard extends React.Component {
           </div>
         ) : (
           <div
-            className='container-fluid d-flex flex-column justify-content-center text-center'
-            style={{ height: "80vh" }}>
+            className="container-fluid d-flex flex-column justify-content-center text-center"
+            style={{ height: "80vh" }}
+          >
             <h4>Not in any groups yet</h4>
-            <p className='text-muted'>Look out for incoming group requests</p>
+            <p className="text-muted">Look out for incoming group requests</p>
           </div>
         )}
       </div>

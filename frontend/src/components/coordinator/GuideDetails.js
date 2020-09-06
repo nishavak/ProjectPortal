@@ -42,7 +42,7 @@ class GuideDetails extends React.Component {
             <div className="d-flex justify-content-start pb-5">
               <img
                 src={this.guide && this.guide.guide_photo}
-                alt="Guide photo"
+                alt="Actions"
                 className="rounded-circle shadow-sm"
                 style={{ width: "9em", height: "9em" }}
               />

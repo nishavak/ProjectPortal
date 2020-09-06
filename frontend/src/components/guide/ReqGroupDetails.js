@@ -1,10 +1,9 @@
+import $ from "jquery";
 import React from "react";
+import { Link, Route } from "react-router-dom";
 import axios from "../../axios";
-import UserImage from "../../assets/images/User.png";
 import Loading from "../shared/Loading";
 import GuideHeader from "./GuideHeader";
-import { Route, Link } from "react-router-dom";
-import $ from "jquery";
 
 class ReqGroupDetails extends React.Component {
   constructor(props) {
@@ -37,21 +36,24 @@ class ReqGroupDetails extends React.Component {
       <div>
         <Route component={GuideHeader} />
         <br></br>
-        <div className='group-container'>
-          <div className='group-section container  p-0'>
+        <div className="group-container">
+          <div className="group-section container  p-0">
             <div
-              className='bg-light p-2 px-3 text-center shadow-sm rounded font-weight-bold'
-              style={{ color: "#5b9ecf", fontSize: "1.1em" }}>
+              className="bg-light p-2 px-3 text-center shadow-sm rounded font-weight-bold"
+              style={{ color: "#5b9ecf", fontSize: "1.1em" }}
+            >
               Group Details
             </div>
-            <div className='mt-3 bg-light rounded'>
+            <div className="mt-3 bg-light rounded">
               <div
-                className='info-section p-3 border-light'
-                style={{ letterSpacing: "0.1em" }}>
+                className="info-section p-3 border-light"
+                style={{ letterSpacing: "0.1em" }}
+              >
                 <div>
                   <p
-                    className='text-muted mb-1'
-                    style={{ fontSize: "1.3em", fontWeight: "550" }}>
+                    className="text-muted mb-1"
+                    style={{ fontSize: "1.3em", fontWeight: "550" }}
+                  >
                     Group Id{" "}
                   </p>
                   <p style={{ fontSize: "1.1em" }}>
@@ -61,8 +63,9 @@ class ReqGroupDetails extends React.Component {
                 <hr />
                 <div style={{}}>
                   <p
-                    className='text-muted mb-1'
-                    style={{ fontSize: "1.3em", fontWeight: "550" }}>
+                    className="text-muted mb-1"
+                    style={{ fontSize: "1.3em", fontWeight: "550" }}
+                  >
                     Group Leader{" "}
                   </p>
                   <p style={{ fontSize: "1.1em" }}>
@@ -72,8 +75,9 @@ class ReqGroupDetails extends React.Component {
                 <hr />
 
                 <p
-                  className='text-muted mb-1'
-                  style={{ fontSize: "1.3em", fontWeight: "550" }}>
+                  className="text-muted mb-1"
+                  style={{ fontSize: "1.3em", fontWeight: "550" }}
+                >
                   Group Members{" "}
                 </p>
                 <p style={{ fontSize: "1.1em" }} />
@@ -82,9 +86,9 @@ class ReqGroupDetails extends React.Component {
             {this.team_data.students &&
               this.team_data.students.map((student) => (
                 <>
-                  <div className='bg-light mt-3 p-0 rounded'>
-                    <div className='d-flex flex-md-row flex-column  p-2'>
-                      <div className='col-md-6 col-12  '>
+                  <div className="bg-light mt-3 p-0 rounded">
+                    <div className="d-flex flex-md-row flex-column  p-2">
+                      <div className="col-md-6 col-12  ">
                         <p>
                           <b>Roll Number:</b> {student.student_roll_number}
                           <br />
@@ -101,9 +105,9 @@ class ReqGroupDetails extends React.Component {
                 </>
               ))}
             {!$.isEmptyObject(this.team_data.project) ? (
-              <div className='text-center p-3'>
+              <div className="text-center p-3">
                 <Link to={`/project/${this.team_data.project.project_id}/`}>
-                  <button className='btn btn-info'>View Project Details</button>
+                  <button className="btn btn-info">View Project Details</button>
                 </Link>
               </div>
             ) : (

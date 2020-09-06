@@ -23,7 +23,6 @@ class ProjectList extends React.Component {
             group_id: project.team_id || null,
             guide_name: project.guide_name || null,
             project_domain: project.project_domain || null,
-            guide_name: project.guide_name || null,
             project_category: project.project_category || null,
             project_description: project.project_description || null,
             project_explanatory_field:

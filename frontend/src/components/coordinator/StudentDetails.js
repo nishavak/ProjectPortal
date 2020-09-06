@@ -47,7 +47,7 @@ class StudentDetails extends React.Component {
             <div className="d-flex justify-content-start pb-5">
               <img
                 src={this.student && this.student.student_photo}
-                alt="Student photo"
+                alt="Actions"
                 className="rounded-circle shadow-sm"
                 style={{ width: "9em", height: "9em" }}
               />

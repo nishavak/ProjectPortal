@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
-import axios from "../../axios";
-import "./StudentList.scss";
 import saveCsv from "save-csv/save-csv.min.js";
+import axios from "../../axios";
 import Loading from "../shared/Loading";
+import "./StudentList.scss";
 
 function compare_group_id(a, b) {
   // Use toUpperCase() to ignore character casing

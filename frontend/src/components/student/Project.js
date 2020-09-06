@@ -75,8 +75,8 @@ export default class Project extends Component {
     event.preventDefault();
     if (this.amILeader)
       if (
-        this.state.title != "" &&
-        this.state.description != "" &&
+        this.state.title !== "" &&
+        this.state.description !== "" &&
         domain.includes(this.state.domain)
       )
         axios
@@ -210,7 +210,7 @@ export default class Project extends Component {
           )}
         </form>
         <div className="">
-          <a href="#">Old project records</a>
+          <button className="btn text-primary m-0 p-0">Old project list</button>
         </div>
       </div>
     );

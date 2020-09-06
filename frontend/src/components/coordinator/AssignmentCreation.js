@@ -157,7 +157,7 @@ export default class AssignmentCreation extends React.Component {
     formData.append("description", this.state.description);
     formData.append("due", Date.parse(new Date(this.state.due)) / 1000 || null);
     formData.append("weightage", this.state.weightage || null);
-    const that = this;
+    // const that = this;
     const config = {
       onUploadProgress: function (progressEvent) {
         var percentCompleted = Math.round(

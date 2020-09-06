@@ -1,13 +1,10 @@
 import React from "react";
-import "./GroupList.scss";
-import $ from "jquery";
-// import GroupDetails from "./GroupDetails";
-import GroupCardView from "./GroupCardView";
-import GroupListView from "./GroupListView";
+import { Route } from "react-router-dom";
 import saveCsv from "save-csv/save-csv.min.js";
 import axios from "../../axios";
 import Loading from "../shared/Loading";
-import { Route } from "react-router-dom";
+import "./GroupList.scss";
+import GroupListView from "./GroupListView";
 
 class GroupList extends React.Component {
   constructor(props) {

@@ -168,7 +168,7 @@ class Uploader extends Component {
         for (let i = 0; i < this.getUploadList().length; i++) {
           formData.append(`file[${i}]`, this.getUploadList()[i]);
         }
-        const that = this;
+        // const that = this;
         const config = {
           onUploadProgress: function (progressEvent) {
             var percentCompleted = Math.round(
@@ -201,7 +201,10 @@ class Uploader extends Component {
   componentDidMount() {
     axios
       .get("amILeader/")
-      .then(({ data }) => (this.leader = data))
+      .then(({ data }) => {
+        this.leader = data;
+        this.setState({ ...this.state });
+      })
       .catch((err) => {});
     axios
       .get(`studentAssignmentDetails/${this.props.match.params.id}`)
@@ -209,7 +212,7 @@ class Uploader extends Component {
         this.turned_in = data.grade.turned_in;
         this.marks_obtained = data.grade.marks_obtained;
         this.my_submissions = data.my_submissions;
-        this.setState({});
+        this.setState({ ...this.state });
       })
       .catch((err) => {
         this.props.history.goBack();

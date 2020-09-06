@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
-import "./GuideList.scss";
-import axios from "../../axios";
+import { Link } from "react-router-dom";
 import saveCsv from "save-csv/save-csv.min.js";
+import axios from "../../axios";
 import Loading from "../shared/Loading";
+import "./GuideList.scss";
 
 class Guide extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class Guide extends Component {
       console.table(data);
       this.guides = data;
       this.guides.forEach((guide) => {
-        if (guide.team_data.length != 0) {
+        if (guide.team_data.length !== 0) {
           guide.team_data.forEach((team) => {
             this.team_ids.push(team.team_id);
             console.log("inside team" + team.team_id);

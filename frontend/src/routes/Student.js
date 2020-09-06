@@ -1,15 +1,14 @@
-import $ from "jquery";
 import React from "react";
+import { NotificationManager } from "react-notifications";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Assignment from "../components/student/Assignment";
-import Assignments from "../components/student/Assignments";
-import Header from "../components/student/Header";
-import Profile from "../components/student/Profile";
 import axios from "../axios";
 import ChangePassword from "../components/shared/ChangePassword";
-import GroupRegistration from "../components/student/GroupRegistration";
 import Loading from "../components/shared/Loading";
-import { NotificationManager } from "react-notifications";
+import Assignment from "../components/student/Assignment";
+import Assignments from "../components/student/Assignments";
+import GroupRegistration from "../components/student/GroupRegistration";
+import Header from "../components/student/Header";
+import Profile from "../components/student/Profile";
 
 export default class Student extends React.Component {
   constructor(props) {

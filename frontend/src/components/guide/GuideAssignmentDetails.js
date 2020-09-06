@@ -1,12 +1,11 @@
-import React, { Component } from "react";
-import "./GuideAssignmentDetails.scss";
-import { Link } from "react-router-dom";
-import axios from "../../axios";
 import $ from "jquery";
+import React, { Component } from "react";
 import { NotificationManager } from "react-notifications";
-import GuideHeader from "./GuideHeader";
 import { Route } from "react-router-dom";
+import axios from "../../axios";
 import Loading from "../shared/Loading";
+import "./GuideAssignmentDetails.scss";
+import GuideHeader from "./GuideHeader";
 
 export class GuideAssignmentDetails extends Component {
   constructor(props) {

@@ -17,7 +17,7 @@ class GuideDetailedList extends React.Component {
     axios.get("coordinatorGuide/").then(({ data }) => {
       this.guides = data;
       this.guides.forEach((guide) => {
-        if (guide.team_data.length != 0) {
+        if (guide.team_data.length !== 0) {
           guide.team_data.forEach((team) => {
             this.downloadable.push({
               guide_id: guide.guide_id,

@@ -1,7 +1,6 @@
+import $ from "jquery";
 import React from "react";
 import axios from "../../axios";
-import $ from "jquery";
-import { NotificationManager } from "react-notifications";
 
 const branch = [
   "Information Technology",

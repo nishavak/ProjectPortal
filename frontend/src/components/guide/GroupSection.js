@@ -1,9 +1,8 @@
-import React from "react";
 import $ from "jquery";
-import "./GroupSection.scss";
+import React from "react";
 import axios from "../../axios";
-import UserImage from "../../assets/images/User.png";
 import Loading from "../shared/Loading";
+import "./GroupSection.scss";
 
 class GroupSection extends React.Component {
   constructor(props) {
