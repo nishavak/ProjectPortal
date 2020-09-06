@@ -176,13 +176,16 @@ export class GuideAssignmentDetails extends Component {
                   <p className="d-flex " style={{ fontSize: "0.9em" }}>
                     <div className="col-3 p-0 ">Weightage :</div>
                     <div className="col-9 p-0">
-                      {this.ass_details.assignment_details &&
-                        this.ass_details.assignment_details.weightage}
+                      {(this.ass_details.assignment_details &&
+                        this.ass_details.assignment_details.weightage) ||
+                        "Non gradable assignment"}
                     </div>
                   </p>
 
                   <form onSubmit={this.handleSubmit}>
-                    {this.ass_details.student_list &&
+                    {this.ass_details.assignment_details &&
+                      this.ass_details.assignment_details.weightage &&
+                      this.ass_details.student_list &&
                       this.ass_details.student_list.map((grade) => (
                         <div className="container py-1">
                           <div className="row mb-2">
@@ -219,40 +222,43 @@ export class GuideAssignmentDetails extends Component {
                         </div>
                       ))}
                     <div />
-                    <div className="d-flex justify-content-start pt-3">
-                      <div className="col-md-3 p-0">
-                        <button
-                          type="button"
-                          className="btn btn-light shadow-sm"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Buttons in grade section will be disabled if there are no submissions"
-                          onClick={() => {
-                            $(".grade").attr("disabled", false);
-                          }}
-                          onMouseOver={() => {
-                            if (!this.isTurnedIn) {
-                              $('[data-toggle="tooltip"]').tooltip();
-                            }
-                          }}
-                          disabled={this.isTurnedIn ? false : true}
-                        >
-                          Edit
-                        </button>
-                      </div>
-                      <div className="col-md-3 p-0">
-                        <button
-                          type="submit"
-                          className="btn btn-light shadow-sm"
-                          onClick={() => {
-                            $(".grade").attr("disabled", true);
-                          }}
-                          disabled={this.isTurnedIn ? false : true}
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </div>
+                    {this.ass_details.assignment_details &&
+                      this.ass_details.assignment_details.weightage && (
+                        <div className="d-flex justify-content-start pt-3">
+                          <div className="col-md-3 p-0">
+                            <button
+                              type="button"
+                              className="btn btn-light shadow-sm"
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="Buttons in grade section will be disabled if there are no submissions"
+                              onClick={() => {
+                                $(".grade").attr("disabled", false);
+                              }}
+                              onMouseOver={() => {
+                                if (!this.isTurnedIn) {
+                                  $('[data-toggle="tooltip"]').tooltip();
+                                }
+                              }}
+                              disabled={this.isTurnedIn ? false : true}
+                            >
+                              Edit
+                            </button>
+                          </div>
+                          <div className="col-md-3 p-0">
+                            <button
+                              type="submit"
+                              className="btn btn-light shadow-sm"
+                              onClick={() => {
+                                $(".grade").attr("disabled", true);
+                              }}
+                              disabled={this.isTurnedIn ? false : true}
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      )}
                   </form>
                 </div>
               </div>

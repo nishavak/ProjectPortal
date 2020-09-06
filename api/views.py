@@ -485,7 +485,7 @@ def coordinatorAssignmentDetail(request, id):
             "coordinator": Coordinator.objects.get(id=request.user.id),
             "posted": assignment.posted,
         }
-        print(data)
+        # print(data)
         serializer = AssignmentSerializer(assignment, data=data)
         if serializer.is_valid():
             serializer.save()
@@ -831,7 +831,7 @@ def guideAssignmentDetails(request, pk, groupId):
         _attachments.append(_file)
     assignmentDetails.setdefault("attachments", _attachments)
     teamSubmissions = []
-    teamFileUploads = File.objects.filter(team_id=groupId)
+    teamFileUploads = File.objects.filter(team_id=groupId, assignment=assignment)
     for file in teamFileUploads:
         _file = {
             "id": file.id,
@@ -880,8 +880,8 @@ def guideAssignmentList(request, groupId):
     response = []
     for grade in grades:
         _assignment = Assignment.objects.get(grade=grade)
-        if assignment.due not in [None, "", "null"]:
-            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
+        if _assignment.due not in [None, "", "null"]:
+            due = timezone.localtime(_assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
         else:
             due = None
         _t = {
