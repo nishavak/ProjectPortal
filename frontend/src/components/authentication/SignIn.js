@@ -67,6 +67,7 @@ export class SignIn extends Component {
               <div className="form-group">
                 <button
                   className="btn text-primary m-0 p-0"
+                  type="button"
                   onClick={() => this.props.history.push("/forgot-password")}
                 >
                   Forgot password

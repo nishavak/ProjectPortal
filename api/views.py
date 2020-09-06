@@ -1528,6 +1528,12 @@ def getProject(request):
             status=status.HTTP_404_NOT_FOUND,
         )
 
+@api_view(["DELETE"])
+def cancelProjectRequest(request):
+    leader = Student.objects.get(id=request.user.id)
+    project = Project.objects.get(id=leader.project.id)
+    project.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 # * AUTHENTICATION AND MISCELLANEOUS
 

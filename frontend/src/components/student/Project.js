@@ -184,7 +184,18 @@ export default class Project extends Component {
                   <button
                     type="button"
                     className="btn btn-danger"
-                    onClick={() => alert("Cancel request")}
+                    onClick={() =>
+                      axios
+                        .delete("cancelProjectRequest/")
+                        .then(() => {
+                          NotificationManager.success(
+                            "Project request cancelled"
+                          );
+                        })
+                        .catch((err) =>
+                          NotificationManager.error("Error cancelling request")
+                        )
+                    }
                   >
                     Cancel request
                   </button>

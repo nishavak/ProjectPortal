@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "api",
     "imagekit",
     "django_cleanup.apps.CleanupConfig",
-    "django_extensions",
 ]
 
 MIDDLEWARE = [
