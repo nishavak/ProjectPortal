@@ -62,6 +62,7 @@ urlpatterns = [
     path("cancelRequest/", views.cancelRequest),
     path("removeStudent/", views.removeStudent),
     path("makeLeader/", views.makeLeader),
+    path("previousYearProjects/", views.previousYearProjects),
     path("requestGuide/", views.requestGuide),
     path("cancelProjectRequest/", views.cancelProjectRequest),
     path("searchGuide/<str:q>", views.searchGuide),

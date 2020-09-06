@@ -1753,12 +1753,13 @@ def coordinatorSignup(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-""" @api_view()
+@api_view()
 def previousYearProjects(request):
     url = "/api/media/pyp.xlsx"
     return Response(data=url)
 
 
+"""
 @api_view()
 def generatePrevYearProjectList(request):
     # with open(os.path.join(settings.BASE_DIR)) as f:

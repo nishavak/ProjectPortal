@@ -64,10 +64,6 @@ class AssignmentList extends React.Component {
                 className="dropdown-menu"
                 aria-labelledby="dropdownMenuButton"
               >
-                <Link className="dropdown-item" to="/create-assignments">
-                  Create Assignment
-                </Link>
-
                 <Link className="dropdown-item" to="/submission-statistics">
                   Submission Stats
                 </Link>

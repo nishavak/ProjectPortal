@@ -182,84 +182,96 @@ export class GuideAssignmentDetails extends Component {
                     </div>
                   </p>
 
-                  <form onSubmit={this.handleSubmit}>
-                    {this.ass_details.assignment_details &&
-                      this.ass_details.assignment_details.weightage &&
-                      this.ass_details.student_list &&
-                      this.ass_details.student_list.map((grade) => (
-                        <div className="container py-1">
-                          <div className="row mb-2">
-                            <div className="col-3 p-0 my-auto">
-                              <span className="" style={{ fontSize: "0.9em" }}>
-                                Student Roll Number:
-                              </span>
+                  {this.ass_details.assignment_details &&
+                    this.ass_details.assignment_details.weightage && (
+                      <form onSubmit={this.handleSubmit}>
+                        {this.ass_details.student_list &&
+                          this.ass_details.student_list.map((grade) => (
+                            <div className="container py-1">
+                              <div className="row mb-2">
+                                <div className="col-3 p-0 my-auto">
+                                  <span
+                                    className=""
+                                    style={{ fontSize: "0.9em" }}
+                                  >
+                                    Student Roll Number:
+                                  </span>
+                                </div>
+                                <div className="col-9 p-0">
+                                  <span
+                                    className=""
+                                    style={{ fontSize: "0.9em" }}
+                                  >
+                                    {grade.student_roll_number}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-3 p-0 my-auto">
+                                  <span
+                                    className=""
+                                    style={{ fontSize: "0.9em" }}
+                                  >
+                                    Grade :
+                                  </span>
+                                </div>
+                                <div className="col-9 p-0">
+                                  <input
+                                    type="number"
+                                    className="grade form-control w-50 shadow-sm "
+                                    name={grade.student_roll_number}
+                                    onChange={this.handleChange}
+                                    value={
+                                      this.grade[grade.student_roll_number]
+                                    }
+                                    placeholder="enter marks here"
+                                    disabled
+                                  />
+                                </div>
+                              </div>
+                              <br />
                             </div>
-                            <div className="col-9 p-0">
-                              <span className="" style={{ fontSize: "0.9em" }}>
-                                {grade.student_roll_number}
-                              </span>
+                          ))}
+                        <div />
+                        {this.ass_details.assignment_details &&
+                          this.ass_details.assignment_details.weightage && (
+                            <div className="d-flex justify-content-start pt-3">
+                              <div className="col-md-3 p-0">
+                                <button
+                                  type="button"
+                                  className="btn btn-light shadow-sm"
+                                  data-toggle="tooltip"
+                                  data-placement="bottom"
+                                  title="Buttons in grade section will be disabled if there are no submissions"
+                                  onClick={() => {
+                                    $(".grade").attr("disabled", false);
+                                  }}
+                                  onMouseOver={() => {
+                                    if (!this.isTurnedIn) {
+                                      $('[data-toggle="tooltip"]').tooltip();
+                                    }
+                                  }}
+                                  disabled={this.isTurnedIn ? false : true}
+                                >
+                                  Edit
+                                </button>
+                              </div>
+                              <div className="col-md-3 p-0">
+                                <button
+                                  type="submit"
+                                  className="btn btn-light shadow-sm"
+                                  onClick={() => {
+                                    $(".grade").attr("disabled", true);
+                                  }}
+                                  disabled={this.isTurnedIn ? false : true}
+                                >
+                                  Save
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-3 p-0 my-auto">
-                              <span className="" style={{ fontSize: "0.9em" }}>
-                                Grade :
-                              </span>
-                            </div>
-                            <div className="col-9 p-0">
-                              <input
-                                type="number"
-                                className="grade form-control w-50 shadow-sm "
-                                name={grade.student_roll_number}
-                                onChange={this.handleChange}
-                                value={this.grade[grade.student_roll_number]}
-                                placeholder="enter marks here"
-                                disabled
-                              />
-                            </div>
-                          </div>
-                          <br />
-                        </div>
-                      ))}
-                    <div />
-                    {this.ass_details.assignment_details &&
-                      this.ass_details.assignment_details.weightage && (
-                        <div className="d-flex justify-content-start pt-3">
-                          <div className="col-md-3 p-0">
-                            <button
-                              type="button"
-                              className="btn btn-light shadow-sm"
-                              data-toggle="tooltip"
-                              data-placement="bottom"
-                              title="Buttons in grade section will be disabled if there are no submissions"
-                              onClick={() => {
-                                $(".grade").attr("disabled", false);
-                              }}
-                              onMouseOver={() => {
-                                if (!this.isTurnedIn) {
-                                  $('[data-toggle="tooltip"]').tooltip();
-                                }
-                              }}
-                              disabled={this.isTurnedIn ? false : true}
-                            >
-                              Edit
-                            </button>
-                          </div>
-                          <div className="col-md-3 p-0">
-                            <button
-                              type="submit"
-                              className="btn btn-light shadow-sm"
-                              onClick={() => {
-                                $(".grade").attr("disabled", true);
-                              }}
-                              disabled={this.isTurnedIn ? false : true}
-                            >
-                              Save
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                  </form>
+                          )}
+                      </form>
+                    )}
                 </div>
               </div>
             </div>

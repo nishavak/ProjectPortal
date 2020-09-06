@@ -1,20 +1,21 @@
-import React from "react";
-import { Button } from "react-bootstrap";
-import "./AssignmentDetails.scss";
-import { Link, Route } from "react-router-dom";
 // import Uploader from "../student/Uploader";
 import $ from "jquery";
-import SubmissionStatus from "./SubmissionStatus";
+import React from "react";
+import { Button } from "react-bootstrap";
+import { NotificationManager } from "react-notifications";
+import { Link, Route } from "react-router-dom";
 //import DateTimePicker from "react-datetime-picker";
 import axios from "../../axios";
 import Loading from "../shared/Loading";
-import { NotificationManager } from "react-notifications";
+import "./AssignmentDetails.scss";
+import SubmissionStatus from "./SubmissionStatus";
+
 class AssignmentDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      inputId: 0,
+      // inputId: 0,
       files: [],
       due: "",
       title: "",
@@ -23,133 +24,133 @@ class AssignmentDetails extends React.Component {
     };
     this.id = this.props.match.params.id;
     this.ass = {};
-    this.deleteList = [];
+    // this.deleteList = [];
   }
-  /* 
-  
-  Removing an item sets File to {} in the FileList.
-  While submitting, retrieve all not null objects and POST.
+  // /*
 
-  */
+  // Removing an item sets File to {} in the FileList.
+  // While submitting, retrieve all not null objects and POST.
 
-  removeItem = (inputId, key) => {
-    let files = this.state.files;
-    // ! if used splice then index may not match. Shifting of array issue arises.
-    let toRemoveInput = Array.from(files[inputId]);
-    toRemoveInput[key] = {};
-    files[inputId] = toRemoveInput;
-    this.setState({
-      files: files,
-    });
-  };
+  // */
 
-  createListItem = (name, inputId, key) => {
-    let that = this;
-    return $("<li>", {
-      class:
-        "list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0",
-    })
-      .append(
-        $("<span>", {
-          text: name,
-        })
-      )
-      .append(
-        $("<i>", {
-          class: "fa fa-close",
-          role: "button",
-        }).on("click", function () {
-          that.removeItem(inputId, key);
-          $(this).parent().remove();
-        })
-      );
-  };
+  // removeItem = (inputId, key) => {
+  //   let files = this.state.files;
+  //   // ! if used splice then index may not match. Shifting of array issue arises.
+  //   let toRemoveInput = Array.from(files[inputId]);
+  //   toRemoveInput[key] = {};
+  //   files[inputId] = toRemoveInput;
+  //   this.setState({
+  //     files: files,
+  //   });
+  // };
 
-  addInput = (type) => {
-    const that = this;
-    let inputId = this.state.inputId;
+  // createListItem = (name, inputId, key) => {
+  //   let that = this;
+  //   return $("<li>", {
+  //     class:
+  //       "list-group-item border-0 rounded-0 d-flex justify-content-between align-items-center m-0",
+  //   })
+  //     .append(
+  //       $("<span>", {
+  //         text: name,
+  //       })
+  //     )
+  //     .append(
+  //       $("<i>", {
+  //         class: "fa fa-close",
+  //         role: "button",
+  //       }).on("click", function () {
+  //         that.removeItem(inputId, key);
+  //         $(this).parent().remove();
+  //       })
+  //     );
+  // };
 
-    // create input files selection
-    if (type === "files")
-      $("#uploadFilesInputContainer").append(
-        $("<input>", {
-          class: "form-control-file",
-          type: "file",
-          multiple: true,
-          inputId: inputId,
-          // webkitdirectory: true,
-        })
-      );
+  // addInput = (type) => {
+  //   const that = this;
+  //   let inputId = this.state.inputId;
 
-    // create input folder selection
-    if (type === "folder")
-      $("#uploadFilesInputContainer").append(
-        $("<input>", {
-          class: "form-control-file",
-          type: "file",
-          multiple: true,
-          inputId: inputId,
-          webkitdirectory: true,
-        })
-      );
+  //   // create input files selection
+  //   if (type === "files")
+  //     $("#uploadFilesInputContainer").append(
+  //       $("<input>", {
+  //         class: "form-control-file",
+  //         type: "file",
+  //         multiple: true,
+  //         inputId: inputId,
+  //         // webkitdirectory: true,
+  //       })
+  //     );
 
-    // ! states should not be directly altered
-    // initialise files[inputId] with {}
-    let files = this.state.files;
-    files[inputId] = {};
-    this.setState({
-      files: files,
-    });
+  //   // create input folder selection
+  //   if (type === "folder")
+  //     $("#uploadFilesInputContainer").append(
+  //       $("<input>", {
+  //         class: "form-control-file",
+  //         type: "file",
+  //         multiple: true,
+  //         inputId: inputId,
+  //         webkitdirectory: true,
+  //       })
+  //     );
 
-    // update List and state on change
-    $(`[inputId="${inputId}"]`)
-      .trigger("click")
-      .on("change", function () {
-        let currentInput = this;
-        let files = that.state.files;
+  //   // ! states should not be directly altered
+  //   // initialise files[inputId] with {}
+  //   let files = this.state.files;
+  //   files[inputId] = {};
+  //   this.setState({
+  //     files: files,
+  //   });
 
-        // * updating files in state with new entries
-        files[inputId] = currentInput.files;
-        that.setState({
-          files: files,
-        });
+  //   // update List and state on change
+  //   $(`[inputId="${inputId}"]`)
+  //     .trigger("click")
+  //     .on("change", function () {
+  //       let currentInput = this;
+  //       let files = that.state.files;
 
-        // update file List visible to the user
-        for (let i = 0; i < currentInput.files.length; i++) {
-          const file = currentInput.files[i];
-          $("#uploadFilesList").append(
-            that.createListItem(file.name, inputId, i)
-          );
-        }
-      });
+  //       // * updating files in state with new entries
+  //       files[inputId] = currentInput.files;
+  //       that.setState({
+  //         files: files,
+  //       });
 
-    //   increment inputId
-    this.setState({
-      inputId: this.state.inputId + 1,
-    });
-  };
+  //       // update file List visible to the user
+  //       for (let i = 0; i < currentInput.files.length; i++) {
+  //         const file = currentInput.files[i];
+  //         $("#uploadFilesList").append(
+  //           that.createListItem(file.name, inputId, i)
+  //         );
+  //       }
+  //     });
 
-  getUploadList = () => {
-    // * uploadList is the list to be uploaded
-    let uploadList = [];
-    for (let i = 0; i < this.state.files.length; i++) {
-      const fileList = this.state.files[i];
-      let fileListArr = Array.from(fileList);
-      for (let j = 0; j < fileListArr.length; j++) {
-        const file = fileListArr[j];
-        if (!$.isEmptyObject(file)) {
-          uploadList.splice(0, 0, file);
-        }
-      }
-    }
-    // ! issue: removing duplicates with same keys but different directories
-    // ! if __init__.py is to be included, there could be multiple of them but from different directories.
-    // let cleanedUploadList = _.uniqWith(uploadList, _.isEqual);
-    // let cleanedUploadList = _.uniqBy(uploadList, ["name", "size"]);
-    // * google allows duplicates
+  //   //   increment inputId
+  //   this.setState({
+  //     inputId: this.state.inputId + 1,
+  //   });
+  // };
 
-    return uploadList; // returns file List with duplicates
-  };
+  // getUploadList = () => {
+  //   // * uploadList is the list to be uploaded
+  //   let uploadList = [];
+  //   for (let i = 0; i < this.state.files.length; i++) {
+  //     const fileList = this.state.files[i];
+  //     let fileListArr = Array.from(fileList);
+  //     for (let j = 0; j < fileListArr.length; j++) {
+  //       const file = fileListArr[j];
+  //       if (!$.isEmptyObject(file)) {
+  //         uploadList.splice(0, 0, file);
+  //       }
+  //     }
+  //   }
+  //   // ! issue: removing duplicates with same keys but different directories
+  //   // ! if __init__.py is to be included, there could be multiple of them but from different directories.
+  //   // let cleanedUploadList = _.uniqWith(uploadList, _.isEqual);
+  //   // let cleanedUploadList = _.uniqBy(uploadList, ["name", "size"]);
+  //   // * google allows duplicates
+
+  //   return uploadList; // returns file List with duplicates
+  // };
 
   componentDidMount() {
     axios
@@ -169,64 +170,64 @@ class AssignmentDetails extends React.Component {
       .catch((err) => this.props.history.goBack());
   }
 
-  handleChange = (e) => {
-    console.log(this.state);
+  // handleChange = (e) => {
+  //   console.log(this.state);
 
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
+  //   this.setState({
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  // handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    axios
-      .post("coordinatorRemoveAttachments/", { delete_list: this.deleteList })
-      .then(({ data }) => console.log(data))
-      .catch((err) => console.log(err));
+  //   axios
+  //     .post("coordinatorRemoveAttachments/", { delete_list: this.deleteList })
+  //     .then(({ data }) => console.log(data))
+  //     .catch((err) => console.log(err));
 
-    let formData = new FormData();
-    let u = this.getUploadList();
-    for (let i = 0; i < u.length; i++) {
-      formData.append(`file[${i}]`, u[i]);
-    }
-    // formData.append("attachments", this.getUploadList());
-    formData.append("attachment_count", u.length);
-    formData.append("title", this.state.title);
-    formData.append("description", this.state.description);
-    formData.append("due", Date.parse(new Date(this.state.due)) / 1000 || null);
-    formData.append("weightage", this.state.weightage || null);
-    // const that = this;
-    const config = {
-      onUploadProgress: function (progressEvent) {
-        var percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        console.log(percentCompleted);
-      },
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-    axios
-      .put(`coordinatorAssignmentDetail/${this.id}/`, formData, config)
-      .then(({ data }) => {
-        alert("Assignment updated");
-        // window.location.reload();
-      })
-      .catch((err) => {
-        NotificationManager.error("Error creating assignment");
-      });
-  };
+  //   let formData = new FormData();
+  //   let u = this.getUploadList();
+  //   for (let i = 0; i < u.length; i++) {
+  //     formData.append(`file[${i}]`, u[i]);
+  //   }
+  //   // formData.append("attachments", this.getUploadList());
+  //   formData.append("attachment_count", u.length);
+  //   formData.append("title", this.state.title);
+  //   formData.append("description", this.state.description);
+  //   formData.append("due", Date.parse(new Date(this.state.due)) / 1000 || null);
+  //   formData.append("weightage", this.state.weightage || null);
+  //   // const that = this;
+  //   const config = {
+  //     onUploadProgress: function (progressEvent) {
+  //       var percentCompleted = Math.round(
+  //         (progressEvent.loaded * 100) / progressEvent.total
+  //       );
+  //       console.log(percentCompleted);
+  //     },
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   };
+  //   axios
+  //     .put(`coordinatorAssignmentDetail/${this.id}/`, formData, config)
+  //     .then(({ data }) => {
+  //       alert("Assignment updated");
+  //       // window.location.reload();
+  //     })
+  //     .catch((err) => {
+  //       NotificationManager.error("Error creating assignment");
+  //     });
+  // };
 
-  deleteAss = () => {
-    axios
-      .delete(`coordinatorAssignmentDetail/${this.id}/`)
-      .then((res) => {
-        this.props.history.goBack();
-      })
-      .catch((err) => console.log(err));
-  };
+  // deleteAss = () => {
+  //   axios
+  //     .delete(`coordinatorAssignmentDetail/${this.id}/`)
+  //     .then((res) => {
+  //       this.props.history.goBack();
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   render() {
     if (this.state.loading) return <Loading />;
     return (
@@ -246,18 +247,18 @@ class AssignmentDetails extends React.Component {
         <div className="d-flex flex-column flex-md-row py-3">
           <div className="col-12 col-md-7 my-4 form-section">
             <div className="">
-              <form id="assignment-form" onSubmit={this.handleSubmit}>
+              <div id="assignment-form">
                 <div className="form-group">
                   <label for="title">
                     Title <span style={{ color: "red" }}>*</span>
                   </label>
                   <input
+                    disabled
                     type="text"
                     className="form-control"
                     id="title"
                     name="title"
                     placeholder="Enter title here ..."
-                    onChange={this.handleChange}
                     value={this.ass.assignment_details ? this.state.title : ""}
                     required
                   />
@@ -265,12 +266,12 @@ class AssignmentDetails extends React.Component {
                 <div className="form-group">
                   <label for="description">Descriptional (optional)</label>
                   <textarea
+                    disabled
                     className="form-control"
                     id="description"
                     name="description"
                     rows="4"
                     placeholder="Enter description here ..."
-                    onChange={this.handleChange}
                     value={
                       this.ass.assignment_details ? this.state.description : ""
                     }
@@ -279,12 +280,12 @@ class AssignmentDetails extends React.Component {
                 <div className="form-group">
                   <label for="weightage">Weightage (optional)</label>
                   <input
+                    disabled
                     type="number"
                     className="form-control"
                     id="weightage"
                     name="weightage"
                     placeholder="Enter marks weightage here..."
-                    onChange={this.handleChange}
                     value={
                       this.ass.assignment_details ? this.state.weightage : ""
                     }
@@ -293,29 +294,15 @@ class AssignmentDetails extends React.Component {
                 <div className="form-group">
                   <label for="due">Due Date and Time (optional)</label>
                   <input
+                    disabled
                     type="datetime-local"
                     className="form-control"
                     id="due"
                     name="due"
-                    onChange={this.handleChange}
                     value={this.ass.assignment_details ? this.state.due : 0}
                   />
                 </div>
-                <div className="form-group d-flex justify-content-between">
-                  <Button variant="outline-success" id="save" type="submit">
-                    Save Changes
-                  </Button>
-
-                  <Button
-                    variant="outline-danger"
-                    id="delete"
-                    onClick={this.deleteAss}
-                  >
-                    {" "}
-                    Delete
-                  </Button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
           <div className="col-12 col-md-5 my-4">
@@ -360,25 +347,6 @@ class AssignmentDetails extends React.Component {
                     </>
                   )}
                 </ul>
-              </div>
-              <div
-                className="d-flex justify-content-between"
-                hidden={this.isFileUploadEnabled}
-              >
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => this.addInput("files")}
-                >
-                  Attach Files
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-info"
-                  onClick={() => this.addInput("folder")}
-                >
-                  Attach Folder
-                </button>
               </div>
             </>
           </div>

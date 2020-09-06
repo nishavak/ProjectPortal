@@ -26,6 +26,7 @@ export default class Project extends Component {
     this.amILeader = false;
     this.approved = null;
     this.state = {
+      link: null,
       loading: true,
       title: "",
       description: "",
@@ -36,6 +37,10 @@ export default class Project extends Component {
   }
 
   componentDidMount() {
+    axios
+      .get("previousYearProjects/")
+      .then(({ data }) => this.setState({ link: data }))
+      .catch((err) => {});
     axios
       .get("amILeader/")
       .then(({ data }) => {
@@ -210,7 +215,14 @@ export default class Project extends Component {
           )}
         </form>
         <div className="">
-          <button className="btn text-primary m-0 p-0">Old project list</button>
+          <a
+            href={this.state.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn text-primary m-0 p-0"
+          >
+            Previous year project list
+          </a>
         </div>
       </div>
     );
