@@ -97,7 +97,7 @@ export class GuideAssignmentDetails extends Component {
                 className="col-md-4 col-12 text-muted"
                 style={{ fontSize: "0.9em" }}
               >
-                Due date :
+                Due date:{" "}
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.due}
               </div>
@@ -116,6 +116,7 @@ export class GuideAssignmentDetails extends Component {
                 {this.ass_details.assignment_details &&
                   this.ass_details.assignment_details.description}
               </div>
+              <hr />
               <div className="attachments d-md-flex">
                 <ul className="list-group">
                   {!$.isEmptyObject(this.ass_details)
