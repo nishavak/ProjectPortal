@@ -79,18 +79,22 @@ class GuideDetailsForm extends React.Component {
     preferences.push(p3);
     preferences.push(p4);
     // this.setState({ preferences: preferences });
-    let data = {
-      initials: this.state.initials,
-      preferences: preferences,
-    };
-    axios
-      .put("guideDetailsForm/", data)
-      .then(() => {
-        window.location.href = "/";
-      })
-      .catch((err) => {
-        NotificationManager.error(err.response.data);
-      });
+    if (this.state.initials.length != 3) {
+      NotificationManager.error("Initials length should be 3!");
+    } else {
+      let data = {
+        initials: this.state.initials,
+        preferences: preferences,
+      };
+      axios
+        .put("guideDetailsForm/", data)
+        .then(() => {
+          window.location.href = "/";
+        })
+        .catch((err) => {
+          NotificationManager.error(err.response.data);
+        });
+    }
   };
 
   render() {

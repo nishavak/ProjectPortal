@@ -11,10 +11,10 @@ export default class AssignmentCreation extends React.Component {
     this.state = {
       inputId: 0,
       files: [],
-      due: new Date(),
+      due: "",
       title: "",
       description: "",
-      weightage: "",
+      weightage: null,
     };
   }
   /* 
@@ -155,8 +155,8 @@ export default class AssignmentCreation extends React.Component {
     formData.append("attachment_count", u.length);
     formData.append("title", this.state.title);
     formData.append("description", this.state.description);
-    formData.append("due", Date.parse(new Date(this.state.due)) / 1000);
-    formData.append("weightage", this.state.weightage);
+    formData.append("due", Date.parse(new Date(this.state.due)) / 1000 || null);
+    formData.append("weightage", this.state.weightage || null);
     const that = this;
     const config = {
       onUploadProgress: function (progressEvent) {
@@ -230,14 +230,14 @@ export default class AssignmentCreation extends React.Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="weightage">Weightage</label>
+                  <label for="weightage">Weightage (optional)</label>
                   <input
                     type="number"
+                    min="0"
                     className="form-control"
                     id="weightage"
                     name="weightage"
                     placeholder="Enter marks weightage here..."
-                    required
                     onChange={this.handleChange}
                   />
                 </div>

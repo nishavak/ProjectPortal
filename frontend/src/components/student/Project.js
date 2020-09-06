@@ -191,6 +191,7 @@ export default class Project extends Component {
                           NotificationManager.success(
                             "Project request cancelled"
                           );
+                          this.componentDidMount();
                         })
                         .catch((err) =>
                           NotificationManager.error("Error cancelling request")

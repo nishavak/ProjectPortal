@@ -16,10 +16,10 @@ class AssignmentDetails extends React.Component {
       loading: true,
       inputId: 0,
       files: [],
-      due: new Date(),
+      due: "",
       title: "",
       description: "",
-      weightage: "",
+      weightage: null,
     };
     this.id = this.props.match.params.id;
     this.ass = {};
@@ -194,8 +194,8 @@ class AssignmentDetails extends React.Component {
     formData.append("attachment_count", u.length);
     formData.append("title", this.state.title);
     formData.append("description", this.state.description);
-    formData.append("due", Date.parse(new Date(this.state.due)) / 1000);
-    formData.append("weightage", this.state.weightage);
+    formData.append("due", Date.parse(new Date(this.state.due)) / 1000 || null);
+    formData.append("weightage", this.state.weightage || null);
     const that = this;
     const config = {
       onUploadProgress: function (progressEvent) {

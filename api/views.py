@@ -374,8 +374,12 @@ def coordinatorAssignmentList(request):
                 "assignment_title": assignment.title,
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
-                "assignment_due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_due": timezone.localtime(assignment.due).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
+                "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
             }
         except:
             _assignment = {
@@ -384,7 +388,9 @@ def coordinatorAssignmentList(request):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": None,
-                "assignment_posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
             }
         response.append(_assignment)
     return Response(data=response)
@@ -427,8 +433,12 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_title": assignment.title,
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
-                "assignment_due": assignment.due.strftime("%Y-%m-%dT%H:%M"),
-                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M"),
+                "assignment_due": timezone.localtime(assignment.due).strftime(
+                    "%Y-%m-%dT%H:%M"
+                ),
+                "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                    "%Y-%m-%dT%H:%M"
+                ),
             }
         except:
             _assignment = {
@@ -437,7 +447,9 @@ def coordinatorAssignmentDetail(request, id):
                 "assignment_weightage": assignment.weightage,
                 "assignment_description": assignment.description,
                 "assignment_due": None,
-                "assignment_posted": assignment.posted.strftime("%Y-%m-%dT%H:%M"),
+                "assignment_posted": timezone.localtime(assignment.posted).strftime(
+                    "%Y-%m-%dT%H:%M"
+                ),
             }
         assignment_details.setdefault("assignment", _assignment)
         assignment_details.setdefault("files", _files)
@@ -474,14 +486,23 @@ def coordinatorAssignmentDetail(request, id):
             assignment = Assignment.objects.get(id=id)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        if request.data.get("due") not in ["", "null", None]:
+            due = timezone.datetime.fromtimestamp(int(request.data.get("due")))
+        else:
+            due = None
+        if request.data["weightage"] not in ["", "null", None]:
+            weightage = request.data["weightage"]
+        else:
+            weightage = None
         data = {
             "title": request.data["title"],
             "description": request.data["description"],
-            "weightage": request.data["weightage"],
-            "due": timezone.datetime.fromtimestamp(int(request.data.get("due"))),
+            "weightage": weightage,
+            "due": due,
             "coordinator": Coordinator.objects.get(id=request.user.id),
             "posted": assignment.posted,
         }
+        print(data)
         serializer = AssignmentSerializer(assignment, data=data)
         if serializer.is_valid():
             serializer.save()
@@ -544,9 +565,26 @@ def coordinatorGroupSubmissionDetails(request, assignmentId, teamId):
 def coordinatorCreateAssignment(request):
     title = request.data.get("title")
     description = request.data.get("description")
-    weightage = int(request.data.get("weightage"))
-    posted = timezone.datetime.now()
-    due = timezone.datetime.fromtimestamp(int(request.data.get("due")))
+    print(
+        "Weightage:\t",
+        request.data.get("weightage"),
+        type(request.data.get("weightage")),
+    )
+    print(
+        "due:\t",
+        request.data.get("due"),
+        type(request.data.get("due")),
+    )
+    if request.data.get("weightage") != "null":
+        weightage = int(request.data.get("weightage"))
+    else:
+        weightage = None
+    posted = timezone.localtime(timezone.now())
+    # print(posted)
+    if request.data.get("due") not in ["", "null", None]:
+        due = timezone.datetime.fromtimestamp(int(request.data.get("due")))
+    else:
+        due = None
     coordinator = Coordinator.objects.get(id=request.user.id)
 
     data = {
@@ -557,6 +595,7 @@ def coordinatorCreateAssignment(request):
         "weightage": weightage,
         "coordinator": coordinator,
     }
+    # print(data)
     serializer = AssignmentSerializer(data=data)
     if serializer.is_valid():
         assignment = serializer.save()
@@ -655,8 +694,12 @@ def coordinatorGroupRequest(request):
             else None,
             "team": group_request.team.id,
             "description": group_request.description,
-            "generated": group_request.generated.strftime("%d/%m/%Y, %H:%M:%S"),
-            "processed": group_request.processed.strftime("%d/%m/%Y, %H:%M:%S"),
+            "generated": timezone.localtime(group_request.generated).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
+            "processed": timezone.localtime(group_request.processed).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
         }
         group_requests.append(_t)
     response.setdefault("group_requests", group_requests)
@@ -713,8 +756,10 @@ def coordinatorProjectRequest(request):
             "project": project_request.project.id,
             "status": project_request.status,
             "id": project_request.id,
-            "created": project_request.created.strftime("%d/%m/%Y, %H:%M:%S"),
-            "last_modified": project_request.last_modified.strftime(
+            "created": timezone.localtime(project_request.created).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
+            "last_modified": timezone.localtime(project_request.last_modified).strftime(
                 "%d/%m/%Y, %H:%M:%S"
             ),
         }
@@ -794,8 +839,8 @@ def guideAssignmentDetails(request, pk, groupId):
         "title": assignment.title,
         "description": assignment.description,
         "weightage": assignment.weightage,
-        "due": assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-        "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+        "due": timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S"),
+        "posted": timezone.localtime(assignment.posted).strftime("%d/%m/%Y, %H:%M:%S"),
     }
     fileAttachements = File.objects.filter(team=None, assignment=assignment)
     _attachments = []
@@ -861,8 +906,12 @@ def guideAssignmentList(request, groupId):
             _t = {
                 "assignment_id": _assignment.id,
                 "assignment_title": _assignment.title,
-                "assignment_due": _assignment.due.strftime("%d/%m/%Y, %H:%M:%S"),
-                "assignment_posted": _assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_due": timezone.localtime(_assignment.due).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
+                "assignment_posted": timezone.localtime(_assignment.posted).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
                 "assignment_weightage": _assignment.weightage,
             }
         except:
@@ -870,7 +919,9 @@ def guideAssignmentList(request, groupId):
                 "assignment_id": _assignment.id,
                 "assignment_title": _assignment.title,
                 "assignment_due": None,
-                "assignment_posted": _assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+                "assignment_posted": timezone.localtime(_assignment.posted).strftime(
+                    "%d/%m/%Y, %H:%M:%S"
+                ),
                 "assignment_weightage": _assignment.weightage,
             }
         if grade.turned_in:
@@ -896,9 +947,9 @@ def guideRequest(request):
             "team": guide_request.team.id,
             "status": guide_request.status,
             "id": guide_request.id,
-            "timestamp_requested": guide_request.timestamp_requested.strftime(
-                "%d/%m/%Y, %H:%M:%S"
-            ),
+            "timestamp_requested": timezone.localtime(
+                guide_request.timestamp_requested
+            ).strftime("%d/%m/%Y, %H:%M:%S"),
         }
         guide_req_list.append(_g)
     return Response(data=guide_req_list, status=status.HTTP_200_OK)
@@ -1139,7 +1190,7 @@ def studentAssignments(request):
         else:
             submission_status = "not-submitted"
         try:
-            due = assignment.due.strftime("%d/%m/%Y, %H:%M:%S")
+            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
         except:
             due = None
         t = {
@@ -1147,7 +1198,9 @@ def studentAssignments(request):
             "title": assignment.title,
             "due": due,
             "weightage": assignment.weightage,
-            "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+            "posted": timezone.localtime(assignment.posted).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
             "status": submission_status,
         }
         response.append(t)
@@ -1190,14 +1243,16 @@ def assignment(request, id):
             }
             attachments.append(t)
         try:
-            due = assignment.due.strftime("%d/%m/%Y, %H:%M:%S")
+            due = timezone.localtime(assignment.due).strftime("%d/%m/%Y, %H:%M:%S")
         except:
             due = None
         response = {
             "title": assignment.title,
             "description": assignment.description,
             "due": due,
-            "posted": assignment.posted.strftime("%d/%m/%Y, %H:%M:%S"),
+            "posted": timezone.localtime(assignment.posted).strftime(
+                "%d/%m/%Y, %H:%M:%S"
+            ),
             "weightage": assignment.weightage,
             "attachments": attachments,
         }
@@ -1528,12 +1583,14 @@ def getProject(request):
             status=status.HTTP_404_NOT_FOUND,
         )
 
+
 @api_view(["DELETE"])
 def cancelProjectRequest(request):
     leader = Student.objects.get(id=request.user.id)
     project = Project.objects.get(id=leader.project.id)
     project.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # * AUTHENTICATION AND MISCELLANEOUS
 
