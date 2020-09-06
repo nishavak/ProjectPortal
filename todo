@@ -1,15 +1,3 @@
 if wrong url, server should not stop.
 
-file handling
-
-frontend
-
-student backend
-
-
-email
 project edit button...title
-
-onClick={() =>
-                    axios.get("signOut/").then(() => window.location.reload())
-                  }
