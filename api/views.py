@@ -1589,6 +1589,12 @@ def signIn(request):
         if user is not None:
             login(request, user)
             return HttpResponse()
+        elif Student.objects.filter(email=email).count():
+            inst = Student.objects.get(email=email)
+            if Student.check_password(inst, password):
+                return Response(status=status.HTTP_403_FORBIDDEN)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
     else:

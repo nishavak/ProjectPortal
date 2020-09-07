@@ -1,8 +1,6 @@
 // import Uploader from "../student/Uploader";
 import $ from "jquery";
 import React from "react";
-import { Button } from "react-bootstrap";
-import { NotificationManager } from "react-notifications";
 import { Link, Route } from "react-router-dom";
 //import DateTimePicker from "react-datetime-picker";
 import axios from "../../axios";
@@ -156,7 +154,7 @@ class AssignmentDetails extends React.Component {
     axios
       .get(`coordinatorAssignmentDetail/${this.id}/`)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         this.ass = data;
         this.setState({
           loading: false,

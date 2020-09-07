@@ -83,8 +83,8 @@ export default class Assignment extends Component {
                     ? "No attachments"
                     : this.assignment.attachments.map((attachment) => (
                         <li
-                          className="attachment text-primary list-group-item border-0"
-                          style={{ cursor: "pointer" }}
+                          className="attachment text-primary text-break list-group-item border-0"
+                          style={{ cursor: "pointer", wordBreak: "break-word" }}
                           key={attachment.id}
                           onClick={() =>
                             // (window.location.href = `${attachment.url}`)

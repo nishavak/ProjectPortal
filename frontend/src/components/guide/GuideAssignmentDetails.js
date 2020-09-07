@@ -126,8 +126,11 @@ export class GuideAssignmentDetails extends Component {
                         : this.ass_details.assignment_details.attachments.map(
                             (attachment) => (
                               <li
-                                className="attachment text-primary list-group-item border-0"
-                                style={{ cursor: "pointer" }}
+                                className="attachment text-primary  text-wrap list-group-item border-0"
+                                style={{
+                                  cursor: "pointer",
+                                  wordBreak: "break-word",
+                                }}
                                 key={attachment.id}
                                 onClick={() =>
                                   // (window.location.href = `${attachment.file_url}`)
@@ -156,8 +159,11 @@ export class GuideAssignmentDetails extends Component {
                       ? "No team submissions"
                       : this.ass_details.team_submissions.map((file) => (
                           <li
-                            className="attachment text-primary list-group-item border-0"
-                            style={{ cursor: "pointer" }}
+                            className="attachment text-primary text-wrap list-group-item border-0"
+                            style={{
+                              cursor: "pointer",
+                              wordBreak: "break-word",
+                            }}
                             key={file.id}
                             onClick={() => window.open(file.file_url, "_blank")}
                           >

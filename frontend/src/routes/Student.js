@@ -34,7 +34,7 @@ export default class Student extends React.Component {
             this.setState({ loading: false });
           })
           .catch((err) => {
-            console.log(err);
+            this.setState({ loading: false });
           });
       })
       .catch((err) => {

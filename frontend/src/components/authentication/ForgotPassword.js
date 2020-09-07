@@ -26,17 +26,22 @@ export default class ForgotPassword extends Component {
       axios
         .post("forgot-password/", { email: this.state.email })
         .then(({ data }) => NotificationManager.success(data))
-        .catch((err) => NotificationManager.error(err.response.data));
+        .catch(({ response }) => {
+          if (response.status === 404)
+            NotificationManager.error("User not found");
+          if (response.status === 403)
+            NotificationManager.error("Account not verfied");
+        });
     else NotificationManager.warning("Check email address");
   };
 
   render() {
     return (
-      <div className="d-flex   text-center min-vh-100 container justify-content-center align-items-center">
-        <div className="d-flex flex-column border rounded w-50">
+      <div className="d-flex  min-vh-100 container justify-content-center align-items-center">
+        <div className="d-flex flex-column shadow rounded w-75">
           <div
-            className="bg-light h5 p-2 font-weight-bold  w-100"
-            style={{ color: "lightcoral" }}
+            className="bg-light h5 p-2 w-100"
+            // style={{ color: "lightcoral" }}
           >
             Forgot Password
           </div>

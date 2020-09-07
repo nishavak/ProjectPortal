@@ -112,7 +112,9 @@ class GroupSection extends React.Component {
               </button>
             </div>
           ) : (
-            "This group hasn't registered the project yet "
+            <div className="py-2 font-italic">
+              This group has not registered for any project yet.
+            </div>
           )}
         </div>
       </div>

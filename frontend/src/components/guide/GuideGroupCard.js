@@ -12,13 +12,17 @@ function GuideGroupCard(props) {
       <Link
         to={`/assignment-list/${props.groupId}/`}
         className="text-dark"
-        style={{ textDecoration: "none" , cursor: "pointer"}}
+        style={{ textDecoration: "none", cursor: "pointer" }}
       >
         <div className="card border-0 rounded shadow my-4 groupCard">
           <div id="card-header" className="card-header border-0 shadow-sm">
             <div className="card-subtitle">
-              <span><b>Group Id :</b></span>
-              <span><b>{props.groupId}</b></span>
+              <span>
+                <b>Group Id :</b>
+              </span>
+              <span>
+                <b>{props.groupId}</b>
+              </span>
             </div>
           </div>
           <div className="card-body">

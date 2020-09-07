@@ -21,7 +21,9 @@ class AssignmentList extends React.Component {
         this.assignments = data;
         this.setState({ loading: false });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err);
+      });
   }
   render() {
     if (this.state.loading) return <Loading />;

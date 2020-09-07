@@ -170,8 +170,6 @@ class AssignmentDetails extends React.Component {
   }
 
   handleChange = (e) => {
-    console.log(this.state);
-
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -182,8 +180,12 @@ class AssignmentDetails extends React.Component {
 
     axios
       .post("coordinatorRemoveAttachments/", { delete_list: this.deleteList })
-      .then(({ data }) => console.log(data))
-      .catch((err) => console.log(err));
+      .then(({ data }) => {
+        // console.log(data);
+      })
+      .catch((err) => {
+        // console.log(err);
+      });
 
     let formData = new FormData();
     let u = this.getUploadList();
@@ -225,7 +227,9 @@ class AssignmentDetails extends React.Component {
       .then((res) => {
         this.props.history.goBack();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        // console.log(err);
+      });
   };
   render() {
     if (this.state.loading) return <Loading />;

@@ -45,10 +45,13 @@ export default class Profile extends Component {
       this.setState({});
     });
   }
+
   componentWillUnmount() {
     localStorage.setItem("sidebarCurrentTab", JSON.stringify("#tab1"));
   }
-
+  toggleProfileMenu = () => {
+    $(".mobile-menu").toggleClass("d-none");
+  };
   render() {
     if (this.state.loading) return <Loading />;
     return (
@@ -64,7 +67,12 @@ export default class Profile extends Component {
                 id="Sidebar"
                 className="bg-light m-0 p-0 text-center rounded-left h-100"
               >
-                <div className="p-0 d-md-none ">
+                <div
+                  className="p-0 d-md-none "
+                  onClick={() => {
+                    this.toggleProfileMenu();
+                  }}
+                >
                   <i class="fa fa-bars" aria-hidden="true"></i>
                 </div>
                 <div className="profile-pic container-fluid p-3 pb-0 mb-0 d-md-block d-none">
@@ -74,7 +82,33 @@ export default class Profile extends Component {
                     alt="user avatar"
                   />
                 </div>
-
+                <div className="mobile-menu d-md-none">
+                  <div
+                    className="link"
+                    onClick={() => {
+                      this.toggleProfileMenu();
+                      window.location.href = "/profile/personal-section/";
+                    }}
+                  >
+                    <div id="tab1" className="tab rounded p-2 ">
+                      Personal
+                    </div>
+                  </div>
+                  {this.team &&
+                    this.team.map((team) => (
+                      <div
+                        onClick={() => {
+                          this.toggleProfileMenu();
+                          window.location.href = `/profile/group-section/${team.team_id}`;
+                        }}
+                        className="link"
+                      >
+                        <div id="tab2" className="tab rounded p-2 ">
+                          Group ID: {team.team_id}
+                        </div>
+                      </div>
+                    ))}
+                </div>
                 <div
                   className="p-1 nav-options mt-2 d-md-block d-none"
                   style={{

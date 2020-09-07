@@ -2,16 +2,19 @@ import React, { Component } from "react";
 import { NotificationManager } from "react-notifications";
 import SignInImage from "../../assets/images/SignIn.gif";
 import axios from "../../axios";
+
 export class SignIn extends Component {
   state = {
     email: "",
     password: "",
   };
+
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
   };
+
   handleSubmit = (event) => {
     event.preventDefault();
     axios
@@ -19,10 +22,15 @@ export class SignIn extends Component {
       .then(() => {
         window.location.href = "/";
       })
-      .catch((err) => {
-        NotificationManager.error("Check credentials");
+      .catch(({ response }) => {
+        if (response.status === 401)
+          NotificationManager.error("Check credentials");
+        else if (response.status === 403)
+          NotificationManager.warning("Please verify your account");
+        else NotificationManager.error("Error signing in");
       });
   };
+
   render() {
     return (
       <div className="swing-in-top-fwd">

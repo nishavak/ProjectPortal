@@ -86,14 +86,13 @@ export class SignUp extends Component {
         .then(() => {
           NotificationManager.success(
             "Please verify your email and sign in.",
-            "Signed up.",
+            "Signed up",
             6000,
             () => this.props.history.push("signIn/"),
             true
           );
         })
         .catch((err) => {
-          console.error(err);
           NotificationManager.error("Error signing up");
         });
     } else NotificationManager.error("Form has been tampered");
@@ -118,10 +117,7 @@ export class SignUp extends Component {
               <div className="form-group">
                 <h1 className="text-center">Sign Up</h1>
               </div>
-              <div
-                className="form-group jello-horizontal rounded p-2 shadow bg-dark text-white"
-                // hidden
-              >
+              <div className="form-group jello-horizontal rounded p-2 shadow bg-dark text-white">
                 <b className="form-text">Student please note that</b>
                 <small className="form-text">
                   <p className="p-0 m-0">All fields are compulsary.</p>

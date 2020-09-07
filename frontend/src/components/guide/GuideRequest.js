@@ -58,12 +58,12 @@ export default class GuideRequest extends React.Component {
                         </div>
                         <div className="col d-flex justify-content-center m-0 p-0">
                           <Link to={`/group/${request.team}`}>
-                            <div className="text-primary text-center">
+                            <div className="text-primary text-xl-center ">
                               View Group Details
                             </div>
                           </Link>
                         </div>
-                        <div className="col d-flex m-0 p-0 justify-content-end">
+                        <div className="col d-flex m-0 p-0 justify-content-end text-xl-center">
                           {/* <div className="d-flex flex-md-row flex-column  justify-content-end"> */}
                           <button
                             type="button"
